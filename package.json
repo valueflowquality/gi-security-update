@@ -1,0 +1,13 @@
+{
+  "author": "David Bochenski",
+  "name": "Gintellect-Angular-Users",
+  "version": "0.0.1",
+  "main": "./main.coffee",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "coffee-script": "~1.4.0",
+    "grunt": "~0.3.17",
+    "grunt-hustler": "~0.7.3"
+  }
+}
