@@ -4,5 +4,5 @@ angular.module('app').config ['$routeProvider', '$locationProvider'
   $routeProvider
   .when '/test'
     controller: 'testController'
-    templateUrl: '/views/Angular-Users/test.html'
+    templateUrl: '/views/gint-security/test.html'
 ]

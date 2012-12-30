@@ -41,7 +41,7 @@ module.exports = function (grunt) {
     coffee: {
       scripts: {
         files: {
-          './temp/': './src/**/*.coffee'
+          './temp/client/': './client/**/*.coffee'
         },
         bare: true
       },
@@ -56,10 +56,10 @@ module.exports = function (grunt) {
     // optimizes files managed by RequireJS
     requirejs: {
       scripts: {
-        baseUrl: './temp/',
+        baseUrl: './temp/client/',
         findNestedDependencies: true,
         logLevel: 0,
-        mainConfigFile: './temp/main.js',
+        mainConfigFile: './temp/client/main.js',
         name: 'main',
         onBuildWrite: function (moduleName, path, contents) {
           var modulesToExclude = ['main'],
@@ -72,7 +72,7 @@ module.exports = function (grunt) {
           return contents;
         },
         optimize: 'none',
-        out: './index.js',
+        out: './client/index.js',
         preserveLicenseComments: false,
         skipModuleInsertion: true,
         uglify: {

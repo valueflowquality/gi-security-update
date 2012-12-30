@@ -6,7 +6,7 @@ angular.module('app').config([
   '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     return $routeProvider.when('/test', {
       controller: 'testController',
-      templateUrl: '/views/Angular-Users/test.html'
+      templateUrl: '/views/gint-security/test.html'
     });
   }
 ]);

@@ -1,5 +1,5 @@
 {
-  "name": "gintellect-angular-users",
+  "name": "gint-security",
   "version": "0.0.1",
-  "main": "./index.js"
+  "main": "./client/index.js"
 }
