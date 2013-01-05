@@ -47,7 +47,7 @@ module.exports = function (grunt) {
       },
       tests: {
         files: {
-          './test/': './test/coffee/**/*.coffee'
+          './test/client/spec/': './test/client/coffee/**/*.coffee'
         },
         bare: true
       }
