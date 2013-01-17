@@ -2,14 +2,18 @@ util = require 'util'
 path = require 'path'
 passport = require 'passport'
 dir = path.normalize __dirname + "/views"
-module.exports = (app, users, options) ->
 
+module.exports = (app, mongoose, options) ->
+  models = require('./models/models')(mongoose)
+  users = models.users
   FacebookStrategy = require('passport-facebook').Strategy
   HmacStrategy = require('./hmac').Strategy
 
   FACEBOOK_APP_ID = options.FACEBOOK_APP_ID
   FACEBOOK_APP_SECRET =  options.FACEBOOK_APP_SECRET
   DOMAIN_URI = options.DOMAIN_URI
+
+  console.log util.inspect options
 
   passport.serializeUser = (user, done) ->
     done null, user.id
@@ -107,6 +111,8 @@ module.exports = (app, users, options) ->
   app.use passport.session()
   app.use app.router
 
+  console.log 'about to register the auth routes'
+
   app.get '/auth/facebook'
   , passport.authenticate 'facebook' #middleware that redirects us onto facebook
   , emptyAction #this will not be called, as we will have been redirected
@@ -117,6 +123,8 @@ module.exports = (app, users, options) ->
 
   app.get     '/api/loginstatus', loginStatus
   app.get     '/api/logout', logout
+
+  console.log 'auth routes registered'
 
   publicAction: publicAction
   userAction: userAction
