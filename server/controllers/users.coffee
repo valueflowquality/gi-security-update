@@ -1,7 +1,5 @@
 module.exports = (mongoose) ->
-  console.log 'in controllers -> category'
   models = require('../models/models')(mongoose)
-
 
   create = (req, res) ->
     models.users.create req.body, (err, user) ->
@@ -57,7 +55,6 @@ module.exports = (mongoose) ->
         res.json 200
 
   resetapi = (req, res) ->
-    console.log 'in reset api'
     models.users.findOneById req.user.id, (err, user) ->
       if err
         res.json 500, err
@@ -78,7 +75,6 @@ module.exports = (mongoose) ->
   updateMe = (req, res) ->
     #first check that the user we want to update is the user
     #making the request
-    console.log 'in updateMe'
     console.log req.query.resetApi
     if req.query.resetApi
       resetapi req, res
@@ -88,3 +84,5 @@ module.exports = (mongoose) ->
   showMe: showMe
   updateMe: updateMe
   destroyMe: destroyMe
+  index: index
+  destroy: destroy

@@ -13,8 +13,6 @@ module.exports = (app, mongoose, options) ->
   FACEBOOK_APP_SECRET =  options.FACEBOOK_APP_SECRET
   DOMAIN_URI = options.DOMAIN_URI
 
-  console.log util.inspect options
-
   passport.serializeUser = (user, done) ->
     done null, user.id
 
@@ -111,8 +109,6 @@ module.exports = (app, mongoose, options) ->
   app.use passport.session()
   app.use app.router
 
-  console.log 'about to register the auth routes'
-
   app.get '/auth/facebook'
   , passport.authenticate 'facebook' #middleware that redirects us onto facebook
   , emptyAction #this will not be called, as we will have been redirected
@@ -123,8 +119,6 @@ module.exports = (app, mongoose, options) ->
 
   app.get     '/api/loginstatus', loginStatus
   app.get     '/api/logout', logout
-
-  console.log 'auth routes registered'
 
   publicAction: publicAction
   userAction: userAction
