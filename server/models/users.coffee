@@ -47,9 +47,8 @@ module.exports = (mongoose) ->
     obj.save (err, user) ->
       callback err, user
 
-  update = (json, callback) ->
-    callback 'not implemented'
-    #essentially here we need to iterate
+  update = (id, json, callback) ->
+    User.findByIdAndUpdate(id, json, callback)
 
   destroy =  (id, callback) ->
     User.findOne { _id : id}, (err, user) ->
@@ -59,7 +58,7 @@ module.exports = (mongoose) ->
         user.remove (err) ->
           callback err
 
-  findOneById = (id, callback) ->
+  findById = (id, callback) ->
     User.findOne { _id : id}, (err, user) ->
       callback err, user
 
@@ -89,7 +88,7 @@ module.exports = (mongoose) ->
   create: create
   find: find
   findOrCreate: findOrCreate
-  findOneById: findOneById
+  findById: findById
   findOneByProviderId: findOneByProviderId
   update: update
   destroy: destroy
