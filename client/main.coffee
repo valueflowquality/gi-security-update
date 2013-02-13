@@ -8,12 +8,17 @@ require
       deps: [
         'services/userAccountService'
       ]
+    'controllers/role':
+      deps: [
+        'services/role'
+      ]
   [
     'routes'
-    'controllers/testController'
     'controllers/loginController'
     'controllers/logoutController'
     'controllers/userController'
     'controllers/usersController'
+    'controllers/role'
+    'directives/roleForm'
   ], () ->
-    console.log 'Angular-Users loaded'
+    console.log 'gint-security loaded'

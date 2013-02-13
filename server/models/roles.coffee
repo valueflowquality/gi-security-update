@@ -15,4 +15,4 @@ module.exports = (mongoose) ->
   update: crud.update
   destroy: crud.destroy
   show: crud.show
-  index: crud.index
+  find: crud.find

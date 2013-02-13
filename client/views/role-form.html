@@ -1,0 +1,25 @@
+<div class="well form-horizontal">
+  <input type="hidden" id="hiddenSiteId" ng-model="role._id"/>
+  <div class="control-group">
+    <label class="control-label" >Name:</label>
+    <div class="controls">
+      <input type="text" name="name" ng-model="role.name"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-primary" ng-click="submit({role: role})">{{submitText}}</button>
+      <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()" ><i class="icon-white icon-trash"></i></button>
+    </div>
+  </div>
+</div>
+<modal visible="showDeleteModal"
+        title="Please Confirm Delete Action">
+  <div class="body">
+    <p>Delete a role - are you sure?</p>
+    <p>Please continue only if you are 100% you understand what you're deleting.  There is no way to retrieve the data after this point.</p>
+  </div>
+  <div class="footer">
+    <button ng-click="deleteRole()" class="btn btn-danger">Delete It!</button>
+  </div>
+</modal>
