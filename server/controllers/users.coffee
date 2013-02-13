@@ -1,5 +1,4 @@
-module.exports = (mongoose) ->
-  models = require('../models/models')(mongoose)
+module.exports = (models) ->
 
   create = (req, res) ->
     models.users.create req.body, (err, user) ->
@@ -30,7 +29,7 @@ module.exports = (mongoose) ->
         res.json 200, result
 
   showMe = (req, res) ->
-    models.users.findOneById req.user.id, (err, user) ->
+    models.users.findById req.user.id, (err, user) ->
       if err
         res.json 404
       else
@@ -55,7 +54,7 @@ module.exports = (mongoose) ->
         res.json 200
 
   resetapi = (req, res) ->
-    models.users.findOneById req.user.id, (err, user) ->
+    models.users.findById req.user.id, (err, user) ->
       if err
         res.json 500, err
       else if not user

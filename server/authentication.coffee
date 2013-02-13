@@ -17,7 +17,7 @@ module.exports = (app, mongoose, options) ->
     done null, user.id
 
   passport.deserializeUser = (obj, done) ->
-    users.findOneById obj, (err, user) ->
+    users.findById obj, (err, user) ->
       if err
         done err, null
       else
@@ -88,7 +88,7 @@ module.exports = (app, mongoose, options) ->
 
   passport.use new HmacStrategy((accessKey, done) ->
     # if there is an error , we should return:    #   done(err)
-    users.findOneById accessKey, (err, user) ->
+    users.findById accessKey, (err, user) ->
       if err
         done err
       else if not user

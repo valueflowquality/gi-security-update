@@ -1,11 +1,7 @@
 should = require 'should'
-path = require 'path'
 mongoose = require 'mongoose'
-util = require 'util'
-dir =  path.normalize __dirname + '../../../../server'
-require './mongo'
 
-models = require(dir + '/models/models')(mongoose)
+models = require './models'
 
 dropUsersCollection = () ->
   mongoose.connection.collections['users']?.drop()
