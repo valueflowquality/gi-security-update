@@ -33,7 +33,7 @@ encodeProperty = (key, value) ->
 
 encodeHeaders = (headers) ->
   result = ""
-  if headers['access-key'] 
+  if headers['access-key']
     result += encodeProperty('access-key', headers['access-key'])
   if headers['expiry-date']
     result += '&' + encodeProperty('expiry-date', headers['expiry-date'])
@@ -66,7 +66,8 @@ Strategy::authenticate = (req, options) ->
     #TODO: get secret from the user id
     verificationSecret = user.api_secret
     verificationString = stringToSign req
-    verificationSignature = hmac verificationSecret, verificationString, 'base64'
+    verificationSignature = hmac verificationSecret
+    , verificationString, 'base64'
    
     if reqSignature != verificationSignature
       @fail {message: 'Signature Verification Failure'}
