@@ -9,7 +9,8 @@ module.exports = (mongoose) ->
   userSchema = new Schema {first_name: 'String'
   , last_name: 'String'
   , api_secret: 'String'
-  , user_ids: [{ provider: 'String', provider_id: 'String'}] }
+  , user_ids: [{ provider: 'String', provider_id: 'String'}]
+  , roles: [{type: ObjectId, ref: 'Role'}] }
 
   userSchema.virtual('name').get () ->
     @first_name + ' ' + @last_name
@@ -27,7 +28,7 @@ module.exports = (mongoose) ->
         callback err
       else
         @api_secret = secret
-        callback()
+        callback() if callback
 
   mongoose.model 'Users', userSchema
 

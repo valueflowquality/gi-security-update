@@ -1,35 +1,10 @@
-module.exports = (models) ->
+gint = require 'gint-util'
 
-  create = (req, res) ->
-    models.users.create req.body, (err, user) ->
-      if err
-        res.json 500
-      else
-        res.json 200, user
-
-  destroy = (req, res) ->
-    models.users.destroy req.params.id, (err) ->
-      if err
-        res.json 404
-      else
-        res.json 200
-
-  index = (req, res) ->
-   
-    max = do () ->
-      if  isNaN req.query.max
-        10
-      else
-        req.query.max || 10
-
-    models.users.find {sort: {name: 'desc'}, limit: max }, (err, result) ->
-      if err
-        res.json 404
-      else
-        res.json 200, result
+module.exports = (model) ->
+  crud = gint.controllers.crud(model)
 
   showMe = (req, res) ->
-    models.users.findById req.user.id, (err, user) ->
+    model.findById req.user.id, (err, user) ->
       if err
         res.json 404
       else
@@ -40,21 +15,21 @@ module.exports = (models) ->
     if req.user.id is not req.body._id
       res.json 401
     else
-      models.users.update req.body, (err, user) ->
+      model.update req.body, (err, user) ->
         if err
           res.json 404
         else
           res.json 200, user
 
   destroyMe = (req, res) ->
-    models.users.destroy req.user.id, (err) ->
+    model.destroy req.user.id, (err) ->
       if err
         res.json 404
       else
         res.json 200
 
   resetapi = (req, res) ->
-    models.users.findById req.user.id, (err, user) ->
+    model.findById req.user.id, (err, user) ->
       if err
         res.json 500, err
       else if not user
@@ -79,9 +54,13 @@ module.exports = (models) ->
       resetapi req, res
     else
       res.json 500, 'update not implemented'
-   
+  
+  create: crud.create
+  update: crud.update
+  destroy: crud.destroy
   showMe: showMe
   updateMe: updateMe
   destroyMe: destroyMe
-  index: index
-  destroy: destroy
+  index: crud.index
+  destroy: crud.destroy
+  show: crud.show
