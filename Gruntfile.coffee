@@ -95,12 +95,15 @@ module.exports = (grunt) ->
 
             return contents
           optimize: 'none'
-          out: './client/index.js'
+          out: './client/gint-security.js'
           preserveLicenseComments: false
           skipModuleInsertion: true
           uglify:
             no_mangle: false
     watch:
+      dev:
+        files: ['client/**', 'server/**', ]
+        tasks: ['default']
       mochatests:
         files: ['testbin/server/**/*.coffee', 'testbin/test/server/**/*.js']
         tasks: ['mocha']
@@ -126,3 +129,6 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'default'
   , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp', 'mocha']
+
+  grunt.registerTask 'run'
+  , [ 'default', 'watch:dev']

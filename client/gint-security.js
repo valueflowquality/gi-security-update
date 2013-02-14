@@ -303,7 +303,6 @@ angular.module('app').directive('roleform', function() {
         return scope.showDeleteModal = false;
       };
       return scope.confirmDelete = function() {
-        console.log('would show delete modal');
         return scope.showDeleteModal = true;
       };
     }
