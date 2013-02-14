@@ -1,0 +1,57 @@
+<div class="well form">
+  <h4>Profile</h4>
+  <div class="control-group">
+    <label class="control-label" >Name:</label>
+    <div class="controls">
+      <input type="text" name="name" ng-model="user.first_name"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <h4>Assigned Roles</h4>
+    <div class="span12" ng-repeat="role in userRoles">
+      <label>{{role.name}}<label>
+      <button class="btn btn-danger"
+              ng-click="removeFromRole(role)" >
+        <i class="icon-white icon-trash" />
+      </button>
+    </div>
+
+    <h4>Available Roles</h4>
+    <select ng-model="selectedRole" 
+            ng-options="role.name for role in notUserRoles">
+    </select>
+    <div class="controls">
+      <button ng-click="addToRole(selectedRole)" 
+              class="btn btn-primary">Assign</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-primary" 
+              ng-click="submit({user: user})">
+        {{submitText}}
+      </button>
+      <button ng-show="showDelete" 
+              class="btn btn-danger" 
+              ng-click="confirmDelete()" >
+        <i class="icon-white icon-trash" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<modal visible="showDeleteModal"
+        title="Please Confirm Delete Action">
+  <div class="body">
+    <p>Delete a user - are you sure?</p>
+    <p>Please continue only if you are 100% 
+      you understand what you're deleting.  
+      There is no way to retrieve the data after this point.</p>
+  </div>
+  <div class="footer">
+    <button ng-click="deleteUser()" \
+            class="btn btn-danger">
+      Delete It!
+    </button>
+  </div>
+</modal>
