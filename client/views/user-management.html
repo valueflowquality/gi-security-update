@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <ul class="nav nav-list">
+        <li ng-class="{active: currentView == 'list' }">
+          <a ng-click="show('list')">All Users</a>
+        </li>
+        <li ng-class="{active: currentView == 'form' }">
+          <a ng-click="show('form')">New User</a>
+        </li>
+      </ul>
+    </div>
+    <div class="span10">
+      <div>
+        <div ng-show="selectedUser" >
+          <div class="span6">
+            <h4>Users</h4>
+            <ul class="nav nav-list" ng-repeat="user in users" >
+              <li ng-class="{active: role.name == selectedRole.name}" >
+                <a 
+                 ng-click="selectUser(user)">{{user.first_name}}</a>
+              </li>
+            </ul>
+          </div>
+          <div ng-show="currentView == 'list'" class="span6">
+            <userform user="selectedUser" title="User Details" submit-text="Update User" submit="saveUser(user)" destroy="deleteUser(role)"></userfrm>
+          </div>
+          <div ng-show="currentView == 'form'" class="span6">
+            <userform title="New User" user="newUser" submit-text="Create User" submit="saveRole(role)"></userform>
+          </div>
+        </div>      
+        <div ng-hide="selectedUser">
+          <div class="span6">
+            <h4>Users</h4>
+            No Users found for this organisation.
+            You can create one by entering the details on this page.
+          </div>
+          <div class="span6">
+            <h4>Create New User</h4>
+            <userform title="New User" user="newUser" submit-text="Create User" submit="saveRole(role)"></userform>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

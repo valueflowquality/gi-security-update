@@ -14,4 +14,7 @@ angular.module('app').config ['$routeProvider', '$locationProvider'
   .when '/role'
     controller: 'roleController'
     templateUrl: '/views/gint-security/role.html'
+  .when '/users'
+    controller: 'usersController'
+    templateUrl: '/views/gint-security/user-management.html'
 ]
