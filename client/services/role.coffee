@@ -28,9 +28,7 @@ angular.module('app').factory 'Role'
           roles[index] = role
 
     unless replaced
-      console.log 'pushing to roles ' + roles.length
       roles.push role
-      console.log 'roles: ' + roles.length
 
   all = (callback) ->
     if roles.length == 0

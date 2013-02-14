@@ -7,16 +7,6 @@ angular.module('app').directive 'roleform', ->
     destroy: '&'
     submitText: '@'
   link: (scope, elm, attrs) ->
-    scope.frequencies = [
-      "Monthly"
-      "Annually"
-    ]
-
-    scope.paymentTypes = [
-      "D/D"
-      "Cheque"
-      "Cash"
-    ]
 
     scope.showDelete = true
 
