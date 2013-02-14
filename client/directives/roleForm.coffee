@@ -27,5 +27,4 @@ angular.module('app').directive 'roleform', ->
       scope.showDeleteModal = false
 
     scope.confirmDelete = ->
-      console.log 'would show delete modal'
       scope.showDeleteModal = true
