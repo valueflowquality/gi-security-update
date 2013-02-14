@@ -363,11 +363,25 @@ angular.module('app').factory('Role', [
   }
 ]);
 
+var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 angular.module('app').controller('roleController', [
-  '$scope', 'Role', function($scope, Role) {
+  '$scope', 'Role', 'User', function($scope, Role, User) {
+    var refreshRoleUsers;
     $scope.roles = [];
     $scope.newRole = Role.create();
+    User.query(function(results) {
+      return $scope.users = results;
+    });
+    refreshRoleUsers = function(role) {
+      $scope.roleUsers = [];
+      return angular.forEach($scope.users, function(user) {
+        var _ref;
+        if (_ref = role._id, __indexOf.call(user.roles, _ref) >= 0) {
+          return $scope.roleUsers.push(user);
+        }
+      });
+    };
     $scope.saveRole = function(role) {
       console.log('save role clicked');
       return Role.save(role, function() {
@@ -382,7 +396,8 @@ angular.module('app').controller('roleController', [
       });
     };
     $scope.selectRole = function(role) {
-      return $scope.selectedRole = role;
+      $scope.selectedRole = role;
+      return refreshRoleUsers(role);
     };
     $scope.deleteRole = function(role) {
       return Role.destroy(role._id, function() {

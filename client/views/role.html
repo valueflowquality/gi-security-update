@@ -21,13 +21,15 @@
                  ng-click="selectRole(role)">{{role.name}}</a>
               </li>
             </ul>
+            <div>
+              <h4>Role Members</h4>
+              <div ng-repeat="user in roleUsers">{{user.first_name}}</div>
+            </div>
           </div>
           <div ng-show="currentView == 'list'" class="span6">
             <h4>Role Details</h4>
             <roleform role="selectedRole" title="Role Details" submit-text="Update Role" submit="saveRole(role)" destroy="deleteRole(role)"></roleform>
-            <div>
-              <h4>Role Members</h4>
-            </div>
+
           </div>
           <div ng-show="currentView == 'form'" class="span6">
             <roleform role="newRole" title="Role Details" submit-text="Create Role" submit="saveRole(role)"></roleform>
