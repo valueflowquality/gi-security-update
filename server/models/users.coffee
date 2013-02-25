@@ -8,6 +8,7 @@ module.exports = (mongoose) ->
 
   userSchema = new Schema {first_name: 'String'
   , last_name: 'String'
+  , email: 'String'
   , api_secret: 'String'
   , user_ids: [{ provider: 'String', provider_id: 'String'}]
   , roles: [{type: ObjectId, ref: 'Role'}] }
