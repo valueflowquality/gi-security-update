@@ -12,7 +12,7 @@
     "passport-facebook": "~0.1.4",
     "moment": "~1.7.2",
     "mongoose": "~3.5.5",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.0.1"
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.0.2"
   },
   "devDependencies": {
     "grunt": "0.4.0rc7",
@@ -23,7 +23,7 @@
     "grunt-contrib-less": "0.5.0rc7",
     "grunt-contrib-requirejs": "0.4.0rc7",
     "grunt-testacular": "0.3.0",
-    "grunt-gint": "0.1.0",
+    "grunt-gint": "0.2.0",
     "grunt-reload": "git://github.com/webxl/grunt-reload.git",
     "should": "~1.2.1",
     "rewire": "~1.0.3",
