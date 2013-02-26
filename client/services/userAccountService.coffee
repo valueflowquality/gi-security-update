@@ -1,4 +1,6 @@
-angular.module('app').factory 'UserAccount', ['$resource', ($resource) ->
+angular.module('app').factory 'UserAccount',
+['$resource', '$rootScope', '$http'
+, ($resource, $rootScope, $http) ->
   methods =
     query:
       method: 'GET'
@@ -9,5 +11,16 @@ angular.module('app').factory 'UserAccount', ['$resource', ($resource) ->
       params:
         resetApi: true
 
-  $resource '/api/user', {}, methods
+  resource = $resource '/api/user', {}, methods
+
+  getMe = (callback) ->
+    if $rootScope.me?
+      callback($rootScope.me)
+    else
+      $http.get('/api/user')
+        .success (user) ->
+          callback(user) if callback
+
+  get: resource.get
+  getMe: getMe
 ]

@@ -186,8 +186,8 @@ angular.module('app').controller('userController', [
 
 
 angular.module('app').factory('UserAccount', [
-  '$resource', function($resource) {
-    var methods;
+  '$resource', '$rootScope', '$http', function($resource, $rootScope, $http) {
+    var getMe, methods, resource;
     methods = {
       query: {
         method: 'GET',
@@ -201,7 +201,22 @@ angular.module('app').factory('UserAccount', [
         }
       }
     };
-    return $resource('/api/user', {}, methods);
+    resource = $resource('/api/user', {}, methods);
+    getMe = function(callback) {
+      if ($rootScope.me != null) {
+        return callback($rootScope.me);
+      } else {
+        return $http.get('/api/user').success(function(user) {
+          if (callback) {
+            return callback(user);
+          }
+        });
+      }
+    };
+    return {
+      get: resource.get,
+      getMe: getMe
+    };
   }
 ]);
 
