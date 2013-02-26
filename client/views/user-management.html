@@ -16,7 +16,7 @@
           <div class="span6">
             <h4>Users</h4>
             <ul class="nav nav-list" ng-repeat="user in users" >
-              <li ng-class="{active: role.name == selectedRole.name}" >
+              <li ng-class="{active: user._id == selectedUser._id}" >
                 <a 
                  ng-click="selectUser(user)">{{user.first_name}}</a>
               </li>
