@@ -1,6 +1,6 @@
-
+gint = require 'gint-util'
 module.exports = (mongoose) ->
-  gint = require('gint-util')(mongoose)
+
   name = 'Role'
 
   Schema = mongoose.Schema

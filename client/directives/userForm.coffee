@@ -14,7 +14,7 @@ angular.module('app').directive 'userform'
 
     scope.showDeleteModal = false
     scope.userRoles = []
-    scope.notUserRoles = []    
+    scope.notUserRoles = []
     
     refreshUserRoles = () ->
       scope.userRoles = []
