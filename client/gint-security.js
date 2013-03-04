@@ -75,19 +75,19 @@ angular.module('app').factory('User', [
     };
     resource = $resource('/api/users/:id', {}, methods);
     items = [];
-    updateMasterList = function(item) {
+    updateMasterList = function(newItem) {
       var replaced;
       replaced = false;
       angular.forEach(items, function(item, index) {
         if (!replaced) {
-          if (item._id === item._id) {
+          if (newItem._id === item._id) {
             replaced = true;
-            return items[index] = item;
+            return items[index] = newItem;
           }
         }
       });
       if (!replaced) {
-        return items.push(item);
+        return items.push(newItem);
       }
     };
     all = function(callback) {

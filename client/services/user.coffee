@@ -19,16 +19,16 @@ angular.module('app').factory 'User'
 
   items = []
 
-  updateMasterList = (item) ->
+  updateMasterList = (newItem) ->
     replaced = false
     angular.forEach items, (item, index) ->
       unless replaced
-        if item._id is item._id
+        if newItem._id is item._id
           replaced = true
-          items[index] = item
+          items[index] = newItem
 
     unless replaced
-      items.push item
+      items.push newItem
 
   all = (callback) ->
     if items.length == 0
