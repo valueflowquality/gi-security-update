@@ -73,8 +73,8 @@ angular.module('app').factory 'User'
       callback() if callback
 
   factory = () ->
-    first_name: ''
-    last_name: ''
+    firstName: ''
+    lastName: ''
 
   query: all
   all: all

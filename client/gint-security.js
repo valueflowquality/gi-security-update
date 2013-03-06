@@ -155,8 +155,8 @@ angular.module('app').factory('User', [
     };
     factory = function() {
       return {
-        first_name: '',
-        last_name: ''
+        firstName: '',
+        lastName: ''
       };
     };
     return {

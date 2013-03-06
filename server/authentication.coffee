@@ -3,9 +3,7 @@ path = require 'path'
 passport = require 'passport'
 dir = path.normalize __dirname + "/views"
 
-module.exports = (app, mongoose, options) ->
-  models = require('./models/models')(mongoose)
-  users = models.users
+module.exports = (app, users, options) ->
   FacebookStrategy = require('passport-facebook').Strategy
   HmacStrategy = require('./hmac').Strategy
 
@@ -80,10 +78,10 @@ module.exports = (app, mongoose, options) ->
       # asynchronous verification, for effect...
       process.nextTick () ->
         users.findOrCreate { name: profile.displayName
-        , provider_id : profile.id
-        , user_ids: [{provider: 'Facebook', provider_id: profile.id}] }
+        , providerId : profile.id
+        , userIds: [{provider: 'Facebook', providerId: profile.id}] }
         , (err, user) ->
-          done(null, user)
+          done(err, user)
   )
 
   passport.use new HmacStrategy((accessKey, done) ->

@@ -1,5 +1,4 @@
 module.exports = (mongoose) ->
-
   Schema = mongoose.Schema
   ObjectId = Schema.Types.ObjectId
 
@@ -69,7 +68,6 @@ module.exports = (mongoose) ->
       callback err, user
 
   findOrCreate = (json, callback) ->
-    console.log 'find or create'
     findOneByProviderId json.providerId, (err, user) ->
       if user
         console.log 'found user by provider id'
