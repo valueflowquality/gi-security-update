@@ -13,24 +13,24 @@ describe 'User Model', ->
     dropUsersCollection()
     done()
 
-  it 'Set user first_name', (done) ->
-    user.create { first_name: 'toto' }, (err, result) ->
+  it 'Set user firstName', (done) ->
+    user.create { firstName: 'toto' }, (err, result) ->
       should.exist result
       result.should.have.property('_id')
-      result.should.have.property('first_name', 'toto')
+      result.should.have.property('firstName', 'toto')
       id = result._id
       done()
 
   it 'Can find users by Id', (done) ->
     user.findById id, (err, result) ->
       should.exist result
-      result.should.have.property('first_name', 'toto')
+      result.should.have.property('firstName', 'toto')
       done()
 
   it 'Can find multiple users', (done) ->
     user.find {}, (err, result) ->
       result.length.should.equal 1
-      user.create { first_name: 'bob' }, (err, result) ->
+      user.create { firstName: 'bob' }, (err, result) ->
         user.find {}, (err, result) ->
           result.length.should.equal 2
           done()
@@ -39,11 +39,11 @@ describe 'User Model', ->
     user.findById id, (err, result) ->
       if err
         console.log err
-      result.first_name = 'barry'
-      user.update id, {first_name: 'barry'}, (err, result) ->
+      result.firstName = 'barry'
+      user.update id, {firstName: 'barry'}, (err, result) ->
         if err
           console.log err
-        result.should.have.property('first_name', 'barry')
+        result.should.have.property('firstName', 'barry')
         done()
 
   it 'Can delete users', (done) ->

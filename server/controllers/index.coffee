@@ -1,5 +1,5 @@
 module.exports = (mongoose) ->
-  models = require('../models/models')(mongoose)
+  models = require('../models')(mongoose)
   user = require('./users')(models.users)
   role = require('./role')(models.roles)
   

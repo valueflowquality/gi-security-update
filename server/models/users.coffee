@@ -6,20 +6,20 @@ module.exports = (mongoose) ->
   util = require 'util'
   crypto = require 'crypto'
 
-  userSchema = new Schema {first_name: 'String'
-  , last_name: 'String'
+  userSchema = new Schema {firstName: 'String'
+  , lastName: 'String'
   , email: 'String'
-  , api_secret: 'String'
-  , user_ids: [{ provider: 'String', provider_id: 'String'}]
+  , apiSecret: 'String'
+  , userIds: [{ provider: 'String', providerId: 'String'}]
   , roles: [{type: ObjectId, ref: 'Role'}] }
 
   userSchema.virtual('name').get () ->
-    @first_name + ' ' + @last_name
+    @firstName + ' ' + @lastName
 
   userSchema.virtual('name').set (name) ->
     split = name.split ' '
-    @first_name = split[0]
-    @last_name = split[1]
+    @firstName = split[0]
+    @lastName = split[1]
 
   userSchema.methods.resetAPISecret = (callback) ->
     console.log 'in reset api secret'
@@ -65,12 +65,12 @@ module.exports = (mongoose) ->
       callback err, user
 
   findOneByProviderId = (id, callback) ->
-    User.findOne { 'user_ids.provider_id' : id }, (err, user) ->
+    User.findOne { 'userIds.providerId' : id }, (err, user) ->
       callback err, user
 
   findOrCreate = (json, callback) ->
     console.log 'find or create'
-    findOneByProviderId json.provider_id, (err, user) ->
+    findOneByProviderId json.providerId, (err, user) ->
       if user
         console.log 'found user by provider id'
         callback err, user

@@ -1,5 +1,5 @@
 module.exports = (app, auth, mongoose) ->
-  api = require('./controllers/api')(mongoose)
+  api = require('./controllers')(mongoose)
   #user routes
   app.get     '/api/user',        auth.userAction,  api.user.showMe
   app.put     '/api/user',        auth.userAction,  api.user.updateMe
