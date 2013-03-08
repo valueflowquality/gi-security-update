@@ -55,7 +55,7 @@ angular.module('app').controller('logoutController', [
 
 angular.module('app').factory('User', [
   '$resource', function($resource) {
-    var all, destroy, factory, get, items, methods, resource, save, updateMasterList;
+    var all, destroy, factory, get, getByIdSync, items, itemsById, methods, resource, save, updateMasterList;
     methods = {
       query: {
         method: 'GET',
@@ -75,6 +75,7 @@ angular.module('app').factory('User', [
     };
     resource = $resource('/api/users/:id', {}, methods);
     items = [];
+    itemsById = {};
     updateMasterList = function(newItem) {
       var replaced;
       replaced = false;
@@ -87,13 +88,17 @@ angular.module('app').factory('User', [
         }
       });
       if (!replaced) {
-        return items.push(newItem);
+        items.push(newItem);
       }
+      itemsById[newItem._id] = newItem;
     };
     all = function(callback) {
       if (items.length === 0) {
         return resource.query(function(results) {
           items = results;
+          angular.forEach(results, function(item, index) {
+            itemsById[item._id] = item;
+          });
           if (callback) {
             return callback(items);
           }
@@ -126,6 +131,11 @@ angular.module('app').factory('User', [
         });
       }
     };
+    getByIdSync = function(id) {
+      console.log('lookin for ' + id);
+      console.log(itemsById);
+      return itemsById[id];
+    };
     get = function(params, callback) {
       return resource.get(params, function(item) {
         updateMasterList(item);
@@ -140,6 +150,7 @@ angular.module('app').factory('User', [
       }, function() {
         var removed;
         removed = false;
+        delete itemsById[id];
         angular.forEach(items, function(item, index) {
           if (!removed) {
             if (item._id === id) {
@@ -163,6 +174,7 @@ angular.module('app').factory('User', [
       query: all,
       all: all,
       get: get,
+      getSync: getByIdSync,
       create: factory,
       destroy: destroy,
       save: save

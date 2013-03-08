@@ -18,6 +18,7 @@ angular.module('app').factory 'User'
   resource = $resource '/api/users/:id', {}, methods
 
   items = []
+  itemsById = {}
 
   updateMasterList = (newItem) ->
     replaced = false
@@ -30,10 +31,16 @@ angular.module('app').factory 'User'
     unless replaced
       items.push newItem
 
+    itemsById[newItem._id] = newItem
+    return
+
   all = (callback) ->
     if items.length == 0
       resource.query (results) ->
         items = results
+        angular.forEach results, (item, index) ->
+          itemsById[item._id] = item
+          return
 
         callback items if callback
     else
@@ -54,6 +61,11 @@ angular.module('app').factory 'User'
         console.log 'got a result ' + result
         updateMasterList result
         success() if success
+  
+  getByIdSync = (id) ->
+    console.log 'lookin for ' + id
+    console.log itemsById
+    itemsById[id]
 
   get = (params, callback) ->
     resource.get params, (item) ->
@@ -64,6 +76,7 @@ angular.module('app').factory 'User'
   destroy = (id, callback) ->
     resource.delete {id: id}, () ->
       removed = false
+      delete itemsById[id]
       angular.forEach items, (item, index) ->
         unless removed
            if item._id is id
@@ -79,6 +92,7 @@ angular.module('app').factory 'User'
   query: all
   all: all
   get: get
+  getSync: getByIdSync
   create: factory
   destroy: destroy
   save: save
