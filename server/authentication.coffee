@@ -3,7 +3,10 @@ path = require 'path'
 passport = require 'passport'
 dir = path.normalize __dirname + "/views"
 
-module.exports = (app, users, options) ->
+module.exports = (app, models, options) ->
+  users = models.users
+  accounts = models.accounts
+
   FacebookStrategy = require('passport-facebook').Strategy
   HmacStrategy = require('./hmac').Strategy
 
