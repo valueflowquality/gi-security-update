@@ -24,26 +24,45 @@ module.exports = (app, models, options) ->
       else
         done null, user
 
+
+  accountCheck = (req, res, next) ->
+    #find account by host
+    if req.host
+      accounts.findOneBy 'host', req.host, (err, result) ->
+        if err
+          res.json 500, {message: err}
+        else if result
+          console.log 'result!'
+          console.log result
+          req.accountId = result._id
+          next()
+        else
+          res.json 404, {message: 'host account not found'}
+    else
+      res.json 500, {message: 'host not found on request object'}
+
+
   publicAction = (req, res, next) ->
-    next()
+    accountCheck req, res, next
 
   userAction = (req, res, next) ->
-    if req.isAuthenticated()
-      console.log 'user is authenticated via session cookie'
-      next()
-    else
-      #the user was not authenticated via cookies, try hmac
-      passport.authenticate('hmac', (err, user, info) ->
-        if err
-          next(err)
-        else if not user
-          console.log info
-          res.json 401, info
-        else
-          console.log 'user is authenticated via hmac'
-          req.user = user
-          next()
-      )(req, res, next)
+    accountCheck req, res, () ->
+      if req.isAuthenticated()
+        console.log 'user is authenticated via session cookie'
+        next()
+      else
+        #the user was not authenticated via cookies, try hmac
+        passport.authenticate('hmac', (err, user, info) ->
+          if err
+            next(err)
+          else if not user
+            console.log info
+            res.json 401, info
+          else
+            console.log 'user is authenticated via hmac'
+            req.user = user
+            next()
+        )(req, res, next)
 
   adminAction = (req, res, next) ->
     userAction req, res, () ->

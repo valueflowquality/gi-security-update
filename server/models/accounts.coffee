@@ -14,6 +14,7 @@ module.exports = (mongoose) ->
 
   find: crud.find
   findById: crud.findById
+  findOneBy: crud.findOneBy
   create: crud.create
   update: crud.update
   destroy: crud.destroy
