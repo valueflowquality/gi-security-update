@@ -5,7 +5,7 @@ module.exports = (grunt) ->
 
     clean:
       reset:
-        src: ['dist','testbin']
+        src: ['bin']
       temp:
         src: ['temp']
 
@@ -45,7 +45,7 @@ module.exports = (grunt) ->
         expand: true
         cwd: 'client'
         src: ['**/*.coffee']
-        dest: 'temp/client/'
+        dest: 'temp/client/js/'
         ext: '.js'
         options:
           bare: true
@@ -67,24 +67,24 @@ module.exports = (grunt) ->
       conf:
         src: ['.npmignore', 'component.json', 'package.json', 'README.md']
         dest: 'temp/'
-      dist:
+      temp:
         expand: true
         cwd: 'temp/'
-        src: ['**', '!*.coffee', '!test/**']
-        dest: 'dist'      
+        src: ['**', '!*.coffee']
+        dest: 'bin'      
       test:
         expand: true
-        cwd: 'temp/'
-        src: ['**']
-        dest: 'testbin'     
+        cwd: 'test'
+        src: ['*', 'libs/*']
+        dest: 'bin/test'     
 
     requirejs:
       scripts:
         options:
-          baseUrl: 'temp/client/'
+          baseUrl: 'temp/client/js/'
           findNestedDependencies: true
           logLevel: 0
-          mainConfigFile: 'temp/client/main.js'
+          mainConfigFile: 'temp/client/js/main.js'
           name: 'main'
           onBuildWrite: (moduleName, path, contents) ->
             modulesToExclude = ['main']
@@ -104,20 +104,29 @@ module.exports = (grunt) ->
       dev:
         files: ['client/**', 'server/**', ]
         tasks: ['default']
-      mochatests:
-        files: ['testbin/server/**/*.coffee', 'testbin/test/server/**/*.js']
-        tasks: ['mocha']
+      mochaTests:
+        files: ['test/server/**/*.coffee']
+        tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:test', 'mocha']
+      unitTests:
+        files: ['test/client/**/*.coffee']
+        tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:temp', 'clean:temp', 'copy:test', 'testacular:unit']
 
     mocha:
       all:
         expand: true
-        src: ['test/server/_helper.js', 'testbin/test/server/**/*_test.js']
+        src: ['test/server/_helper.js', 'bin/test/server/**/*_test.js']
         options:
           globals: ['should']
           timeout: 3000
           ignoreLeaks: false
           ui: 'bdd'
           reporter: 'spec'
+
+    testacular:
+      unit:
+        options:
+          keepalive: true
+          configFile: 'bin/test/testacular.conf.js'
 
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -126,9 +135,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-gint'
+  grunt.loadNpmTasks 'grunt-testacular'
 
   grunt.registerTask 'default'
-  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp', 'mocha']
+  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp', 'mocha', 'testacular:unit']
 
   grunt.registerTask 'run'
-  , [ 'default', 'watch:dev']
+  , [ 'default', 'watch']
