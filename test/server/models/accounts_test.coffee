@@ -38,7 +38,7 @@ describe 'Account Model', ->
         model.find {}, (err, result) ->
           result.length.should.equal 2
           done()
-
+  
   it 'Can update the name of an account', (done) ->
     model.findById id, (err, result) ->
       if err
@@ -55,3 +55,10 @@ describe 'Account Model', ->
       model.find {}, (err, result) ->
         result.length.should.equal 1
         done()
+
+  it 'Can have a host', (done) ->
+    model.create { host: 'toto'}, (err, result) ->
+      should.exist result
+      result.should.have.property('host','toto')
+      done()
+
