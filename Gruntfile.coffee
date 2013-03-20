@@ -127,6 +127,11 @@ module.exports = (grunt) ->
         options:
           keepalive: true
           configFile: 'bin/test/testacular.conf.js'
+      travis:
+        options:
+          keepalive: true
+          configFile: 'bin/test/testacular.conf.js'
+          browsers: [ 'PhantomJS' ]
 
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -137,8 +142,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-testacular'
 
+  grunt.registerTask 'build'
+  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp']
+
   grunt.registerTask 'default'
-  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp', 'mocha', 'testacular:unit']
+  , ['build', 'mocha', 'testacular:unit']
+
+  grunt.registerTask 'travis'
+  , ['build', 'mocha', 'testacular:travis' ]
 
   grunt.registerTask 'run'
   , [ 'default', 'watch']

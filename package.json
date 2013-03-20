@@ -4,7 +4,7 @@
   "version": "0.0.8",
   "main": "./server/index.coffee",
   "scripts": {
-    "test": "grunt"
+    "test": "grunt travis"
   },
   "dependencies": {
     "coffee-script": "~1.4.0",
