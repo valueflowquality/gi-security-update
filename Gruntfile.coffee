@@ -109,29 +109,28 @@ module.exports = (grunt) ->
         tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:test', 'mocha']
       unitTests:
         files: ['test/client/**/*.coffee']
-        tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:temp', 'clean:temp', 'copy:test', 'testacular:unit']
+        tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:temp', 'clean:temp', 'copy:test', 'karma:unit:run']
 
     mocha:
       all:
         expand: true
-        src: ['test/server/_helper.js', 'bin/test/server/**/*_test.js']
+        src: ['bin/test/server/**/*_test.js']
         options:
           globals: ['should']
           timeout: 3000
           ignoreLeaks: false
           ui: 'bdd'
           reporter: 'spec'
+          growl: true
 
-    testacular:
+    karma:
       unit:
-        options:
-          keepalive: true
-          configFile: 'bin/test/testacular.conf.js'
+        configFile: 'bin/test/karma.conf.js'
+        reporters: ['growl']
       travis:
-        options:
-          keepalive: true
-          configFile: 'bin/test/testacular.conf.js'
-          browsers: [ 'PhantomJS' ]
+        configFile: 'bin/test/karma.conf.js'
+        singleRun: true
+        browsers: [ 'PhantomJS' ]
 
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -140,16 +139,16 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-gint'
-  grunt.loadNpmTasks 'grunt-testacular'
+  grunt.loadNpmTasks 'grunt-karma'
 
   grunt.registerTask 'build'
   , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mocha', 'testacular:unit']
+  , ['build', 'mocha', 'karma:unit:run']
 
   grunt.registerTask 'travis'
-  , ['build', 'mocha', 'testacular:travis' ]
+  , ['build', 'mocha', 'karma:travis' ]
 
   grunt.registerTask 'run'
   , [ 'default', 'watch']
