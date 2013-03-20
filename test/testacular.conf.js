@@ -9,11 +9,13 @@ basePath = '';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
+  './libs/sinon-1.6.0.js',
   './libs/angular.js',
   './libs/angular-resource.js',
   './libs/angular-ui.js',
   './libs/angular-mocks.js',
   './libs/app.js',
+  '../client/js/controllers/role.js',
   './client/controllers/*.js'
 ];
 
