@@ -3,11 +3,13 @@ angular.module('app').controller 'roleController'
 , ($scope, Role, User) ->
 
   $scope.roles = []
-
-  $scope.newRole = Role.create()
-  
+ 
   User.query (results) ->
     $scope.users = results
+  
+  reset = () ->
+    $scope.newRole = Role.create()
+    $scope.getRoles()
 
   refreshRoleUsers = (role) ->
     $scope.roleUsers = []
@@ -15,16 +17,16 @@ angular.module('app').controller 'roleController'
       if role._id in user.roles
         $scope.roleUsers.push user
 
-  $scope.saveRole = (role) ->
-    console.log 'save role clicked'
+  $scope.saveRole = (role, callback) ->
     Role.save role, () ->
-      $scope.getRoles()
+      reset()
+      callback() if callback
 
   $scope.getRoles = () ->
     Role.query (roles) ->
       $scope.roles = roles
-      $scope.selectedRole = roles[0]?
-      $scope.show 'list'
+      if roles.length > 0
+        $scope.selectedRole = roles[0]
 
   $scope.selectRole = (role) ->
     $scope.selectedRole = role
@@ -38,6 +40,6 @@ angular.module('app').controller 'roleController'
     $scope.currentView = selector
   
   $scope.show 'list'
-  $scope.getRoles()
+  reset()
 
 ]

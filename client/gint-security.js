@@ -394,12 +394,15 @@ var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; 
 
 angular.module('app').controller('roleController', [
   '$scope', 'Role', 'User', function($scope, Role, User) {
-    var refreshRoleUsers;
+    var refreshRoleUsers, reset;
     $scope.roles = [];
-    $scope.newRole = Role.create();
     User.query(function(results) {
       return $scope.users = results;
     });
+    reset = function() {
+      $scope.newRole = Role.create();
+      return $scope.getRoles();
+    };
     refreshRoleUsers = function(role) {
       $scope.roleUsers = [];
       return angular.forEach($scope.users, function(user) {
@@ -409,17 +412,20 @@ angular.module('app').controller('roleController', [
         }
       });
     };
-    $scope.saveRole = function(role) {
-      console.log('save role clicked');
+    $scope.saveRole = function(role, callback) {
       return Role.save(role, function() {
-        return $scope.getRoles();
+        reset();
+        if (callback) {
+          return callback();
+        }
       });
     };
     $scope.getRoles = function() {
       return Role.query(function(roles) {
         $scope.roles = roles;
-        $scope.selectedRole = roles[0] != null;
-        return $scope.show('list');
+        if (roles.length > 0) {
+          return $scope.selectedRole = roles[0];
+        }
       });
     };
     $scope.selectRole = function(role) {
@@ -435,7 +441,7 @@ angular.module('app').controller('roleController', [
       return $scope.currentView = selector;
     };
     $scope.show('list');
-    return $scope.getRoles();
+    return reset();
   }
 ]);
 
