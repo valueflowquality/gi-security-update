@@ -51,9 +51,9 @@ module.exports = (grunt) ->
           bare: true
       tests:
         expand: true
-        cwd: 'test'
+        cwd: 'test/server'
         src: ['**/*.coffee']
-        dest: 'temp/test/'
+        dest: 'temp/test/server/'
         ext: '.js'
         options:
           bare: true
@@ -72,11 +72,6 @@ module.exports = (grunt) ->
         cwd: 'temp/'
         src: ['**', '!*.coffee']
         dest: 'bin'      
-      test:
-        expand: true
-        cwd: 'test'
-        src: ['*', 'libs/*']
-        dest: 'bin/test'     
 
     requirejs:
       scripts:
@@ -106,10 +101,10 @@ module.exports = (grunt) ->
         tasks: ['default']
       mochaTests:
         files: ['test/server/**/*.coffee']
-        tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:test', 'mocha']
+        tasks: ['coffeeLint:tests', 'coffee:tests', 'mocha']
       unitTests:
         files: ['test/client/**/*.coffee']
-        tasks: ['coffeeLint:tests', 'coffee:tests', 'copy:temp', 'clean:temp', 'copy:test', 'karma:unit:run']
+        tasks: ['coffeeLint:tests', 'karma:unit:run']
 
     mocha:
       all:
@@ -125,10 +120,10 @@ module.exports = (grunt) ->
 
     karma:
       unit:
-        configFile: 'bin/test/karma.conf.js'
+        configFile: 'test/karma.conf.js'
         reporters: ['growl']
       travis:
-        configFile: 'bin/test/karma.conf.js'
+        configFile: 'test/karma.conf.js'
         singleRun: true
         browsers: [ 'PhantomJS' ]
 

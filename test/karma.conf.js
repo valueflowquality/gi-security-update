@@ -2,27 +2,31 @@
 
 
 // base path, that will be used to resolve files and exclude
-basePath = '';
+basePath = '..';
 
 
 // list of files / patterns to load in the browser
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  './libs/sinon-1.6.0.js',
-  './libs/angular.js',
-  './libs/angular-resource.js',
-  './libs/angular-ui.js',
-  './libs/angular-mocks.js',
-  './libs/app.js',
-  '../client/js/controllers/role.js',
-  './client/controllers/*.js'
+  'test/libs/sinon-1.6.0.js',
+  'test/libs/angular.js',
+  'test/libs/angular-resource.js',
+  'test/libs/angular-ui.js',
+  'test/libs/angular-mocks.js',
+  'test/libs/app.js',
+  'client/controllers/role.coffee',
+  'test/client/controllers/*.coffee'
 ];
 
 // list of files to exclude
 exclude = [
 
 ];
+
+preprocessors = {
+  '**/*.coffee': 'coffee'
+};
 
 
 // test results reporter to use
