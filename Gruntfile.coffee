@@ -49,29 +49,6 @@ module.exports = (grunt) ->
         ext: '.js'
         options:
           bare: true
-      tests:
-        expand: true
-        cwd: 'test/server'
-        src: ['**/*.coffee']
-        dest: 'temp/test/server/'
-        ext: '.js'
-        options:
-          bare: true
-
-    copy:
-      server:
-        expand: true
-        cwd: 'server'
-        src: '**'
-        dest: 'temp/server/'
-      conf:
-        src: ['.npmignore', 'component.json', 'package.json', 'README.md']
-        dest: 'temp/'
-      temp:
-        expand: true
-        cwd: 'temp/'
-        src: ['**', '!*.coffee']
-        dest: 'bin'      
 
     requirejs:
       scripts:
@@ -90,7 +67,7 @@ module.exports = (grunt) ->
 
             return contents
           optimize: 'none'
-          out: './client/gint-security.js'
+          out: 'bin/gint-security.js'
           preserveLicenseComments: false
           skipModuleInsertion: true
           uglify:
@@ -101,15 +78,15 @@ module.exports = (grunt) ->
         tasks: ['default']
       mochaTests:
         files: ['test/server/**/*.coffee']
-        tasks: ['coffeeLint:tests', 'coffee:tests', 'mocha']
+        tasks: ['coffeeLint:tests', 'mocha']
       unitTests:
         files: ['test/client/**/*.coffee']
         tasks: ['coffeeLint:tests', 'karma:unit:run']
 
     mocha:
-      all:
+      unit:
         expand: true
-        src: ['bin/test/server/**/*_test.js']
+        src: ['test/server/**/*_test.coffee']
         options:
           globals: ['should']
           timeout: 3000
@@ -117,11 +94,19 @@ module.exports = (grunt) ->
           ui: 'bdd'
           reporter: 'spec'
           growl: true
+      travis:
+        expand: true
+        src: ['test/server/**/*_test.coffee']
+        options:
+          globals: ['should']
+          timeout: 3000
+          ignoreLeaks: false
+          reporter: 'dot'   
 
     karma:
       unit:
         configFile: 'test/karma.conf.js'
-        reporters: ['growl']
+        reporters: ['dots', 'growl']
       travis:
         configFile: 'test/karma.conf.js'
         singleRun: true
@@ -129,7 +114,6 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
-  grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-watch'
@@ -137,13 +121,13 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-karma'
 
   grunt.registerTask 'build'
-  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'copy', 'clean:temp']
+  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mocha', 'karma:unit:run']
+  , ['build', 'mocha:unit', 'karma:unit:run']
 
   grunt.registerTask 'travis'
-  , ['build', 'mocha', 'karma:travis' ]
+  , ['build', 'mocha:travis', 'karma:travis' ]
 
   grunt.registerTask 'run'
   , [ 'default', 'watch']
