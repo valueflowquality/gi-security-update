@@ -10,13 +10,17 @@ files = [
   JASMINE,
   JASMINE_ADAPTER,
   'test/libs/sinon-1.6.0.js',
+  'test/libs/jquery-1.8.3.js',
   'test/libs/angular.js',
   'test/libs/angular-resource.js',
   'test/libs/angular-ui.js',
   'test/libs/angular-mocks.js',
   'test/libs/app.js',
   'client/controllers/role.coffee',
-  'test/client/controllers/*.coffee'
+  'client/directives/*.coffee',
+  'client/services/*.coffee',
+  'client/views/*.html',
+  'test/client/**/*.coffee'
 ];
 
 // list of files to exclude
@@ -25,7 +29,8 @@ exclude = [
 ];
 
 preprocessors = {
-  '**/*.coffee': 'coffee'
+  '**/*.coffee': 'coffee',
+  '**/*.html': 'html2js'
 };
 
 

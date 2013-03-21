@@ -491,6 +491,12 @@ angular.module('app').directive('userform', [
         scope.showDeleteModal = false;
         scope.userRoles = [];
         scope.notUserRoles = [];
+        scope.unsavedChanges = false;
+        scope.$watch('user', function(newVal) {
+          if (newVal) {
+            return refreshUserRoles();
+          }
+        });
         refreshUserRoles = function() {
           scope.userRoles = [];
           scope.notUserRoles = [];
@@ -519,6 +525,7 @@ angular.module('app').directive('userform', [
           return scope.showDeleteModal = true;
         };
         scope.addToRole = function(role) {
+          scope.unsavedChanges = true;
           scope.user.roles.push(role._id);
           return refreshUserRoles();
         };
@@ -528,6 +535,12 @@ angular.module('app').directive('userform', [
               scope.user.roles.splice(index, 1);
               return refreshUserRoles();
             }
+          });
+        };
+        scope.save = function() {
+          scope.unsavedChanges = false;
+          return scope.submit({
+            user: scope.user
           });
         };
         return getRoles();

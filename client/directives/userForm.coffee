@@ -2,7 +2,7 @@ angular.module('app').directive 'userform'
 , ['Role'
 , (Role) ->
   restrict: 'E'
-  templateUrl: '/views/gint-security/user-form.html'
+  templateUrl: 'client/views/user-form.html'
   scope:
     user: '='
     submit: '&'
@@ -15,7 +15,13 @@ angular.module('app').directive 'userform'
     scope.showDeleteModal = false
     scope.userRoles = []
     scope.notUserRoles = []
+    scope.unsavedChanges = false
     
+
+    scope.$watch 'user', (newVal) ->
+      if newVal
+        refreshUserRoles()
+
     refreshUserRoles = () ->
       scope.userRoles = []
       scope.notUserRoles = []
@@ -38,6 +44,7 @@ angular.module('app').directive 'userform'
       scope.showDeleteModal = true
 
     scope.addToRole = (role) ->
+      scope.unsavedChanges = true
       scope.user.roles.push role._id
       refreshUserRoles()
 
@@ -46,6 +53,10 @@ angular.module('app').directive 'userform'
         if userRole is role._id
           scope.user.roles.splice index, 1
           refreshUserRoles()
+
+    scope.save = () ->
+      scope.unsavedChanges = false
+      scope.submit {user: scope.user}
 
     getRoles()
 ]
