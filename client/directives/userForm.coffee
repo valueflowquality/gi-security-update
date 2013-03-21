@@ -2,7 +2,7 @@ angular.module('app').directive 'userform'
 , ['Role'
 , (Role) ->
   restrict: 'E'
-  templateUrl: 'client/views/user-form.html'
+  templateUrl: '/views/user-form.html'
   scope:
     user: '='
     submit: '&'

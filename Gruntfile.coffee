@@ -50,6 +50,17 @@ module.exports = (grunt) ->
         options:
           bare: true
 
+    ngTemplateCache:
+      views:
+        files:
+          './temp/client/js/views.js': './client/views/*.html'
+        options:
+          trim: './client'
+    copy:
+      views:
+        src: 'temp/client/js/views.js'
+        dest: 'bin/views.js'
+
     requirejs:
       scripts:
         options:
@@ -74,8 +85,11 @@ module.exports = (grunt) ->
             no_mangle: false
     watch:
       dev:
-        files: ['client/**', 'server/**', ]
+        files: ['client/**', 'server/**']
         tasks: ['default']
+      html:
+        files: ['client/views/*.html']
+        tasks: ['ngTemplateCache', 'copy:views', 'karma:unit:run']
       mochaTests:
         files: ['test/server/**/*.coffee']
         tasks: ['coffeeLint:tests', 'mocha']
@@ -117,11 +131,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-karma'
 
   grunt.registerTask 'build'
-  , ['clean', 'coffeeLint', 'coffee', 'requirejs', 'clean:temp']
+  , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','requirejs', 'copy', 'clean:temp']
 
   grunt.registerTask 'default'
   , ['build', 'mocha:unit', 'karma:unit:run']

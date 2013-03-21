@@ -13,6 +13,7 @@ require
         'services/role'
       ]
   [
+    'views'
     'routes'
     'controllers/loginController'
     'controllers/logoutController'

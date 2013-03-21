@@ -3,10 +3,7 @@ describe 'userForm', () ->
   beforeEach module 'ngResource'
   beforeEach module 'ui'
   beforeEach module 'app'
-
-  #load the templates
-  beforeEach module 'client/views/user-form.html'
-  
+ 
   #Mock (/ override) the Role service that will be used by the directive
   beforeEach(module(($provide) ->
     $provide.factory('Role', () ->

@@ -19,7 +19,7 @@ files = [
   'client/controllers/role.coffee',
   'client/directives/*.coffee',
   'client/services/*.coffee',
-  'client/views/*.html',
+  'bin/views.js',
   'test/client/**/*.coffee'
 ];
 
@@ -29,8 +29,7 @@ exclude = [
 ];
 
 preprocessors = {
-  '**/*.coffee': 'coffee',
-  '**/*.html': 'html2js'
+  '**/*.coffee': 'coffee'
 };
 
 
