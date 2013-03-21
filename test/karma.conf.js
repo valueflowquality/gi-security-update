@@ -1,28 +1,36 @@
-// Testacular configuration
+// Karma configuration
 
 
 // base path, that will be used to resolve files and exclude
-basePath = '';
+basePath = '..';
 
 
 // list of files / patterns to load in the browser
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  './libs/sinon-1.6.0.js',
-  './libs/angular.js',
-  './libs/angular-resource.js',
-  './libs/angular-ui.js',
-  './libs/angular-mocks.js',
-  './libs/app.js',
-  '../client/js/controllers/role.js',
-  './client/controllers/*.js'
+  'test/libs/sinon-1.6.0.js',
+  'test/libs/jquery-1.8.3.js',
+  'test/libs/angular.js',
+  'test/libs/angular-resource.js',
+  'test/libs/angular-ui.js',
+  'test/libs/angular-mocks.js',
+  'test/libs/app.js',
+  'client/controllers/role.coffee',
+  'client/directives/*.coffee',
+  'client/services/*.coffee',
+  'bin/views.js',
+  'test/client/**/*.coffee'
 ];
 
 // list of files to exclude
 exclude = [
 
 ];
+
+preprocessors = {
+  '**/*.coffee': 'coffee'
+};
 
 
 // test results reporter to use
@@ -63,4 +71,4 @@ browsers = ['Chrome'];
 
 // Continuous Integration mode
 // if true, it capture browsers, run tests and exit
-singleRun = true;
+singleRun = false;
