@@ -4,10 +4,13 @@ module.exports = (mongoose) ->
 
   util = require 'util'
   crypto = require 'crypto'
+  bcrypt = require 'bcrypt'
+  SALT_WORK_FACTOR = 10
 
   userSchema = new Schema {firstName: 'String'
   , lastName: 'String'
   , email: 'String'
+  , password: 'String'
   , apiSecret: 'String'
   , userIds: [{ provider: 'String', providerId: 'String'}]
   , roles: [{type: ObjectId, ref: 'Role'}] }
@@ -30,6 +33,31 @@ module.exports = (mongoose) ->
         @api_secret = secret
         callback() if callback
 
+  userSchema.methods.comparePassword = (candidate, callback) ->
+    bcrypt.compare candidate, @password, (err, isMatch) ->
+      if err
+        return callback(err)
+      callback null, isMatch
+
+  userSchema.pre 'save', (next) ->
+    user = @
+
+    if (not user.password?) or (user.password is '')
+      @password = 'notSet'
+      return next()
+
+    if not @isModified('password')
+      return next()
+    bcrypt.genSalt SALT_WORK_FACTOR, (err, salt) ->
+      if err
+        return next(err)
+      bcrypt.hash user.password, salt, (err, hash) ->
+        if err
+          return next(err)
+
+        user.password = hash
+        next()
+
   mongoose.model 'Users', userSchema
 
   User = mongoose.model 'Users'
@@ -45,10 +73,11 @@ module.exports = (mongoose) ->
 
   create = (json, callback) ->
     obj = new User json
-    obj.save (err, user) ->
-      callback err, user
+    obj.save (err, json) ->
+      callback err, json
 
   update = (id, json, callback) ->
+    delete json.password
     User.findByIdAndUpdate(id, json, callback)
 
   destroy =  (id, callback) ->

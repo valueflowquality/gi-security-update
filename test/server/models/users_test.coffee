@@ -51,3 +51,23 @@ describe 'User Model', ->
       user.find {}, (err, result) ->
         result.length.should.equal 1
         done()
+
+  it 'Hashes password on creation', (done) ->
+    user.create { firstName: 'bob', password: 'aPassword' }, (err, result) ->
+      #Check we're doing some sort of hash
+      result.password.should.not.equal 'aPassword'
+      result.comparePassword 'aPassword', (err, isMatch) ->
+
+        isMatch.should.equal(true)
+        result.comparePassword 'aBadPassword', (err, isNotMatch) ->
+          isNotMatch.should.equal(false)
+
+          done()
+
+  it 'Sets password to notSet if not set', (done) ->
+    user.create { firstName: 'bob' }, (err, result) ->
+      result.password.should.equal 'notSet'
+      user.create { firstName: 'bob', password: "" }, (err, result) ->
+        result.password.should.equal 'notSet'
+        done()
+
