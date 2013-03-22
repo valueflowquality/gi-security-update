@@ -14,5 +14,9 @@ angular.module('app').controller 'loginController'
     .error (data, status) ->
       $timeout $scope.testLogin, 1000
 
+  $scope.login = () ->
+    $http.post '/api/login', $scope.cred
+
   $scope.testLogin()
+
 ]

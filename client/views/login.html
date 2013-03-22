@@ -1,4 +1,14 @@
 <div class="hero-unit">
-  <h3>Please Login Using one of the following</h3>
-  <a href="/auth/facebook" target="_blank"><img src="/img/login-with-facebook.png" width="154" height="22"></a>
+  <h3>Please Login</h3>
+  <div class="well form-inline">
+    <input type="text" ng-model="cred.username" class="input" placeholder="Email">
+    <input type="password" ng-model="cred.password" class="input-small" placeholder="Password">
+    <button ng-disabled="!cred.username || !cred.password" class="btn btn-primary" 
+                ng-click="login()">
+          Login
+    </button>
+  </div>
+  <div class="well form">
+    <a href="/auth/facebook" target="_blank"><img src="/img/login-with-facebook.png" width="154" height="22"></a> 
+  </div>
 </div>

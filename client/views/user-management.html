@@ -23,10 +23,10 @@
             </ul>
           </div>
           <div ng-show="currentView == 'list'" class="span6">
-            <userform user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(role)"></userform>
+            <userform user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></userform>
           </div>
           <div ng-show="currentView == 'form'" class="span6">
-            <userform title="New User" user="newUser" submit-text="Create User" submit="saveRole(role)"></userform>
+            <userform title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></userform>
           </div>
         </div>      
         <div ng-hide="selectedUser">
@@ -37,7 +37,7 @@
           </div>
           <div class="span6">
             <h4>Create New User</h4>
-            <userform title="New User" user="newUser" submit-text="Create User" submit="saveRole(role)"></userform>
+            <userform title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></userform>
           </div>
         </div>
       </div>
