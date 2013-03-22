@@ -9,6 +9,7 @@ module.exports = (app, models, options) ->
 
   FacebookStrategy = require('passport-facebook').Strategy
   HmacStrategy = require('./hmac').Strategy
+  LocalStrategy = require('./basic').Strategy
 
   FACEBOOK_APP_ID = options.FACEBOOK_APP_ID
   FACEBOOK_APP_SECRET =  options.FACEBOOK_APP_SECRET
@@ -32,8 +33,6 @@ module.exports = (app, models, options) ->
         if err
           res.json 500, {message: err}
         else if result
-          console.log 'result!'
-          console.log result
           req.accountId = result._id
           next()
         else
@@ -119,6 +118,22 @@ module.exports = (app, models, options) ->
         done null, user
   )
 
+  passport.use new LocalStrategy((email, password, done) ->
+    users.findOneBy 'email', email, (err, user) ->
+      if err
+        done null, false, {message: err}
+      else if not user
+        done null, false, {message: 'User not found'}
+      else
+        user.comparePassword password, (err, isValid) ->
+          if err
+            done err
+          else if not isValid
+            done null, false, {message: 'Incorrect password'}
+          else
+            done null, user
+  )
+
   # FACEBOOK authentication routes
   #   The first step in Facebook authentication will involve
   #   redirecting the user to facebook.com.  After authorization, Facebook will
@@ -137,8 +152,13 @@ module.exports = (app, models, options) ->
   , passport.authenticate('facebook', { failureRedirect: '/' })
   , facebookCallback
 
-  app.get     '/api/loginstatus', loginStatus
-  app.get     '/api/logout', logout
+  app.post '/api/login'
+  , passport.authenticate('basic')
+  , (req, res) ->
+    res.json 200
+
+  app.get   '/api/loginstatus', loginStatus
+  app.get   '/api/logout', logout
 
   publicAction: publicAction
   userAction: userAction
