@@ -12,7 +12,7 @@ module.exports = (app, auth, api) ->
   
   # sysAdminAction routes
   app.get     '/api/users',       auth.sysAdminAction,  api.user.index
-  app.post    '/api/users/',      auth.sysAdminAction,  api.user.create
+  app.post    '/api/users',       auth.sysAdminAction,  api.user.create
   app.get     '/api/users/:id',   auth.sysAdminAction,  api.user.show
   app.put     '/api/users/:id',   auth.sysAdminAction,  api.user.update
   app.delete  '/api/users/:id',   auth.sysAdminAction,  api.user.destroy

@@ -1,13 +1,21 @@
+gint = require 'gint-util'
+crypto = require 'crypto'
+bcrypt = require 'bcrypt'
+
 module.exports = (mongoose) ->
+  
+  name = 'User'
+
   Schema = mongoose.Schema
   ObjectId = Schema.Types.ObjectId
 
-  util = require 'util'
-  crypto = require 'crypto'
+
+  SALT_WORK_FACTOR = 10
 
   userSchema = new Schema {firstName: 'String'
   , lastName: 'String'
   , email: 'String'
+  , password: 'String'
   , apiSecret: 'String'
   , userIds: [{ provider: 'String', providerId: 'String'}]
   , roles: [{type: ObjectId, ref: 'Role'}] }
@@ -21,51 +29,48 @@ module.exports = (mongoose) ->
     @lastName = split[1]
 
   userSchema.methods.resetAPISecret = (callback) ->
-    console.log 'in reset api secret'
     generateAPISecret (err, secret) =>
-      console.log 'in generate callback ' + util.inspect(@)
       if err
         callback err
       else
         @api_secret = secret
         callback() if callback
 
-  mongoose.model 'Users', userSchema
+  userSchema.methods.comparePassword = (candidate, callback) ->
+    bcrypt.compare candidate, @password, (err, isMatch) ->
+      if err
+        return callback(err)
+      callback null, isMatch
 
-  User = mongoose.model 'Users'
+  userSchema.pre 'save', (next) ->
+    user = @
 
-  find = (options, callback) ->
-    max = options?.max or 10000
-    sort = options?.sort or {}
-    query = options?.query or {}
-    if max < 1
-      callback
-    else
-      User.find().sort(sort).limit(max).exec callback
+    if (not user.password?) or (user.password is '')
+      @password = 'notSet'
+      return next()
 
-  create = (json, callback) ->
-    obj = new User json
-    obj.save (err, user) ->
-      callback err, user
+    if not @isModified('password')
+      return next()
+    bcrypt.genSalt SALT_WORK_FACTOR, (err, salt) ->
+      if err
+        return next(err)
+      bcrypt.hash user.password, salt, (err, hash) ->
+        if err
+          return next(err)
+
+        user.password = hash
+        next()
+  
+  mongoose.model name, userSchema
+
+  crud = gint.models.crud mongoose.model(name)
 
   update = (id, json, callback) ->
-    User.findByIdAndUpdate(id, json, callback)
-
-  destroy =  (id, callback) ->
-    User.findOne { _id : id}, (err, user) ->
-      if err
-        callback err
-      else
-        user.remove (err) ->
-          callback err
-
-  findById = (id, callback) ->
-    User.findOne { _id : id}, (err, user) ->
-      callback err, user
+    delete json.password
+    crud.update(id, json, callback)
 
   findOneByProviderId = (id, callback) ->
-    User.findOne { 'userIds.providerId' : id }, (err, user) ->
-      callback err, user
+    crud.findOneBy 'userIds.providerId', id, callback
 
   findOrCreate = (json, callback) ->
     findOneByProviderId json.providerId, (err, user) ->
@@ -74,7 +79,7 @@ module.exports = (mongoose) ->
         callback err, user
       else
         console.log 'creating new user'
-        create json, (err, user) ->
+        crud.create json, (err, user) ->
           callback err, user
 
   generateAPISecret = (callback) ->
@@ -85,10 +90,11 @@ module.exports = (mongoose) ->
       console.log 'result: ' + result
       callback null, result
 
-  create: create
-  find: find
-  findOrCreate: findOrCreate
-  findById: findById
+  create: crud.create
+  find: crud.find
+  findOneBy: crud.findOneBy
+  findById: crud.findById
   findOneByProviderId: findOneByProviderId
+  findOrCreate: findOrCreate
   update: update
-  destroy: destroy
+  destroy: crud.destroy
