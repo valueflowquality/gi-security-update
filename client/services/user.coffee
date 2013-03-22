@@ -88,6 +88,7 @@ angular.module('app').factory 'User'
   factory = () ->
     firstName: ''
     lastName: ''
+    roles: []
 
   query: all
   all: all

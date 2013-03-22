@@ -180,7 +180,8 @@ angular.module('app').factory('User', [
     factory = function() {
       return {
         firstName: '',
-        lastName: ''
+        lastName: '',
+        roles: []
       };
     };
     return {
@@ -551,7 +552,6 @@ angular.module('app').directive('userform', [
           });
         };
         scope.save = function() {
-          console.log('into save we go');
           scope.unsavedChanges = false;
           return scope.submit({
             user: scope.user
