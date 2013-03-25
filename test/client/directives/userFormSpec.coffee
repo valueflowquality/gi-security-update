@@ -39,7 +39,6 @@ describe 'userForm', () ->
 
   it 'should call role service when save changes is clicked', () ->
     buttons = elm.find 'button'
-
     expect(spy.called).toBe(false)
-    buttons.eq(1).click()
+    buttons.eq(0).click()
     expect(spy.called).toBe(true)

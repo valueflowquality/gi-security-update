@@ -1,11 +1,37 @@
 <div class="well form">
   <h4>Profile</h4>
   <div class="control-group">
-    <label class="control-label" >Name:</label>
+    <label class="control-label" >First Name:</label>
     <div class="controls">
       <input type="text" name="name" ng-model="user.firstName"/>
     </div>
   </div>
+  <div class="control-group">
+    <label class="control-label" >Surname:</label>
+    <div class="controls">
+      <input type="text" name="name" ng-model="user.lastName"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" >Email:</label>
+    <div class="controls">
+      <input type="text" name="name" ng-model="user.email"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" >Password:</label>
+    <div class="controls">
+      <input type="password" name="name" ng-model="user.password"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-primary" ng-disabled="!unsavedChanges" ng-click="save()">{{submitText}}</button>
+    </div>
+  </div>
+</div>
+<div class="well form">
+  <h4>Roles</h4>
   <div class="control-group">
     <h4>Assigned Roles</h4>
     <div class="span12" ng-repeat="role in userRoles">
@@ -27,7 +53,7 @@
   </div>
   <div class="control-group">
     <div class="controls">
-      <button ng-show="unsavedChanges" class="btn btn-primary" 
+      <button ng-disabled="!unsavedChanges" class="btn btn-primary" 
               ng-click="save()">
         {{submitText}}
       </button>

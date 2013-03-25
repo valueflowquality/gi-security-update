@@ -1,5 +1,7 @@
 node_modules/
-bin/views.js
+bin/
+!bin/gint-security.js
+coverage/
 temp/
 npm-debug.log
 
