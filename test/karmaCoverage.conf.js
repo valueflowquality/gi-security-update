@@ -16,9 +16,9 @@ files = [
   'test/libs/angular-ui.js',
   'test/libs/angular-mocks.js',
   'test/libs/app.js',
-  'client/controllers/*.coffee',
-  'client/directives/*.coffee',
-  'client/services/*.coffee',
+  'bin/client/js/controllers/*.js',
+  'bin/client/js/directives/*.js',
+  'bin/client/js/services/*.js',
   'bin/client/js/views.js',
   'test/client/**/*.coffee'
 ];
@@ -29,7 +29,8 @@ exclude = [
 ];
 
 preprocessors = {
-  '**/*.coffee': 'coffee'
+  '**/*.coffee': 'coffee',
+  '**/client/js/**/*.js': 'coverage'
 };
 
 
@@ -39,11 +40,11 @@ reporters = 'dots';
 
 
 // web server port
-port = 8080;
+port = 8083;
 
 
 // cli runner port
-runnerPort = 9100;
+runnerPort = 9103;
 
 
 // enable / disable colors in the output (reporters and logs)

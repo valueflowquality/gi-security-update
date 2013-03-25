@@ -8,6 +8,8 @@ module.exports = (grunt) ->
         src: ['bin']
       temp:
         src: ['temp']
+      bin:
+        src: ['bin/client']
 
     coffeeLint: 
       scripts:
@@ -57,9 +59,11 @@ module.exports = (grunt) ->
         options:
           trim: './client'
     copy:
-      views:
-        src: 'temp/client/js/views.js'
-        dest: 'bin/views.js'
+      dev:
+        expand: true
+        cwd: 'temp/'
+        src: ['**']
+        dest: 'bin'
 
     requirejs:
       scripts:
@@ -125,6 +129,11 @@ module.exports = (grunt) ->
         configFile: 'test/karma.conf.js'
         singleRun: true
         browsers: [ 'PhantomJS' ]
+      coverage:
+        configFile: 'test/karmaCoverage.conf.js'
+        singleRun: true
+        browsers: [ 'Chrome' ]
+        reporters: ['dots', 'coverage']
 
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -139,10 +148,16 @@ module.exports = (grunt) ->
   , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','requirejs', 'copy', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mocha:unit', 'karma:unit:run']
+  , ['build', 'mocha:unit', 'karma:unit:run', 'clean:bin']
 
   grunt.registerTask 'travis'
   , ['build', 'mocha:travis', 'karma:travis' ]
 
+  grunt.registerTask 'coverage'
+  , ['build', 'karma:coverage', 'clean:bin']
+
+  grunt.registerTask 'ciserver'
+  , ['build', 'karma:unit']
+
   grunt.registerTask 'run'
-  , [ 'default', 'watch']
+  , [ 'build', 'watch']

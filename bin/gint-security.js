@@ -10,8 +10,6 @@ angular.module('app').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('/views/user.html', '<label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label> <label name="userId">Id: {{user._id}}</label> <label name="apiSecret">API Secret: {{user.apiSecret}}</label> <button class="btn btn-primary" ng-click="resetApi()">Create API Secret</button>');
 }]);
 
-console.log('test routes3');
-
 angular.module('app').config([
   '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     return $routeProvider.when('/login', {
