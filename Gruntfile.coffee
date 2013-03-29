@@ -122,6 +122,10 @@ module.exports = (grunt) ->
           reporter: 'dot'   
 
     karma:
+      singleUnit:
+        configFile: 'test/karma.conf.js'
+        reporters: ['dots', 'growl']
+        singleRun: true        
       unit:
         configFile: 'test/karma.conf.js'
         reporters: ['dots', 'growl']
@@ -148,7 +152,7 @@ module.exports = (grunt) ->
   , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','requirejs', 'copy', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mocha:unit', 'karma:unit:run', 'clean:bin']
+  , ['build', 'mocha:unit', 'karma:singleUnit', 'clean:bin']
 
   grunt.registerTask 'travis'
   , ['build', 'mocha:travis', 'karma:travis' ]
