@@ -7,4 +7,15 @@ module.exports = (app, mongoose, options) ->
   
   require('./routes')(app, auth, controllers)
 
+  app.configure 'test', ->
+    console.log 'injecting test dummy admin user'
+    dummyAdmin = 
+      email: 'dummyadmin@test.com'
+      firstName: 'Dummy'
+      lastName: 'Admin'
+      password: 'password'
+
+    models.users.create dummyAdmin, (err, result) ->
+      {}
+
   auth
