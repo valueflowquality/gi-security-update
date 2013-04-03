@@ -93,13 +93,13 @@ module.exports = (grunt) ->
         tasks: ['default']
       html:
         files: ['client/views/*.html']
-        tasks: ['ngTemplateCache', 'copy:views', 'karma:unit:run']
+        tasks: ['ngTemplateCache', 'copy:views', 'karma:singleUnit']
       mochaTests:
         files: ['test/server/**/*.coffee']
         tasks: ['coffeeLint:tests', 'mocha:unit']
       unitTests:
         files: ['test/client/**/*.coffee']
-        tasks: ['coffeeLint:tests', 'karma:unit:run']
+        tasks: ['coffeeLint:tests', 'karma:singleUnit']
 
     mocha:
       unit:

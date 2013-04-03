@@ -32,38 +32,6 @@ angular.module('app').config([
 ]);
 
 
-angular.module('app').controller('loginController', [
-  '$rootScope', '$scope', '$http', '$timeout', 'authService', function($rootScope, $scope, $http, $timeout, authService) {
-    $scope.testLogin = function() {
-      return $http.get('/api/loginstatus').success(function(data, status) {
-        if (data.loggedIn) {
-          $scope.getLoggedInUser();
-          return authService.loginConfirmed();
-        } else {
-          return $timeout($scope.testLogin, 1000);
-        }
-      }).error(function(data, status) {
-        return $timeout($scope.testLogin, 1000);
-      });
-    };
-    $scope.login = function() {
-      return $http.post('/api/login', $scope.cred);
-    };
-    return $scope.testLogin();
-  }
-]);
-
-
-angular.module('app').controller('logoutController', [
-  '$rootScope', '$scope', '$http', '$timeout', 'authService', function($rootScope, $scope, $http, $timeout, authService) {
-    return $http.get('/api/logout').success(function() {
-      $rootScope.me = {};
-      return $rootScope.loggedIn = false;
-    });
-  }
-]);
-
-
 angular.module('app').factory('User', [
   '$resource', function($resource) {
     var all, destroy, factory, get, getByIdSync, items, itemsById, methods, resource, save, updateMasterList;
@@ -191,6 +159,57 @@ angular.module('app').factory('User', [
       destroy: destroy,
       save: save
     };
+  }
+]);
+
+
+angular.module('app').filter('userName', [
+  'User', function(User) {
+    return function(id) {
+      var result, user;
+      result = 'Missing User Id';
+      if (id) {
+        user = User.getSync(id);
+        if (user) {
+          result = user.firstName;
+        } else {
+          result = id;
+        }
+      }
+      return result;
+    };
+  }
+]);
+
+
+angular.module('app').controller('loginController', [
+  '$rootScope', '$scope', '$http', '$timeout', 'authService', function($rootScope, $scope, $http, $timeout, authService) {
+    $scope.testLogin = function() {
+      return $http.get('/api/loginstatus').success(function(data, status) {
+        if (data.loggedIn) {
+          $scope.getLoggedInUser();
+          return authService.loginConfirmed();
+        } else {
+          return $timeout($scope.testLogin, 1000);
+        }
+      }).error(function(data, status) {
+        return $timeout($scope.testLogin, 1000);
+      });
+    };
+    $scope.login = function() {
+      return $http.post('/api/login', $scope.cred);
+    };
+    return $scope.testLogin();
+  }
+]);
+
+
+angular.module('app').controller('logoutController', [
+  '$rootScope', '$scope', '$http', '$timeout', 'authService', function($rootScope, $scope, $http, $timeout, authService) {
+    return $http.get('/api/logout').success(function() {
+      $rootScope.me = {};
+      return $rootScope.loggedIn = false;
+    });
   }
 ]);
 

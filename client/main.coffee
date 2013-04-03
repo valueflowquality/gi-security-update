@@ -12,9 +12,14 @@ require
       deps: [
         'services/role'
       ]
+    'filters/userName':
+      deps: [
+        'services/user'
+      ]
   [
     'views'
     'routes'
+    'filters/userName'
     'controllers/loginController'
     'controllers/logoutController'
     'controllers/userController'

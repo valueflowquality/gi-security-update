@@ -19,6 +19,7 @@ files = [
   'client/controllers/*.coffee',
   'client/directives/*.coffee',
   'client/services/*.coffee',
+  'client/filters/*.coffee',
   'bin/client/js/views.js',
   'test/client/**/*.coffee'
 ];
