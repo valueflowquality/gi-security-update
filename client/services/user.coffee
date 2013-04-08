@@ -48,23 +48,18 @@ angular.module('app').factory 'User'
 
   save = (item, success) ->
     if item._id
-      console.log 'updating user'
       #we are updating
       resource.save {id: item._id}, item, (result) ->
         updateMasterList result
         success() if success
 
     else
-      console.log 'creating user'
       #we are createing a new object on the server
       resource.create {}, item, (result) ->
-        console.log 'got a result ' + result
         updateMasterList result
         success() if success
   
   getByIdSync = (id) ->
-    console.log 'lookin for ' + id
-    console.log itemsById
     itemsById[id]
 
   get = (params, callback) ->

@@ -47,7 +47,6 @@ module.exports = (app, models, options) ->
   userAction = (req, res, next) ->
     accountCheck req, res, () ->
       if req.isAuthenticated()
-        console.log 'user is authenticated via session cookie'
         next()
       else
         #the user was not authenticated via cookies, try hmac

@@ -90,7 +90,6 @@ angular.module('app').factory('User', [
     };
     save = function(item, success) {
       if (item._id) {
-        console.log('updating user');
         return resource.save({
           id: item._id
         }, item, function(result) {
@@ -100,9 +99,7 @@ angular.module('app').factory('User', [
           }
         });
       } else {
-        console.log('creating user');
         return resource.create({}, item, function(result) {
-          console.log('got a result ' + result);
           updateMasterList(result);
           if (success) {
             return success();
@@ -111,8 +108,6 @@ angular.module('app').factory('User', [
       }
     };
     getByIdSync = function(id) {
-      console.log('lookin for ' + id);
-      console.log(itemsById);
       return itemsById[id];
     };
     get = function(params, callback) {
