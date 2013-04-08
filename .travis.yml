@@ -2,7 +2,7 @@ language: node_js
 node_js: "0.8"
 services: mongodb
 before_script:
-  - npm install -g grunt-cli
+  - npm install -g grunt-cli --silent
 before_install:
   - secret=`openssl rsautl -decrypt -inkey ~/.ssh/id_rsa -in conf/secret`
   - openssl aes-256-cbc -k $secret -in conf/id_private.enc -d -a -out id_private
