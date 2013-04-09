@@ -25,18 +25,17 @@ exports.findById = (id, callback) ->
     if id is '111111111111111111111111'
       callback null, null
     else if id is 'validId'
-      callback null, { _id: id}
+      callback null, { _id: id, password: 'aHashedPassword'}
     else
       callback 'invalid id'
   else
     callback 'no id'
 
 exports.find = (options, callback) ->
-  should.exist options.limit
-  options.limit.should.be.above -1
   result = []
-  if options.limit >0
-    result = ({some: 'toto'} for h in [1..options.limit])
+  if options.max >0
+    result = ({some: 'toto'
+    , password: 'aHashedPassword'} for h in [1..options.max])
   if options.limit is 666
     callback 'The Devil'
   else

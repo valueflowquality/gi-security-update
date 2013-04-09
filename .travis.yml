@@ -10,4 +10,4 @@ before_install:
   - chmod 600 id_private
   - ssh-add ./id_private
 install:
-  - npm install --silent
+  - npm install --quiet

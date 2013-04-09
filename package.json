@@ -12,8 +12,9 @@
     "passport-facebook": "~0.1.4",
     "moment": "~1.7.2",
     "mongoose": "~3.5.5",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.9",
-    "bcrypt": "~0.7.5"
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.11",
+    "bcrypt": "~0.7.5",
+    "underscore": "~1.4.4"
   },
   "devDependencies": {
     "grunt": "0.4.0rc7",

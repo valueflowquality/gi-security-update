@@ -1,6 +1,6 @@
 should = require 'should'
 mongoose = require 'mongoose'
-
+_ = require 'underscore'
 models = require './models'
 
 dropUsersCollection = () ->
@@ -70,4 +70,3 @@ describe 'User Model', ->
       user.create { firstName: 'bob', password: "" }, (err, result) ->
         result.password.should.equal 'notSet'
         done()
-

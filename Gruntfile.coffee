@@ -104,7 +104,7 @@ module.exports = (grunt) ->
     mocha:
       unit:
         expand: true
-        src: ['test/server/**/*_test.coffee']
+        src: ['test/server/**/*Spec.coffee']
         options:
           globals: ['should']
           timeout: 3000
@@ -114,7 +114,7 @@ module.exports = (grunt) ->
           growl: true
       travis:
         expand: true
-        src: ['test/server/**/*_test.coffee']
+        src: ['test/server/**/*Spec.coffee']
         options:
           globals: ['should']
           timeout: 3000

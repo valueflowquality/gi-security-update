@@ -1,4 +1,5 @@
 gint = require 'gint-util'
+_ = require 'underscore'
 
 module.exports = (model) ->
   crud = gint.controllers.crud(model)
@@ -8,6 +9,8 @@ module.exports = (model) ->
       if err
         res.json 404
       else
+        user.password = null
+        delete user.password
         res.json 200, user
   updateMe = (req, res) ->
     #first check that the user we want to update is the user
@@ -15,10 +18,12 @@ module.exports = (model) ->
     if req.user.id is not req.body._id
       res.json 401
     else
-      model.update req.body, (err, user) ->
+      model.update req.user.id, req.body, (err, user) ->
         if err
           res.json 404
         else
+          user.password = null
+          delete user.password
           res.json 200, user
 
   destroyMe = (req, res) ->
@@ -28,39 +33,54 @@ module.exports = (model) ->
       else
         res.json 200
 
-  resetapi = (req, res) ->
-    model.findById req.user.id, (err, user) ->
+  index = (req, res) ->
+    crud.index req, res, (err, result) ->
       if err
-        res.json 500, err
-      else if not user
-        res.json 404
+        res.json 404, err
       else
-        user.resetAPISecret (err2) ->
-          if err2
-            res.json 500, err2
-          else
-            console.log 'about to save user'
-            user.save (err3, result) ->
-              if err3
-                res.json 500, err3
-              else
-                res.json 200, result
+        _.each result, (u) ->
+          u.password = null
+          delete u.password
+        res.json 200, result
 
-  updateMe = (req, res) ->
-    #first check that the user we want to update is the user
-    #making the request
-    console.log req.query.resetApi
-    if req.query.resetApi
-      resetapi req, res
-    else
-      res.json 500, 'update not implemented'
-  
-  create: crud.create
-  update: crud.update
+  findById = (req, res) ->
+    crud.show req, res, (err, result) ->
+      if err
+        res.json 404, err
+      else if result
+        result.password = null
+        delete result.password
+        res.json 200, result
+      else
+        res.json 404
+
+  create = (req, res) ->
+    crud.create req, res, (err, result) ->
+      if err
+        res.json 404, err
+      else if result
+        result.password = null
+        delete result.password
+        res.json 200, result
+      else
+        res.json 404
+  update = (req, res) ->
+    crud.update req, res, (err, result) ->
+      if err
+        res.json 404, err
+      else if result
+        result.password = null
+        delete result.password
+        res.json 200, result
+      else
+        res.json 404
+
+  create: create
+  update: update
   destroy: crud.destroy
   showMe: showMe
   updateMe: updateMe
   destroyMe: destroyMe
-  index: crud.index
+  index: index
   destroy: crud.destroy
-  show: crud.show
+  show: findById
