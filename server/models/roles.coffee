@@ -10,10 +10,6 @@ module.exports = (mongoose) ->
 
   mongoose.model name, roleSchema
 
-  crud = gint.models.crud mongoose.model(name)
-
-  create: crud.create
-  update: crud.update
-  destroy: crud.destroy
-  show: crud.show
-  find: crud.find
+  exports = gint.models.crud mongoose.model(name)
+  exports.name = name
+  exports

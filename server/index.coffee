@@ -12,10 +12,10 @@ module.exports = (app, mongoose, options) ->
   app.configure 'test', ->
 
     resetTestDb = (callback) ->
-      console.log 'dropping test accounts'    
+      console.log 'dropping test accounts'
       mongoose.connection.collections['accounts']?.drop () ->
         console.log 'injecting test account'
-        dummyAccount = 
+        dummyAccount =
           name: 'Acme'
           host: 'localhost'
         
@@ -25,13 +25,13 @@ module.exports = (app, mongoose, options) ->
       console.log 'dropping test users'
       mongoose.connection.collections['users']?.drop () ->
         console.log 'injecting test dummy admin user'
-        dummyAdmin = 
+        dummyAdmin =
           email: 'dummyadmin@test.com'
           firstName: 'Dummy'
           lastName: 'Admin'
           password: 'password'
 
-        alice = 
+        alice =
           email: 'alice@test.com'
           firstName: 'Alice'
           lastName: 'Alison'

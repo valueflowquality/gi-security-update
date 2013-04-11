@@ -17,7 +17,7 @@ describe 'Account Model', ->
     model.name.should.equal 'Account'
     done()
 
-  it 'Set account name', (done) ->
+  it 'Can have a name', (done) ->
     model.create { name: 'toto' }, (err, result) ->
       should.exist result
       result.should.have.property('_id')
