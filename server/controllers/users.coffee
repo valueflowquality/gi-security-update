@@ -34,46 +34,29 @@ module.exports = (model) ->
         res.json 200
 
   index = (req, res) ->
-    crud.index req, res, (err, result) ->
-      if err
-        res.json 404, err
-      else
-        _.each result, (u) ->
-          u.password = null
-          delete u.password
-        res.json 200, result
+    crud.index req, res, () ->
+      _.each res.gintResult, (u) ->
+        u.password = null
+        delete u.password
+      res.json 200, res.gintResult
 
   findById = (req, res) ->
-    crud.show req, res, (err, result) ->
-      if err
-        res.json 404, err
-      else if result
-        result.password = null
-        delete result.password
-        res.json 200, result
-      else
-        res.json 404
+    crud.show req, res, () ->
+      res.gintResult.password = null
+      delete res.gintResult.password
+      res.json 200, res.gintResult
 
   create = (req, res) ->
-    crud.create req, res, (err, result) ->
-      if err
-        res.json 404, err
-      else if result
-        result.password = null
-        delete result.password
-        res.json 200, result
-      else
-        res.json 404
+    crud.create req, res, () ->
+      res.gintResult.password = null
+      delete res.gintResult.password
+      res.json 200, res.gintResult
+
   update = (req, res) ->
-    crud.update req, res, (err, result) ->
-      if err
-        res.json 404, err
-      else if result
-        result.password = null
-        delete result.password
-        res.json 200, result
-      else
-        res.json 404
+    crud.update req, res, () ->
+      res.gintResult.password = null
+      delete res.gintResult.password
+      res.json 200, res.gintResult
 
   create: create
   update: update

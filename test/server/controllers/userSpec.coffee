@@ -89,7 +89,7 @@ describe 'User Controller', ->
       controller.showMe req, res
   describe 'UpdateMe', ->
     it 'Does not transmit passwords', (done) ->
-      req = 
+      req =
         user:
           id: '123'
         body:
