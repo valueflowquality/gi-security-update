@@ -37,27 +37,29 @@ module.exports = (mongoose) ->
         callback() if callback
 
   userSchema.methods.comparePassword = (candidate, callback) ->
-    bcrypt.compare candidate, @password, (err, isMatch) ->
-      if err
-        return callback(err)
-      callback null, isMatch
+    if candidate?
+      if @password?
+        bcrypt.compare candidate, @password, (err, isMatch) ->
+          if err
+            return callback(err)
+          callback null, isMatch
+      else
+        callback 'password authentication is not enabled for this user', false
+    else
+      callback 'password does not meet minimum requirements', false
 
   userSchema.pre 'save', (next) ->
     user = @
 
-    if (not user.password?) or (user.password is '')
-      @password = 'notSet'
-      return next()
-
     if not @isModified('password')
       return next()
+
     bcrypt.genSalt SALT_WORK_FACTOR, (err, salt) ->
       if err
         return next(err)
       bcrypt.hash user.password, salt, (err, hash) ->
         if err
           return next(err)
-
         user.password = hash
         next()
   
@@ -66,8 +68,22 @@ module.exports = (mongoose) ->
   crud = gint.models.crud mongoose.model(name)
 
   update = (id, json, callback) ->
-    delete json.password
-    crud.update(id, json, callback)
+    crud.findById id, (err, user) ->
+      if err
+        callback err, null
+      else
+        if user
+          #call save in case the password has changed
+          if json.password
+            user.password = json.password
+            user.save (err, savedUser) ->
+              if savedUser and savedUser.password
+                json.password = savedUser.password
+              crud.update id, json, callback
+          else
+            crud.update id, json, callback
+        else
+          callback 'user not found', null
 
   findOneByProviderId = (id, callback) ->
     crud.findOneBy 'userIds.providerId', id, callback
@@ -75,10 +91,8 @@ module.exports = (mongoose) ->
   findOrCreate = (json, callback) ->
     findOneByProviderId json.providerId, (err, user) ->
       if user
-        console.log 'found user by provider id'
         callback err, user
       else
-        console.log 'creating new user'
         crud.create json, (err, user) ->
           callback err, user
 
@@ -87,7 +101,6 @@ module.exports = (mongoose) ->
     crypto.randomBytes 18, (err, buf) ->
       callback err if err
       result = buf.toString 'base64'
-      console.log 'result: ' + result
       callback null, result
 
   create: crud.create
