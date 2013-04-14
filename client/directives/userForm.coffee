@@ -20,6 +20,7 @@ angular.module('app').directive 'userform'
 
     scope.$watch 'user', (newVal) ->
       if newVal
+        scope.unsavedChanges = false
         refreshUserRoles()
 
     refreshUserRoles = () ->
@@ -35,6 +36,9 @@ angular.module('app').directive 'userform'
       Role.all (roles) ->
         scope.roles = roles
         refreshUserRoles()
+
+    scope.checkForChanges = () ->
+      scope.unsavedChanges = true
 
     scope.deleteUser = ->
       scope.destroy {user: scope.user}
