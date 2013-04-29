@@ -44,3 +44,5 @@ module.exports = (app, mongoose, options) ->
 
   auth: auth
   resetTestDb: resetTestDb
+  models: models
+  controllers: controllers
