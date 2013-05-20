@@ -10,3 +10,4 @@ module.exports = (app, auth, api) ->
   rest.routeResource 'role',      app, auth.userAction, api.role
   # sysAdminAction routes
   rest.routeResource 'users',     app, auth.userAction, api.user
+  rest.routeResource 'settings',  app, auth.publicAction, api.setting

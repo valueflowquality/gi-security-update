@@ -16,7 +16,14 @@ require
       deps: [
         'services/user'
       ]
+    'controllers/loginController':
+      deps: [
+        'services/facebook'
+        'services/setting'
+      ]
+    'services/facebook': deps: ['libs/facebook']
   [
+    'libs/facebook'
     'views'
     'routes'
     'filters/userName'
@@ -27,5 +34,7 @@ require
     'controllers/role'
     'directives/roleForm'
     'directives/userForm'
+    'services/facebook'
+    'services/setting'
   ], () ->
     console.log 'gint-security loaded'
