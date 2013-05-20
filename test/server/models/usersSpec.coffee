@@ -7,14 +7,13 @@ dropUsersCollection = () ->
   mongoose.connection.collections['users']?.drop()
 
 describe 'User Model', ->
-  user = models.users
-  id = ''
+  model = models.users
   before (done) ->
     dropUsersCollection()
     done()
 
   it 'Set user firstName', (done) ->
-    user.create { firstName: 'toto' }, (err, result) ->
+    model.create { firstName: 'toto' }, (err, result) ->
       should.exist result
       result.should.have.property('_id')
       result.should.have.property('firstName', 'toto')
@@ -22,36 +21,38 @@ describe 'User Model', ->
       done()
 
   it 'Can find users by Id', (done) ->
-    user.findById id, (err, result) ->
-      should.exist result
-      result.should.have.property('firstName', 'toto')
-      done()
+    model.create {}, (e, res) ->
+      model.findById res._id, (err, result) ->
+        should.exist result
+        done()
 
   it 'Can find multiple users', (done) ->
-    user.find {}, (err, result) ->
-      result.length.should.equal 1
-      user.create { firstName: 'bob' }, (err, result) ->
-        user.find {}, (err, result) ->
-          result.length.should.equal 2
+    model.find {}, (err, result) ->
+      temp = result.length
+      model.create { firstName: 'bob' }, (err, result) ->
+        model.find {}, (err, result) ->
+          result.length.should.equal temp + 1
           done()
 
   it 'Can update the first name of an user', (done) ->
-    user.findById id, (err, result) ->
-      should.not.exist err
-      result.firstName = 'barry'
-      user.update id, {firstName: 'barry'}, (err, result) ->
+    model.create {}, (e, res) ->
+      model.findById res._id, (err, result) ->
         should.not.exist err
-        result.should.have.property('firstName', 'barry')
-        done()
+        result.firstName = 'barry'
+        model.update res._id, {firstName: 'barry'}, (err, result) ->
+          should.not.exist err
+          result.should.have.property('firstName', 'barry')
+          done()
 
-  it 'Can delete users', (done) ->
-    user.destroy id, (err, result) ->
-      user.find {}, (err, result) ->
-        result.length.should.equal 1
-        done()
+  it 'Can be deleted', (done) ->
+    model.create {}, (err, res) ->
+      model.destroy res._id, (err, result) ->
+        model.findById res._id, (err, result) ->
+          should.not.exist result
+          done()
 
   it 'Hashes password on creation', (done) ->
-    user.create { firstName: 'bob', password: 'aPassword' }, (err, result) ->
+    model.create { firstName: 'bob', password: 'aPassword' }, (err, result) ->
       #Check we're doing some sort of hash
       result.password.should.not.equal 'aPassword'
       result.comparePassword 'aPassword', (err, isMatch) ->
@@ -62,7 +63,7 @@ describe 'User Model', ->
           done()
 
   it 'Does not allow logins with blank passwords', (done) ->
-    user.create { firstName: 'bob' }, (err, result) ->
+    model.create { firstName: 'bob' }, (err, result) ->
       result.comparePassword '', (err, isMatch) ->
         isMatch.should.be.false
         result.comparePassword undefined, (err, isMatch2) ->
@@ -72,10 +73,10 @@ describe 'User Model', ->
             done()
 
   it 'Can update a password', (done) ->
-    user.create { firstName: 'bob', password: 'aPassword'}, (err, result) ->
+    model.create { firstName: 'bob', password: 'aPassword'}, (err, result) ->
       result.comparePassword 'aPassword', (err, isMatch) ->
         isMatch.should.be.true
-        user.update result._id
+        model.update result._id
         , {firstName: 'bob', password: 'anotherPassword'}
         , (err, updatedUser) ->
           updatedUser.comparePassword 'anotherPassword', (err, updateMatch) ->

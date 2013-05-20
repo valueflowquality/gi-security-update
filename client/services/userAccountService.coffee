@@ -1,6 +1,6 @@
 angular.module('app').factory 'UserAccount',
-['$resource', '$rootScope', '$http'
-, ($resource, $rootScope, $http) ->
+['$resource', '$rootScope', '$http', '$q'
+, ($resource, $rootScope, $http, $q) ->
   methods =
     query:
       method: 'GET'
@@ -13,13 +13,15 @@ angular.module('app').factory 'UserAccount',
 
   resource = $resource '/api/user', {}, methods
 
-  getMe = (callback) ->
-    if $rootScope.me?
-      callback($rootScope.me)
+  getMe = () ->
+    deferred = $q.defer()
+    if $rootScope.me? and $rootScope.me._id?
+      deferred.resolve $rootScope.me
     else
       $http.get('/api/user')
         .success (user) ->
-          callback(user) if callback
+          deferred.resolve user
+    deferred.promise
 
   get: resource.get
   getMe: getMe

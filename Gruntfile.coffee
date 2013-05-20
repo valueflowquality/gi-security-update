@@ -64,6 +64,11 @@ module.exports = (grunt) ->
         cwd: 'temp/'
         src: ['**']
         dest: 'bin'
+      libs:
+        cwd: 'client'
+        expand: true
+        src: 'libs/*'
+        dest: 'temp/client/js'
 
     requirejs:
       scripts:
@@ -91,9 +96,6 @@ module.exports = (grunt) ->
       dev:
         files: ['client/**', 'server/**']
         tasks: ['default']
-      html:
-        files: ['client/views/*.html']
-        tasks: ['ngTemplateCache', 'copy:views', 'karma:singleUnit']
       mochaTests:
         files: ['test/server/**/*.coffee']
         tasks: ['coffeeLint:tests', 'mocha:unit']
@@ -149,7 +151,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-karma'
 
   grunt.registerTask 'build'
-  , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','requirejs', 'copy', 'clean:temp']
+  , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','copy:libs'
+  , 'requirejs', 'copy:dev', 'clean:temp']
 
   grunt.registerTask 'default'
   , ['build', 'mocha:unit', 'karma:singleUnit', 'clean:bin']

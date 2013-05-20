@@ -2,12 +2,13 @@ util = require 'util'
 path = require 'path'
 passport = require 'passport'
 dir = path.normalize __dirname + "/views"
+http = require 'http'
 
 module.exports = (app, models, options) ->
   users = models.users
   accounts = models.accounts
 
-  FacebookStrategy = require('passport-facebook').Strategy
+  FacebookStrategy = require('./facebook').Strategy
   HmacStrategy = require('./hmac').Strategy
   LocalStrategy = require('./basic').Strategy
 
@@ -25,7 +26,6 @@ module.exports = (app, models, options) ->
       else
         done null, user
 
-
   accountCheck = (req, res, next) ->
     #find account by host
     if req.host
@@ -39,7 +39,6 @@ module.exports = (app, models, options) ->
           res.json 404, {message: 'host account not found'}
     else
       res.json 500, {message: 'host not found on request object'}
-
 
   publicAction = (req, res, next) ->
     accountCheck req, res, next
@@ -74,12 +73,6 @@ module.exports = (app, models, options) ->
       #TODO: check roles
       next()
 
-  facebookCallback = (req, res) ->
-    res.sendfile dir + '/success.html'
-
-  emptyAction = (req, res) ->
-    {}
-
   loginStatus = (req, res) ->
     if req.isAuthenticated()
       res.json 200, { loggedIn: true }
@@ -89,20 +82,6 @@ module.exports = (app, models, options) ->
   logout = (req, res) ->
     req.logout()
     res.send 200
-
-  passport.use new FacebookStrategy(
-    { clientID: FACEBOOK_APP_ID
-    , clientSecret: FACEBOOK_APP_SECRET
-    , callbackURL: DOMAIN_URI + "/auth/facebook/callback"}
-    , (accessToken, refreshToken, profile, done) ->
-      # asynchronous verification, for effect...
-      process.nextTick () ->
-        users.findOrCreate { name: profile.displayName
-        , providerId : profile.id
-        , userIds: [{provider: 'Facebook', providerId: profile.id}] }
-        , (err, user) ->
-          done(err, user)
-  )
 
   passport.use new HmacStrategy((accessKey, done) ->
     # if there is an error , we should return:    #   done(err)
@@ -133,26 +112,45 @@ module.exports = (app, models, options) ->
             done null, user
   )
 
-  # FACEBOOK authentication routes
-  #   The first step in Facebook authentication will involve
-  #   redirecting the user to facebook.com.  After authorization, Facebook will
-  #   redirect the user back to this application at /auth/facebook/callback
-  #
+  facebookOptions =
+    clientID: FACEBOOK_APP_ID
+    clientSecret: FACEBOOK_APP_SECRET
+    domain: DOMAIN_URI
+
+  passport.use new FacebookStrategy(facebookOptions
+  , (facebookid, done) ->
+    http.get "http://graph.facebook.com/" +
+    facebookid + "?fields=id%2Cname", (res) ->
+
+      data = ''
+
+      res.on 'data', (chunk) ->
+        data += chunk
+
+      res.on 'end', () ->
+        body = JSON.parse data
+        users.findOrCreate
+          name: body.name
+          providerId : body.id
+          userIds: [{provider: 'Facebook', providerId: body.id}]
+        , (err, user) ->
+          done(err, user)
+
+    .on 'error', (e) ->
+      done e.message, null
+  )
 
   app.use passport.initialize()
   app.use passport.session()
   app.use app.router
 
-  app.get '/auth/facebook'
-  , passport.authenticate 'facebook' #middleware that redirects us onto facebook
-  , emptyAction #this will not be called, as we will have been redirected
-
-  app.get '/auth/facebook/callback'
-  , passport.authenticate('facebook', { failureRedirect: '/' })
-  , facebookCallback
-
   app.post '/api/login'
   , passport.authenticate('basic')
+  , (req, res) ->
+    res.json 200
+
+  app.post '/api/loginviafacebook'
+  , passport.authenticate('facebook-sdk')
   , (req, res) ->
     res.json 200
 
