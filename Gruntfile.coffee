@@ -91,9 +91,6 @@ module.exports = (grunt) ->
       dev:
         files: ['client/**', 'server/**']
         tasks: ['default']
-      html:
-        files: ['client/views/*.html']
-        tasks: ['ngTemplateCache', 'copy:views', 'karma:singleUnit']
       mochaTests:
         files: ['test/server/**/*.coffee']
         tasks: ['coffeeLint:tests', 'mocha:unit']
