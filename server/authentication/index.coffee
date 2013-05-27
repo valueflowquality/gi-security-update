@@ -30,23 +30,50 @@ module.exports = (app, models, options) ->
   publicAction = (req, res, next) ->
     accountCheck req, res, next
 
+  hmacAuth = (req, res, next) ->
+    if _.indexOf(options.strategies, 'Hmac') is -1
+      next 'Hmac strategy not supported', null
+    else  
+      passport.authenticate('hmac', (err, user, info) ->
+        if err
+          next err, null
+        else if not user
+          next info, null
+        else
+          console.log 'user is authenticated via hmac'
+          next null, user
+      )(req, res, next)
+
+  playAuth = (req, res, next) ->
+    if _.indexOf(options.strategies, 'Play') is -1
+      next 'Play strategy not supported', null
+    else
+      passport.authenticate('play', (err, user, info) ->
+        if err
+          next err, null
+        else if not user
+          next info, null
+        else
+          console.log 'user is authenticated via play'
+          next null, user
+      )(req, res, next)
+
   userAction = (req, res, next) ->
     accountCheck req, res, () ->
       if req.isAuthenticated()
         next()
       else
-        #the user was not authenticated via cookies, try hmac
-        passport.authenticate('hmac', (err, user, info) ->
-          if err
-            next(err)
-          else if not user
-            console.log info
-            res.json 401, info
-          else
-            console.log 'user is authenticated via hmac'
-            req.user = user
+        hmacAuth req, res, (err, user) ->
+          if user and (not err)
             next()
-        )(req, res, next)
+          else
+            console.log 'attempting play auth'
+            playAuth req, res, (err, user) ->
+              console.log 'play auth ' + err + ' : ' + user
+              if user and (not err)
+                next()
+              else
+                res.json 401, {}
 
   adminAction = (req, res, next) ->
     userAction req, res, () ->
@@ -73,13 +100,13 @@ module.exports = (app, models, options) ->
   #Configure Passport authentication strategies
   users = models.users
   if options.strategies?
-    if _.indexOf 'Basic' > -1
+    if _.indexOf(options.strategies, 'Basic') > -1
       basic = require('./basic')(users)
-    if _.indexOf 'Facebook' > -1
+    if _.indexOf(options.strategies, 'Facebook') > -1
       facebook = require('./facebook')(users)
-    if _.indexOf 'Hmac' > -1
+    if _.indexOf(options.strategies, 'Hmac') > -1
       require('./hmac')(users)
-    if _.indexOf 'Play' > -1
+    if _.indexOf(options.strategies, 'Play') > -1
       require('./play')(users)
 
   app.use passport.initialize()
@@ -93,9 +120,9 @@ module.exports = (app, models, options) ->
   app.get   '/api/logout', logout
 
   if options.strategies?
-    if _.indexOf 'Basic' > -1
+    if _.indexOf(options.strategies, 'Basic') > -1
       basic.routes app
-    if _.indexOf 'Facebook' > -1
+    if _.indexOf(options.strategies, 'Facebook') > -1
       facebook.routes app
 
   #Export the authentiaction action middleware

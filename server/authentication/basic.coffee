@@ -22,7 +22,6 @@ module.exports = (users) ->
   )
 
   routes: (app) ->
-    console.log 'step0'
     app.post '/api/login'
     , passport.authenticate('basic')
     , (req, res) ->
