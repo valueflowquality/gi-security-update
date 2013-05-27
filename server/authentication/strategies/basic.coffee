@@ -1,7 +1,6 @@
 passport = require 'passport'
 util = require 'util'
 crypto = require 'crypto'
-moment = require 'moment'
 
 Strategy = (options, verify) ->
   if (typeof options == 'function')
@@ -26,6 +25,7 @@ util.inherits Strategy, passport.Strategy
 
 
 Strategy::authenticate = (req, options) ->
+  console.log 'basic authentication'
   options = options or {}
 
   username = req.body[@_userNameField] or undefined
