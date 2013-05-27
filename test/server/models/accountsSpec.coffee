@@ -1,4 +1,3 @@
-
 should = require 'should'
 mongoose = require 'mongoose'
 models = require './models'

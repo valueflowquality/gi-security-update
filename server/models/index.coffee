@@ -3,3 +3,4 @@ module.exports = (mongoose) ->
   roles: require('./roles')(mongoose)
   accounts: require('./accounts')(mongoose)
   settings: require('./settings')(mongoose)
+  activities: require('./activities')(mongoose)

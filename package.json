@@ -9,11 +9,11 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "moment": "~1.7.2",
     "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.14",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
-    "mongoose": "~3.6.5"
+    "mongoose": "~3.6.5",
+    "moment": "~2.0.0"
   },
   "devDependencies": {
     "grunt": "0.4.0rc7",
@@ -31,6 +31,8 @@
     "supertest": "~0.4.2",
     "mocha": "~1.8.1",
     "karma": "~0.8.0",
-    "grunt-karma": "~0.3.0"
+    "grunt-karma": "~0.3.0",
+    "sinon": "~1.7.2",
+    "chai": "~1.6.0"
   }
 }
