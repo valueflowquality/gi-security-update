@@ -24,6 +24,11 @@ module.exports = (mongoose) ->
       type: Number
     from: 'Mixed'
     to: 'Mixed'
+    parent:
+      key:
+        type: ObjectId
+      resourceType:
+        type: String
 
   activitySchema = new Schema schema
 
