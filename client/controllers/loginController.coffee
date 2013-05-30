@@ -13,7 +13,8 @@ angular.module('app').controller 'loginController'
         authService.loginConfirmed()
 
   $scope.login = () ->
-    $http.post '/api/login', $scope.cred
+    $http.post('/api/login', $scope.cred).success () ->
+      finishLogin()
 
   $scope.loginWithFacebook = () ->
     Facebook.login().then (loggedIn) ->

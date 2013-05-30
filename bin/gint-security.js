@@ -432,7 +432,9 @@ angular.module('app').controller('loginController', [
       });
     };
     $scope.login = function() {
-      return $http.post('/api/login', $scope.cred);
+      return $http.post('/api/login', $scope.cred).success(function() {
+        return finishLogin();
+      });
     };
     $scope.loginWithFacebook = function() {
       return Facebook.login().then(function(loggedIn) {
