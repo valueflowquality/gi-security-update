@@ -34,14 +34,12 @@ Strategy::authenticate = (req) ->
 
       playRequestOptions =
         host: req.host
-        port: 9000
+        port: 80
         path: '/cookievalidator'
         headers:
           Cookie: playCookie
           ContentType: 'application/json'
-      
-      console.log req.host
-      console.log playRequestOptions.headers.Cookie
+
 
       verified = (err, user, info) =>
         if err
