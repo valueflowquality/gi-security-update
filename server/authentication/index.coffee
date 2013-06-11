@@ -41,6 +41,7 @@ module.exports = (app, models, options) ->
           next info, null
         else
           console.log 'user is authenticated via hmac'
+          req.user = user
           next null, user
       )(req, res, next)
 
@@ -54,6 +55,7 @@ module.exports = (app, models, options) ->
         else if not user
           next info, null
         else
+          req.user = user
           console.log 'user is authenticated via play'
           next null, user
       )(req, res, next)
