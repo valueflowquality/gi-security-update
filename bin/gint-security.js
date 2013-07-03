@@ -582,7 +582,7 @@ angular.module('app').factory('Role', [
         isArray: false
       }
     };
-    resource = $resource('/api/role/:id', {}, methods);
+    resource = $resource('/api/roles/:id', {}, methods);
     roles = [];
     updateMasterList = function(role) {
       var replaced;

@@ -15,7 +15,7 @@ angular.module('app').factory 'Role'
       params: {}
       isArray: false
 
-  resource = $resource '/api/role/:id', {}, methods
+  resource = $resource '/api/roles/:id', {}, methods
 
   roles = []
 
