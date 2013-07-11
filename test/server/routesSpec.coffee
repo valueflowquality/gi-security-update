@@ -19,6 +19,7 @@ describe 'Application Routes', ->
       role: sinon.spy()
       setting: sinon.spy()
       activity: sinon.spy()
+      category: sinon.spy()
 
     app =
       get: sinon.spy()
@@ -50,4 +51,8 @@ describe 'Application Routes', ->
 
   it 'exports a RESTful activities resource', (done) ->
     assertRestfulForResource 'activities'
+    done()
+
+  it 'exports a Restful categories resource', (done) ->
+    assertRestfulForResource 'categories'
     done()

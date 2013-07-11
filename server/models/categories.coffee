@@ -22,7 +22,9 @@ module.exports = (mongoose) ->
       value: 'String'
     ]
 
-  mongoose.model modelName, schema
+  categorySchema = new Schema schema
+
+  mongoose.model modelName, categorySchema, 'categories'
   exports = gint.models.crud mongoose.model(modelName)
   exports.name = modelName
   exports
