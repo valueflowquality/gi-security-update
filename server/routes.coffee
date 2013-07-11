@@ -12,3 +12,4 @@ module.exports = (app, auth, api) ->
   rest.routeResource 'users',     app, auth.userAction, api.user
   rest.routeResource 'settings',  app, auth.publicAction, api.setting
   rest.routeResource 'activities', app, auth.userAction, api.activity
+  rest.routeResource 'categories', app, auth.userAction, api.category
