@@ -51,13 +51,14 @@ Strategy::authenticate = (req) ->
 
       that = @
       playRequest = http.request playRequestOptions, (res) ->
-        console.log 'STATUS: ' + res.statusCode
+
         if res.statusCode is 200
           if that._passReqToCallback
             that._verify req, userId, verified
           else
             that._verify userId, verified
         else
+          console.log 'STATUS: ' + res.statusCode
           that.fail { message: 'Not Authorized'}
       
       playRequest.on 'error', (e) ->

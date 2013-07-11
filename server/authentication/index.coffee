@@ -56,7 +56,6 @@ module.exports = (app, models, options) ->
           next info, null
         else
           req.user = user
-          console.log 'user is authenticated via play'
           next null, user
       )(req, res, next)
 
@@ -69,9 +68,7 @@ module.exports = (app, models, options) ->
           if user and (not err)
             next()
           else
-            console.log 'attempting play auth'
             playAuth req, res, (err, user) ->
-              console.log 'play auth ' + err + ' : ' + user
               if user and (not err)
                 next()
               else
