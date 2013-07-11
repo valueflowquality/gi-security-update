@@ -20,6 +20,8 @@ describe 'Application Routes', ->
       setting: sinon.spy()
       activity: sinon.spy()
       category: sinon.spy()
+      environment: sinon.spy() 
+      system: sinon.spy()
 
     app =
       get: sinon.spy()

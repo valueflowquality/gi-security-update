@@ -13,22 +13,22 @@ module.exports = (app, models, options) ->
       else
         done null, user
 
-  accountCheck = (req, res, next) ->
-    #find account by host
+  systemCheck = (req, res, next) ->
+    #find environment by host
     if req.host
-      models.accounts.findOneBy 'host', req.host, (err, result) ->
+      models.environments.findOneBy 'host', req.host, (err, result) ->
         if err
           res.json 500, {message: err}
         else if result
-          req.accountId = result._id
+          req.systemId = result.systemId
           next()
         else
-          res.json 404, {message: 'host account not found'}
+          res.json 404, {message: 'system not found'}
     else
       res.json 500, {message: 'host not found on request object'}
 
   publicAction = (req, res, next) ->
-    accountCheck req, res, next
+    systemCheck req, res, next
 
   hmacAuth = (req, res, next) ->
     if _.indexOf(options.strategies, 'Hmac') is -1
@@ -60,7 +60,7 @@ module.exports = (app, models, options) ->
       )(req, res, next)
 
   userAction = (req, res, next) ->
-    accountCheck req, res, () ->
+    systemCheck req, res, () ->
       if req.isAuthenticated()
         next()
       else

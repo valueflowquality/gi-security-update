@@ -6,7 +6,11 @@ module.exports = (mongoose) ->
   Schema = mongoose.Schema
   ObjectId = Schema.Types.ObjectId
 
-  roleSchema = new Schema {name: 'String' }
+  schema =
+  	systemId: ObjectId
+  	name: 'String'
+
+  roleSchema = new Schema schema
 
   mongoose.model name, roleSchema
 

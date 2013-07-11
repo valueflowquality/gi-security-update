@@ -7,7 +7,7 @@ module.exports = (mongoose) ->
   modelName = 'Category'
 
   schema =
-    siteId: ObjectId
+    systemId: ObjectId
     parentId: ObjectId
     title: 'String'
     pluralTitle: 'String'
