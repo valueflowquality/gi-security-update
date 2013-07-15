@@ -7,6 +7,7 @@ module.exports = (mongoose) ->
   modelName = 'Activity'
 
   schema =
+    systemId: ObjectId
     description: 'String'
     job:
       type: ObjectId
