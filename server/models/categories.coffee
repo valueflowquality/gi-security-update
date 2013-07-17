@@ -17,6 +17,7 @@ module.exports = (mongoose) ->
     slug: 'String'
     visible: 'Boolean'
     showOnNav: 'Boolean'
+    order: 'Number'
     attributes: [
       name: 'String'
       value: 'String'
