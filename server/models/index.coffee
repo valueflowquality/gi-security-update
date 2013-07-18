@@ -1,8 +1,8 @@
-module.exports = (mongoose) ->
-  systems: require('./systems')(mongoose)
-  environments: require('./environments')(mongoose)
-  users: require('./users')(mongoose)
-  roles: require('./roles')(mongoose)
-  settings: require('./settings')(mongoose)
-  activities: require('./activities')(mongoose)
-  categories: require('./categories')(mongoose)
+module.exports = (mongoose, crudModelFactory) ->
+  systems: require('./systems')(mongoose, crudModelFactory)
+  environments: require('./environments')(mongoose, crudModelFactory)
+  users: require('./users')(mongoose, crudModelFactory)
+  roles: require('./roles')(mongoose, crudModelFactory)
+  settings: require('./settings')(mongoose, crudModelFactory)
+  activities: require('./activities')(mongoose, crudModelFactory)
+  categories: require('./categories')(mongoose, crudModelFactory)

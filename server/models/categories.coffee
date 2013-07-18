@@ -1,5 +1,4 @@
-gint = require 'gint-util'
-module.exports = (mongoose) ->
+module.exports = (mongoose, crudModelFactory) ->
 
   Schema = mongoose.Schema
   ObjectId = Schema.Types.ObjectId
@@ -26,6 +25,6 @@ module.exports = (mongoose) ->
   categorySchema = new Schema schema
 
   mongoose.model modelName, categorySchema, 'categories'
-  exports = gint.models.crud mongoose.model(modelName)
+  exports = crudModelFactory mongoose.model(modelName)
   exports.name = modelName
   exports

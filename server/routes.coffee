@@ -1,17 +1,37 @@
 gint = require 'gint-util'
 rest = gint.common.rest
 
-module.exports = (app, auth, api) ->
+configure = (app) ->
   #user routes
-  app.get     '/api/user',        auth.userAction,  api.user.showMe
-  app.put     '/api/user',        auth.userAction,  api.user.updateMe
-  app.del     '/api/user',        auth.userAction,  api.user.destroyMe
+  app.get '/api/user'
+  , app.middleware.userAction, app.controllers.user.showMe
+  
+  app.put '/api/user'
+  , app.middleware.userAction, app.controllers.user.updateMe
+  
+  app.del '/api/user'
+  , app.middleware.userAction, app.controllers.user.destroyMe
 
-  rest.routeResource 'roles',      app, auth.userAction, api.role
+  rest.routeResource 'roles', app
+  , app.middleware.userAction, app.controllers.role
   # sysAdminAction routes
-  rest.routeResource 'users',     app, auth.userAction, api.user
-  rest.routeResource 'settings',  app, auth.publicAction, api.setting
-  rest.routeResource 'activities', app, auth.userAction, api.activity
-  rest.routeResource 'categories', app, auth.userAction, api.category
-  rest.routeResource 'systems', app, auth.userAction, api.system
-  rest.routeResource 'environments', app, auth.userAction, api.environment
+  
+  rest.routeResource 'users', app
+  , app.middleware.userAction, app.controllers.user
+  
+  rest.routeResource 'settings', app
+  , app.middleware.publicAction, app.controllers.setting
+  
+  rest.routeResource 'activities', app
+  , app.middleware.userAction, app.controllers.activity
+  
+  rest.routeResource 'categories', app
+  , app.middleware.userAction, app.controllers.category
+  
+  rest.routeResource 'systems', app
+  , app.middleware.userAction, app.controllers.system
+  
+  rest.routeResource 'environments', app
+  , app.middleware.userAction, app.controllers.environment
+
+exports.configure = configure

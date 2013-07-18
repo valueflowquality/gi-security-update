@@ -1,6 +1,5 @@
-gint = require 'gint-util'
-module.exports = (model) ->
-  crudController  = gint.controllers.crud(model)
+module.exports = (model, crudControllerFactory) ->
+  crudController  = crudControllerFactory(model)
     
   create = (req, res) ->
     req.body.user = req.user.id

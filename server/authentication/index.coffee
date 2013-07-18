@@ -1,13 +1,13 @@
 passport = require 'passport'
 _ = require 'underscore'
 
-module.exports = (app, models, options) ->
+module.exports = (app, options) ->
 
   passport.serializeUser = (user, done) ->
     done null, user.id
 
   passport.deserializeUser = (obj, done) ->
-    models.users.findById obj, (err, user) ->
+    app.models.users.findById obj, (err, user) ->
       if err
         done err, null
       else
@@ -16,7 +16,7 @@ module.exports = (app, models, options) ->
   systemCheck = (req, res, next) ->
     #find environment by host
     if req.host
-      models.environments.findOneBy 'host', req.host, (err, result) ->
+      app.models.environments.findOneBy 'host', req.host, (err, result) ->
         if err
           res.json 500, {message: err}
         else if result
@@ -33,7 +33,7 @@ module.exports = (app, models, options) ->
   hmacAuth = (req, res, next) ->
     if _.indexOf(options.strategies, 'Hmac') is -1
       next 'Hmac strategy not supported', null
-    else  
+    else
       passport.authenticate('hmac', (err, user, info) ->
         if err
           next err, null
@@ -97,7 +97,7 @@ module.exports = (app, models, options) ->
     res.send 200
 
   #Configure Passport authentication strategies
-  users = models.users
+  users = app.models.users
   if options.strategies?
     if _.indexOf(options.strategies, 'Basic') > -1
       basic = require('./basic')(users)

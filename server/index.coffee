@@ -1,19 +1,19 @@
 util = require 'util'
 gint = require 'gint-util'
+routes = require './routes'
 
-module.exports = (app, mongoose, options) ->
+configure = (app, mongoose, options) ->
   
-  models = require('./models')(mongoose)
-  controllers = require('./controllers')(models, gint)
-  auth = require('./authentication')(app, models, options)
+  gint.common.extend app.models, require('./models')(mongoose, app.models.crud)
+  gint.common.extend app.controllers, require('./controllers')(app)
+  gint.common.extend app.middleware, require('./authentication')(app, options)
   
-  require('./routes')(app, auth, controllers)
+  routes.configure app
 
-  resetTestDb = ->
-
+resetTestDb = (app, mongoose, callback) ->
   app.configure 'test', ->
 
-    resetTestDb = (callback) ->
+    resetTestDb = (mongoose, callback) ->
       console.log 'dropping test accounts'
       mongoose.connection.collections['accounts']?.drop () ->
         console.log 'injecting test account'
@@ -44,7 +44,6 @@ module.exports = (app, mongoose, options) ->
           models.users.create dummyAdmin, (err, result) ->
             callback(models)
 
-  auth: auth
+module.exports =
+  configure: configure
   resetTestDb: resetTestDb
-  models: models
-  controllers: controllers

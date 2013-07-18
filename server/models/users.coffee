@@ -1,8 +1,7 @@
-gint = require 'gint-util'
 crypto = require 'crypto'
 bcrypt = require 'bcrypt'
 
-module.exports = (mongoose) ->
+module.exports = (mongoose, crudModelFactory) ->
   
   name = 'User'
 
@@ -65,7 +64,7 @@ module.exports = (mongoose) ->
   
   mongoose.model name, userSchema
 
-  crud = gint.models.crud mongoose.model(name)
+  crud = crudModelFactory mongoose.model(name)
 
   update = (id, json, callback) ->
     crud.findById id, (err, user) ->

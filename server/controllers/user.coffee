@@ -1,8 +1,7 @@
-gint = require 'gint-util'
 _ = require 'underscore'
 
-module.exports = (model) ->
-  crud = gint.controllers.crud(model)
+module.exports = (model, crudControllerFactory) ->
+  crud = crudControllerFactory(model)
 
   showMe = (req, res) ->
     model.findById req.user.id, (err, user) ->
@@ -65,5 +64,4 @@ module.exports = (model) ->
   updateMe: updateMe
   destroyMe: destroyMe
   index: index
-  destroy: crud.destroy
   show: findById
