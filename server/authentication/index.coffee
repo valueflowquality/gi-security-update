@@ -4,10 +4,14 @@ _ = require 'underscore'
 module.exports = (app, options) ->
 
   passport.serializeUser = (user, done) ->
-    done null, user.id
+    obj =
+      _id: user._id
+      systemId: user.systemId
+
+    done null, obj
 
   passport.deserializeUser = (obj, done) ->
-    app.models.users.findById obj, (err, user) ->
+    app.models.users.findById obj._id, obj.systemId, (err, user) ->
       if err
         done err, null
       else
@@ -16,11 +20,12 @@ module.exports = (app, options) ->
   systemCheck = (req, res, next) ->
     #find environment by host
     if req.host
-      app.models.environments.findOneBy 'host', req.host, (err, result) ->
+      app.models.environments.forHost req.host, (err, result) ->
         if err
           res.json 500, {message: err}
         else if result
           req.systemId = result.systemId
+          req.environmentId = result._id
           next()
         else
           res.json 404, {message: 'system not found'}

@@ -84,11 +84,11 @@ module.exports = (mongoose, crudModelFactory) ->
         else
           callback 'user not found', null
 
-  findOneByProviderId = (id, callback) ->
-    crud.findOneBy 'userIds.providerId', id, callback
+  findOneByProviderId = (id, systemId, callback) ->
+    crud.findOneBy 'userIds.providerId', id, systemId, callback
 
   findOrCreate = (json, callback) ->
-    findOneByProviderId json.providerId, (err, user) ->
+    findOneByProviderId json.providerId, json.systemId (err, user) ->
       if user
         callback err, user
       else

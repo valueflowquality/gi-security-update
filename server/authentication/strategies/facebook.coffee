@@ -32,14 +32,15 @@ Strategy::authenticate = (req, options) ->
   options = options or {}
   
   response = req.body.authResponse
+  systemId = req.systemId
 
   if not response
     return @fail({message:'Missing facebook response'})
  
   if @_passReqToCallback
-    @_verify req, response.userID, verified
+    @_verify req, response.userID, systemId, verified
   else
-    @_verify response.userID, verified
+    @_verify response.userID, systemId, verified
 
 # Expose `Strategy`.
 exports.Strategy = Strategy

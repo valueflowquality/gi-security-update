@@ -4,7 +4,7 @@ module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
   showMe = (req, res) ->
-    model.findById req.user.id, (err, user) ->
+    model.findById req.user.id, req.systemId (err, user) ->
       if err
         res.json 404
       else
@@ -17,6 +17,7 @@ module.exports = (model, crudControllerFactory) ->
     if req.user.id is not req.body._id
       res.json 401
     else
+      req.body.systemId = req.systemId
       model.update req.user.id, req.body, (err, user) ->
         if err
           res.json 404
@@ -26,7 +27,7 @@ module.exports = (model, crudControllerFactory) ->
           res.json 200, user
 
   destroyMe = (req, res) ->
-    model.destroy req.user.id, (err) ->
+    model.destroy req.user.id, req.systemId, (err) ->
       if err
         res.json 404
       else

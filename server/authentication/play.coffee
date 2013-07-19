@@ -3,8 +3,8 @@ http = require 'http'
 strategies = require './strategies'
 
 module.exports = (users) ->
-  passport.use new strategies.play.Strategy((userId, done) ->
-    users.findById userId, (err, user) ->
+  passport.use new strategies.play.Strategy((userId, systemId, done) ->
+    users.findById userId, systemId, (err, user) ->
       if err
         done err
       else if not user

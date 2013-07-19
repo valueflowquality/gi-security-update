@@ -10,8 +10,24 @@ module.exports = (mongoose, crudModelFactory) ->
     host: 'String'
 
   environmentSchema = new Schema schema
-
   mongoose.model name, environmentSchema
-  exports = crudModelFactory mongoose.model(name)
+  model = mongoose.model(name)
+
+  #This is special - it's the only model function 
+  #that does not filter by systemId (as it is used to find systemIds)
+  getForHost = (host, callback) ->
+    model.findOne {host: host}, (err, env) ->
+      if err
+        callback err, null
+      else if env
+        obj =
+          _id: env._id
+          systemId: env.systemId
+        callback null, obj
+      else
+        callback "Environment Not Found", null
+
+  exports = crudModelFactory model
+  exports.forHost = getForHost
   exports.name = name
   exports

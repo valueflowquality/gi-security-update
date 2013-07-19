@@ -20,7 +20,7 @@ configure = (app) ->
   , app.middleware.userAction, app.controllers.user
   
   rest.routeResource 'settings', app
-  , app.middleware.publicAction, app.controllers.setting
+  , app.middleware.userAction, app.controllers.setting
   
   rest.routeResource 'activities', app
   , app.middleware.userAction, app.controllers.activity
@@ -33,5 +33,8 @@ configure = (app) ->
   
   rest.routeResource 'environments', app
   , app.middleware.userAction, app.controllers.environment
+
+  rest.routeResource 'files', app
+  , app.middleware.userAction, app.controllers.file
 
 exports.configure = configure

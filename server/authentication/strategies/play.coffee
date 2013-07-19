@@ -31,6 +31,7 @@ Strategy::authenticate = (req) ->
 
     if playCookie?
       userId = playCookie.split('-user_id%3A')[1]
+      systemId = req.systemId
 
       playRequestOptions =
         host: req.host
@@ -54,9 +55,9 @@ Strategy::authenticate = (req) ->
 
         if res.statusCode is 200
           if that._passReqToCallback
-            that._verify req, userId, verified
+            that._verify req, userId, systemId, verified
           else
-            that._verify userId, verified
+            that._verify userId, systemId, verified
         else
           console.log 'STATUS: ' + res.statusCode
           that.fail { message: 'Not Authorized'}

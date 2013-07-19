@@ -3,7 +3,7 @@ http = require 'http'
 strategies = require './strategies'
 
 module.exports = (users) ->
-  passport.use new strategies.facebook.Strategy( (facebookid, done) ->
+  passport.use new strategies.facebook.Strategy( (facebookid, systemId, done) ->
     http.get "http://graph.facebook.com/" +
     facebookid + "?fields=id%2Cname", (res) ->
 
@@ -16,6 +16,7 @@ module.exports = (users) ->
         body = JSON.parse data
         users.findOrCreate
           name: body.name
+          systemId: systemId
           providerId : body.id
           userIds: [{provider: 'Facebook', providerId: body.id}]
         , (err, user) ->

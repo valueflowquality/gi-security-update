@@ -78,6 +78,7 @@ Strategy::authenticate = (req, options) ->
   accessKey = req.headers[@_accessKeyField]
   reqSignature = req.headers[@_signatureField]
   expiryDate = moment(parseInt(req.headers[@_expiryDateField],10))
+  systemId = req.systemId or undefined
   
   if not accessKey or not reqSignature
     return @fail({message:'Missing credentials'})
@@ -92,9 +93,9 @@ Strategy::authenticate = (req, options) ->
     return @fail({message: 'expiry date too far in future'})
 
   if @_passReqToCallback
-    @_verify req, accessKey, verified
+    @_verify req, accessKey, systemId, verified
   else
-    @_verify accessKey, verified
+    @_verify accessKey, systemId, verified
 
 # Expose `Strategy`.
 exports.Strategy = Strategy

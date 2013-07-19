@@ -3,9 +3,9 @@ http = require 'http'
 strategies = require './strategies'
 
 module.exports = (users) ->
-  passport.use new strategies.hmac.Strategy((accessKey, done) ->
+  passport.use new strategies.hmac.Strategy((accessKey, systemId, done) ->
     # if there is an error , we should return:    #   done(err)
-    users.findById accessKey, (err, user) ->
+    users.findById accessKey, systemId, (err, user) ->
       if err
         done err
       else if not user

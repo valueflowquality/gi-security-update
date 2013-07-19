@@ -6,3 +6,4 @@ module.exports = (app) ->
   category: app.controllers.crud(app.models.categories)
   system: app.controllers.crud(app.models.systems)
   environment: app.controllers.crud(app.models.environments)
+  file: app.controllers.crud(app.models.files)

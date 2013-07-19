@@ -30,6 +30,7 @@ Strategy::authenticate = (req, options) ->
 
   username = req.body[@_userNameField] or undefined
   password = req.body[@_passwordField] or undefined
+  systemId = req.systemId or undefined
 
   if not username or not password
     @fail {message: 'Credientials not found'}
@@ -44,9 +45,9 @@ Strategy::authenticate = (req, options) ->
 
 
   if @_passReqToCallback
-    @_verify req, username, password, verified
+    @_verify req, username, password, systemId, verified
   else
-    @_verify username, password, verified
+    @_verify username, password, systemId, verified
 
 # Expose `Strategy`.
 exports.Strategy = Strategy
