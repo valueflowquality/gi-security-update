@@ -40,15 +40,11 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
           parent:
             key: environmentId
             resourceType: 'environment'
-        console.log 'step2'
         crud.findOne query, (err, setting) ->
-          console.log 'step 2.5'
-          console.log err
-          console.log setting
           if setting and not err
             callback null, setting
           else
-            console.log 'step3'            
+       
             #roll up to the system setting
             getSystem name, systemId, callback
       else
