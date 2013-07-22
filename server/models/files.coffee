@@ -7,7 +7,7 @@ module.exports = (mongoose, crudModelFactory) ->
 
   schema =
     systemId: Schema.Types.ObjectId
-    parentId: Schema.Types.ObjectId
+    parentId: 'String'
     parentType: 'String'
     name: 'String'
     sequence: 'Number'
