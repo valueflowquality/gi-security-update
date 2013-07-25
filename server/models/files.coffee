@@ -17,6 +17,7 @@ module.exports = (mongoose, crudModelFactory) ->
     title: 'String'
     description: 'String'
     size: Schema.Types.Long
+    s3alternates: ['String']
 
   fileSchema = new Schema schema
 
