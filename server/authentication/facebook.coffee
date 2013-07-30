@@ -26,8 +26,9 @@ module.exports = (users) ->
       done e.message, null
   )
 
-  routes: (app) ->
+  routes: (app, middleware) ->
     app.post '/api/loginviafacebook'
+    , middleware
     , passport.authenticate('facebook-sdk')
     , (req, res) ->
       res.json 200

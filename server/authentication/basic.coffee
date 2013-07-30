@@ -4,7 +4,7 @@ strategies = require './strategies'
 
 module.exports = (users) ->
   passport.use new strategies.basic.Strategy((email, password, systemId, done) ->
-    console.log 'basic verify ' + email + ' ' + password
+    console.log 'basic verify ' + email + ' ' + password + ' ' + systemId
     users.findOneBy 'email', email, systemId, (err, user) ->
       console.log 'found user: ' + err + ' : ' + user
       if err
@@ -21,8 +21,9 @@ module.exports = (users) ->
             done null, user
   )
 
-  routes: (app) ->
+  routes: (app, middleware) ->
     app.post '/api/login'
+    , middleware
     , passport.authenticate('basic')
     , (req, res) ->
       res.json 200
