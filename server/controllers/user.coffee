@@ -4,7 +4,7 @@ module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
   showMe = (req, res) ->
-    model.findById req.user.id, req.systemId (err, user) ->
+    model.findById req.user.id, req.systemId, (err, user) ->
       if err
         res.json 404
       else
