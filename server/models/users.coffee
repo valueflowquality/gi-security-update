@@ -12,6 +12,7 @@ module.exports = (mongoose, crudModelFactory) ->
   SALT_WORK_FACTOR = 10
 
   userSchema = new Schema {firstName: 'String'
+  , systemId: 'ObjectId'
   , lastName: 'String'
   , email: 'String'
   , password: 'String'
