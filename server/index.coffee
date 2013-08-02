@@ -8,7 +8,7 @@ configure = (app, mongoose, options) ->
   gint.common.extend app.controllers, require('./controllers')(app)
   gint.common.extend app.middleware, require('./authentication')(app, options)
   
-  routes.configure app
+  routes.configure app, gint.common.rest
 
 resetTestDb = (app, mongoose, callback) ->
   app.configure 'test', ->

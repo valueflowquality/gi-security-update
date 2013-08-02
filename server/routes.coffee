@@ -1,7 +1,4 @@
-gint = require 'gint-util'
-rest = gint.common.rest
-
-configure = (app) ->
+configure = (app, rest) ->
   #user routes
   app.get '/api/user'
   , app.middleware.userAction, app.controllers.user.showMe
