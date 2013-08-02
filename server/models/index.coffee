@@ -1,11 +1,21 @@
+environments = require './environments'
+files = require './files'
+systems = require './systems'
+users = require './users'
+roles = require './roles'
+settings = require './settings'
+activities = require './activities'
+categories = require './categories'
+
 module.exports = (mongoose, crudModelFactory) ->
-  environments = require('./environments')(mongoose, crudModelFactory)
+  environmentsModel = environments mongoose, crudModelFactory
+  filesModel = files mongoose, crudModelFactory
   
-  systems: require('./systems')(mongoose, crudModelFactory)
-  environments: environments
-  users: require('./users')(mongoose, crudModelFactory)
-  roles: require('./roles')(mongoose, crudModelFactory)
-  settings: require('./settings')(mongoose, crudModelFactory, environments)
-  activities: require('./activities')(mongoose, crudModelFactory)
-  categories: require('./categories')(mongoose, crudModelFactory)
-  files: require('./files')(mongoose, crudModelFactory)
+  systems: systems mongoose, crudModelFactory
+  environments: environmentsModel
+  files: filesModel
+  users: users mongoose, crudModelFactory
+  roles: roles mongoose, crudModelFactory
+  settings: settings mongoose, crudModelFactory, environmentsModel
+  activities: activities mongoose, crudModelFactory
+  categories: categories mongoose, crudModelFactory, filesModel
