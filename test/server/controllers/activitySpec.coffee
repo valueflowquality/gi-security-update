@@ -2,6 +2,7 @@ should = require 'should'
 path = require 'path'
 sinon = require 'sinon'
 assert = require 'assert'
+mocks = require '../mocks'
 
 dir =  path.normalize __dirname + '../../../../server'
 
@@ -11,8 +12,8 @@ describe 'Activity Controller', ->
     activities:
       name: 'activities'
       create: ->
-  
-  controller = require(dir + '/controllers/activity')(models.activities)
+ 
+  controller = require(dir + '/controllers/activity')(models.activities, mocks.crudControllerFactory)
 
   it 'Has an index method', (done) ->
     controller.should.have.ownProperty 'index'
