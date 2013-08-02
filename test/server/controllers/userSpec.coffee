@@ -1,12 +1,35 @@
-should = require 'should'
-path = require 'path'
 _ = require 'underscore'
+path = require 'path'
+assert = require('chai').assert
+should = require('chai').should()
+sinon = require 'sinon'
+
+mocks = require '../mocks'
 
 dir =  path.normalize __dirname + '../../../../server'
 
 describe 'User Controller', ->
-  mockModel = require '../mocks/crud'
-  controller = require(dir + '/controllers/users')(mockModel)
+
+  alice = 
+    firstName: 'Alice'
+    password: '123'
+  
+  bob =
+    firstName: 'Bob'
+    password: '456'
+
+  userModel =
+    name: 'activities'
+    create: (json, cb) ->
+      cb null, json
+    find: (options, cb) ->
+      cb null, [alice, bob]
+    findById: (id, systemId, cb) ->
+      cb null, alice
+    update: (id, json, cb) ->
+      cb null, json
+ 
+  controller = require(dir + '/controllers/user')(userModel, mocks.crudControllerFactory)
 
   describe 'exports', ->
     it 'an index method', (done) ->
@@ -28,7 +51,7 @@ describe 'User Controller', ->
     it 'a destroy method', (done) ->
       controller.should.have.ownProperty 'destroy'
       done()
-  
+
   describe 'Index', ->
     it 'Does not transmit passwords', (done) ->
       req =
@@ -38,6 +61,7 @@ describe 'User Controller', ->
         json: (code, result) ->
           _.each result, (user) ->
             should.not.exist(user.password)
+            user.should.not.have.property 'password'
           done()
       controller.index req, res
 
@@ -49,6 +73,7 @@ describe 'User Controller', ->
       res =
         json: (code, result) ->
           should.not.exist result.password
+          result.should.not.have.property 'password'
           done()
       controller.show req, res
 
@@ -61,6 +86,7 @@ describe 'User Controller', ->
       res =
         json: (code, result) ->
           should.not.exist result.password
+          result.should.not.have.property 'password'
           done()
       controller.create req, res
 
@@ -75,8 +101,10 @@ describe 'User Controller', ->
       res =
         json: (code, result) ->
           should.not.exist result.password
+          result.should.not.have.property 'password'
           done()
       controller.update req, res
+
   describe 'showMe', ->
     it 'Does not transmit passwords', (done) ->
       req =
@@ -85,8 +113,10 @@ describe 'User Controller', ->
       res =
         json: (code, result) ->
           should.not.exist result.password
+          result.should.not.have.property 'password'
           done()
       controller.showMe req, res
+
   describe 'UpdateMe', ->
     it 'Does not transmit passwords', (done) ->
       req =
@@ -98,6 +128,7 @@ describe 'User Controller', ->
       res =
         json: (code, result) ->
           should.not.exist result.password
+          result.should.not.have.property 'password'
           done()
       controller.updateMe req, res
 
