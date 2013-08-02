@@ -27,8 +27,6 @@
     "grunt-contrib-requirejs": "0.4.0rc7",
     "grunt-gint": "0.2.3",
     "grunt-reload": "git://github.com/webxl/grunt-reload.git",
-    "should": "~1.2.1",
-    "rewire": "~1.0.3",
     "jasmine-node": "~1.0.26",
     "supertest": "~0.4.2",
     "mocha": "~1.8.1",
