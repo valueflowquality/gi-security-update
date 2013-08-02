@@ -1,38 +1,34 @@
 module.exports = (mongoose, crudModelFactory) ->
 
-  Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
-
   modelName = 'Activity'
 
   schema =
-    systemId: ObjectId
+    systemId: 'ObjectId'
     description: 'String'
     job:
-      type: ObjectId
+      type: 'ObjectId'
       ref: 'Job'
     user:
-      type: ObjectId
+      type: 'ObjectId'
       ref: 'User'
     timeStamp:
-      type: Date
+      type: 'Date'
       default: Date.now
     status:
-      type: ObjectId
+      type: 'ObjectId'
       ref: 'JobStatus'
     code:
-      type: Number
+      type: 'Number'
     from: 'Mixed'
     to: 'Mixed'
     parent:
       key:
-        type: ObjectId
+        type: 'ObjectId'
       resourceType:
-        type: String
+        type: 'String'
 
-  activitySchema = new Schema schema
+  mongoose.model modelName, schema
 
-  mongoose.model modelName, activitySchema
   exports = crudModelFactory mongoose.model(modelName)
   exports.name = modelName
   exports

@@ -1,10 +1,8 @@
-
 path = require 'path'
 sinon = require 'sinon'
 assert = require('chai').assert
 should = require('chai').should()
 mocks = require '../mocks'
-gint = require 'gint-util'
 
 dir =  path.normalize __dirname + '../../../../server'
 
