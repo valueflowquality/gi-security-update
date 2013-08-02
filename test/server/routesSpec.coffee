@@ -6,56 +6,82 @@ assert = require 'assert'
 
 dir =  path.normalize __dirname + '../../../server'
 
-describe 'Application Routes', ->
-  module = require(dir + '/routes')
+describe 'Routes', ->
 
-  assertRestfulForResource = (resource) ->
-    api =
-      user:
-        showMe: sinon.spy()
-        updateMe: sinon.spy()
-        destroyMe: sinon.spy()
-        index: sinon.spy()
-      role: sinon.spy()
-      setting: sinon.spy()
-      activity: sinon.spy()
-      category: sinon.spy()
-      environment: sinon.spy()
-      
-      system: sinon.spy()
+  assertRestfulForResource = (resource, security, controllerName) ->
+    module = require(dir + '/routes')
 
     app =
       get: sinon.spy()
       post: sinon.spy()
       del: sinon.spy()
       put: sinon.spy()
+      middleware:
+        publicAction: sinon.spy()
+        userAction: sinon.spy()
+        adminAction: sinon.spy()
 
-    security =
-      auth: sinon.spy()
-      models: sinon.spy()
-    router = module(app, security.auth, api)
+      controllers:
+        user:
+          showMe: sinon.spy()
+          updateMe: sinon.spy()
+          destroyMe: sinon.spy()
+          index: sinon.spy()
+        role: sinon.spy()
+        setting: sinon.spy()
+        activity: sinon.spy()
+        category: sinon.spy()
+        environment: sinon.spy()
 
-    assert app.get.calledWith('/api/' + resource), "Get failed"
-    assert app.del.calledWith('/api/' + resource + '/:id'), "Del failed"
-    assert app.put.calledWith('/api/' + resource + '/:id'), "Put failed"
-    assert app.post.calledWith('/api/' + resource), "Post failed"
+    rest = 
+      routeResource: sinon.spy()
+
+    securityFilter = app.middleware.publicAction
+    if security is 'user'
+      securityFilter = app.middleware.userAction
+    else if security is 'admin'
+      securityFilter = app.middleware.adminAction
+
+    module.configure app, rest
+
+    assert rest.routeResource.calledWith(resource, app)
+    , 'routeResource not called for ' + resource
+    
+    assert rest.routeResource.calledWith(resource, app, securityFilter)
+    , 'routeResource ' + resource + ' not called with correct security filter'
+    
+    assert rest.routeResource.calledWith(resource, app, securityFilter, app.controllers[controllerName])
+    , 'routeResource ' + resource + ' not called on correct controller'
 
   it 'exports a RESTful role resource', (done) ->
-    assertRestfulForResource 'roles'
+    assertRestfulForResource 'roles', 'user', 'role'
     done()
 
   it 'exports a RESTful users resource', (done) ->
-    assertRestfulForResource 'users'
+    assertRestfulForResource 'users', 'user', 'user'
     done()
 
   it 'exports a RESTful settings resource', (done) ->
-    assertRestfulForResource 'settings'
+    assertRestfulForResource 'settings', 'user', 'setting'
     done()
 
   it 'exports a RESTful activities resource', (done) ->
-    assertRestfulForResource 'activities'
+    assertRestfulForResource 'activities', 'user', 'activity'
     done()
 
   it 'exports a Restful categories resource', (done) ->
-    assertRestfulForResource 'categories'
+    assertRestfulForResource 'categories', 'user', 'category'
     done()
+
+  it 'exports a Restful systems resource', (done) ->
+    assertRestfulForResource 'systems', 'user', 'system'
+    done()
+  
+  it 'exports a Restful environments resource', (done) ->
+    assertRestfulForResource 'environments', 'user', 'environment'
+    done()
+  
+  it 'exports a Restful files resource', (done) ->
+    assertRestfulForResource 'files', 'user', 'file'
+    done()
+    
