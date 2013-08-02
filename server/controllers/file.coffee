@@ -8,6 +8,7 @@ module.exports = (models, crudControllerFactory) ->
   updatePrimary = (file, res) ->
     if file.primary
       #TODO: set all other files with this parent to primary = false
+      res.json 200, file
     else  
       res.json 200, file
 
