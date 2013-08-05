@@ -17,18 +17,13 @@ module.exports = (mongoose, crudModelFactory) ->
     status:
       type: 'ObjectId'
       ref: 'JobStatus'
-    code:
-      type: 'Number'
+    code: 'Number'
     from: 'Mixed'
     to: 'Mixed'
     parent:
-      key:
-        type: 'ObjectId'
-      resourceType:
-        type: 'String'
+      key: 'ObjectId'
+      resourceType: 'String'
 
   mongoose.model modelName, schema
 
-  exports = crudModelFactory mongoose.model(modelName)
-  exports.name = modelName
-  exports
+  crudModelFactory mongoose.model(modelName)
