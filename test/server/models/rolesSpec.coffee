@@ -1,56 +1,32 @@
-should = require 'should'
-mongoose = require 'mongoose'
-models = require './models'
+path = require 'path'
+sinon = require 'sinon'
+should = require('chai').should()
+assert = require('chai').assert
+moment = require 'moment'
+mocks = require '../mocks'
 
-dropRolesCollection = (cb) ->
-  mongoose.connection.collections['roles']?.drop () ->
-    cb() if cb
+dir =  path.normalize __dirname + '../../../../server'
 
-describe 'Role Model', ->
-  model = models.roles
+describe 'Roles Model', ->
 
-  before (done) ->
-    dropRolesCollection done
+  model = require(dir + '/models/roles')(mocks.mongoose, mocks.crudModelFactory)
 
-  it 'is a Role model', (done) ->
-    model.name.should.equal 'Role'
+  it 'Creates a Role mongoose model', (done) ->
+    mocks.mongoose.model.calledWith('Role'
+    , sinon.match.any).should.be.true
     done()
 
-  it 'Can have a name', (done) ->
-    model.create { name: 'toto' }, (err, result) ->
-      should.exist result
-      result.should.have.property('_id')
-      result.should.have.property('name', 'toto')
+  describe 'Schema', ->
+
+    it 'systemId: ObjectId', (done) ->
+      mocks.mongoose.model.calledWith('Role'
+      , sinon.match.hasOwn 'systemId', 'ObjectId').should.be.true
       done()
 
-  it 'Can find roles by Id', (done) ->
-    model.create { name: 'boris'}, (e, res) ->
-      model.findById res._id, (err, result) ->
-        should.exist result
-        result.should.have.property('name', 'boris')
-        done()
+    it 'name: String', (done) ->
+      mocks.mongoose.model.calledWith('Role'
+      , sinon.match.hasOwn 'name', 'String').should.be.true
+      done()
 
-  it 'Can find multiple roles', (done) ->
-    model.find {}, (err, result) ->
-      temp = result.length
-      model.create { name: 'bob' }, (err, result) ->
-        model.find {}, (err, result) ->
-          result.length.should.equal temp + 1
-          done()
-
-  it 'Can update the name of a role', (done) ->
-    model.create { name: 'jack'}, (e, res) ->
-      model.findById res._id, (err, result) ->
-        should.not.exist err
-        result.name = 'barry'
-        model.update res._id, {name: 'barry'}, (err, result) ->
-          should.not.exist err
-          result.should.have.property('name', 'barry')
-          done()
-
-  it 'Can be deleted', (done) ->
-    model.create {}, (err, res) ->
-      model.destroy res._id, (err, result) ->
-        model.findById res._id, (err, result) ->
-          should.not.exist result
-          done()
+  describe 'Exports',  ->
+     mocks.exportsCrudModel 'Role', model
