@@ -6,19 +6,21 @@ module.exports = (mongoose, crudModelFactory) ->
   name = 'User'
 
   Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
-
 
   SALT_WORK_FACTOR = 10
 
-  userSchema = new Schema {firstName: 'String'
-  , systemId: 'ObjectId'
-  , lastName: 'String'
-  , email: 'String'
-  , password: 'String'
-  , apiSecret: 'String'
-  , userIds: [{ provider: 'String', providerId: 'String'}]
-  , roles: [{type: ObjectId, ref: 'Role'}] }
+  schema =
+    systemId: 'ObjectId'
+    firstName: 'String'
+    lastName: 'String'
+    email: 'String'
+    password: 'String'
+    apiSecret: 'String'
+    userIds: [{provider: 'String', providerId: 'String'}]
+    roles: [{type: 'ObjectId', ref: 'Role'}]
+
+
+  userSchema = new Schema schema
 
   userSchema.virtual('name').get () ->
     @firstName + ' ' + @lastName
@@ -103,11 +105,8 @@ module.exports = (mongoose, crudModelFactory) ->
       result = buf.toString 'base64'
       callback null, result
 
-  create: crud.create
-  find: crud.find
-  findOneBy: crud.findOneBy
-  findById: crud.findById
-  findOneByProviderId: findOneByProviderId
-  findOrCreate: findOrCreate
-  update: update
-  destroy: crud.destroy
+  exports = crud
+  exports.update = update
+  exports.findOrCreate = findOrCreate
+  exports.findOneByProviderId = findOneByProviderId
+  exports
