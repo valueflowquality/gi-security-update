@@ -7,6 +7,7 @@ path = require 'path'
 activities = require './activities'
 roles = require './roles'
 users = require './users'
+permissions = require './permissions'
 
 module.exports = () ->
   describe 'Models', ->
@@ -35,6 +36,7 @@ module.exports = () ->
         './settings': sinon.stub().returns {name: 'Setting'}
         './categories': sinon.stub().returns {name: 'Category'}
         './activities': sinon.stub().returns {name: 'Activity'}
+        './permissions': sinon.stub().returns {name: 'Permission'}
 
       mongooseMock = sinon.spy()
       crudModelFactoryMock = sinon.spy()
@@ -105,5 +107,13 @@ module.exports = () ->
       expect(models.settings.name).to.equal 'Setting'
       done()
 
+    it 'exports permissions model', (done) ->
+      assert.ok stubs['./permissions'].calledOnce
+      assert stubs['./permissions'].calledWithExactly(mongooseMock, crudModelFactoryMock), 'permissions not initalized'
+      assert.property models, 'permissions', 'models does not export permissions'
+      expect(models.permissions.name).to.equal 'Permission'
+      done()
+
+    permissions()
 
 
