@@ -103,23 +103,13 @@ module.exports = (grunt) ->
         files: ['test/client/**/*.coffee']
         tasks: ['coffeeLint:tests', 'karma:singleUnit']
 
-    mocha:
-      unit:
-        expand: true
-        src: ['test/server/**/*Spec.coffee']
-        options:
-          timeout: 3000
-          ignoreLeaks: false
-          ui: 'bdd'
-          reporter: 'spec'
-          growl: true
+    mochaTest:
       travis:
-        expand: true
         src: ['test/server/**/*Spec.coffee']
         options:
           timeout: 3000
           ignoreLeaks: false
-          reporter: 'dot'   
+          reporter: 'dot'
 
     karma:
       singleUnit:
@@ -147,16 +137,17 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-karma'
+  grunt.loadNpmTasks 'grunt-mocha-test'
 
   grunt.registerTask 'build'
   , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','copy:libs'
   , 'requirejs', 'copy:dev', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mocha:unit', 'clean:bin']
+  , ['build', 'mochaTest:unit', 'clean:bin']
 
   grunt.registerTask 'travis'
-  , ['build', 'mocha:travis', 'karma:travis' ]
+  , ['build', 'mochaTest:travis', 'karma:travis' ]
 
   grunt.registerTask 'coverage'
   , ['build', 'karma:coverage', 'clean:bin']
