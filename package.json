@@ -9,7 +9,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.14",
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.17",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
     "mongoose": "~3.6.5",
