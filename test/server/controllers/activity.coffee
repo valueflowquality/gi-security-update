@@ -1,6 +1,7 @@
 path = require 'path'
 sinon = require 'sinon'
 assert = require('chai').assert
+expect = require('chai').expect
 mocks = require '../mocks'
 
 dir =  path.normalize __dirname + '../../../../server'
@@ -16,11 +17,11 @@ module.exports = () ->
     controller = require(dir + '/controllers/activity')(models.activities, mocks.crudControllerFactory)
 
     it 'Has an index method', (done) ->
-      controller.should.have.ownProperty 'index'
+      expect(controller).to.have.ownProperty 'index'
       done()
 
     it 'Has a create method', (done) ->
-      controller.should.have.ownProperty 'create'
+      expect(controller).to.have.ownProperty 'create'
       done()
 
     it 'Adds logged in user id to the request body', (done) ->
@@ -50,13 +51,13 @@ module.exports = () ->
       done()
 
     it 'Has a show method', (done) ->
-      controller.should.have.ownProperty 'show'
+      expect(controller).to.have.ownProperty 'show'
       done()
 
     it 'Has an update method', (done) ->
-      controller.should.have.ownProperty 'update'
+      expect(controller).to.have.ownProperty 'update'
       done()
 
     it 'Has a destroy method', (done) ->
-      controller.should.have.ownProperty 'destroy'
+      expect(controller).to.have.ownProperty 'destroy'
       done()

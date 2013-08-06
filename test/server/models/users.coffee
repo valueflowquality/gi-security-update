@@ -11,8 +11,8 @@ module.exports = () ->
     model = require(dir + '/models/users')(mocks.mongoose, mocks.crudModelFactory)
 
     it 'Creates a User mongoose model', (done) ->
-      mocks.mongoose.model.calledWith('User'
-      , sinon.match.any).should.be.true
+      expect(mocks.mongoose.model.calledWith('User'
+      , sinon.match.any)).to.be.true
       done()
 
     describe 'Schema', ->
@@ -23,38 +23,39 @@ module.exports = () ->
         done()
       
       it 'firstName: String', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'firstName', 'String').should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'firstName', 'String')).to.be.true
         done()
 
       it 'lastName: String', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'lastName', 'String').should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'lastName', 'String')).to.be.true
         done()
 
       it 'email: String', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'email', 'String').should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'email', 'String')).to.be.true
         done()
 
       it 'password: String', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'password', 'String').should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'password', 'String')).to.be.true
         done()
 
       it 'apiSecret: String', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'apiSecret', 'String').should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'apiSecret', 'String')).to.be.true
         done()
 
       it 'userIds: [{provider: String, providerId: String}]', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'userIds', [{provider: 'String', providerId: 'String'}]).should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'userIds'
+        , [{provider: 'String', providerId: 'String'}])).to.be.true
         done()
 
       it 'roles: [{type: ObjectId, ref: Role}]', (done) ->
-        mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'roles', [{type: 'ObjectId', ref: 'Role'}]).should.be.true
+        expect(mocks.mongoose.model.calledWith('User'
+        , sinon.match.has 'roles', [{type: 'ObjectId', ref: 'Role'}])).to.be.true
         done()
 
     describe 'Exports',  ->
