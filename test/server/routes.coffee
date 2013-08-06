@@ -1,4 +1,3 @@
-should = require 'should'
 path = require 'path'
 gint = require 'gint-util'
 sinon = require 'sinon'

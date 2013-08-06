@@ -1,4 +1,4 @@
-should = require 'should'
+expect = require('chai').expect
 
 exports.create = (body, callback) ->
   if body
@@ -15,7 +15,7 @@ exports.update = (id, json, callback) ->
 
 exports.destroy = (id, callback) ->
   if id
-    id.should.equal 'validId'
+    expect(id).to.equal 'validId'
     callback()
   else
     callback 'no id'
