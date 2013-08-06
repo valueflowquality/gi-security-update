@@ -108,7 +108,6 @@ module.exports = (grunt) ->
         expand: true
         src: ['test/server/**/*Spec.coffee']
         options:
-          globals: ['should']
           timeout: 3000
           ignoreLeaks: false
           ui: 'bdd'
@@ -118,7 +117,6 @@ module.exports = (grunt) ->
         expand: true
         src: ['test/server/**/*Spec.coffee']
         options:
-          globals: ['should']
           timeout: 3000
           ignoreLeaks: false
           reporter: 'dot'   
