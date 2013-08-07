@@ -1,19 +1,19 @@
 angular.module('app').config ['$routeProvider', '$locationProvider'
 , ($routeProvider, $locationProvider) ->
   $routeProvider
-  .when '/login'
+  .when '/login',
     controller: 'loginController'
     templateUrl: '/views/login.html'
-  .when '/user'
+  .when '/user',
     controller: 'userController'
     templateUrl: '/views/user.html'
-  .when '/logout'
+  .when '/logout',
     controller: 'logoutController'
     templateUrl: '/views/logout.html'
-  .when '/role'
+  .when '/role',
     controller: 'roleController'
     templateUrl: '/views/role.html'
-  .when '/users'
+  .when '/users',
     controller: 'usersController'
     templateUrl: '/views/userManagement.html'
 ]
