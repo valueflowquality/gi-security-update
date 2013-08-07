@@ -15,5 +15,5 @@ angular.module('app').config ['$routeProvider', '$locationProvider'
     templateUrl: '/views/role.html'
   .when '/users'
     controller: 'usersController'
-    templateUrl: '/views/user-management.html'
+    templateUrl: '/views/userManagement.html'
 ]

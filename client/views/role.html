@@ -28,11 +28,11 @@
           </div>
           <div ng-show="currentView == 'list'" class="span6">
             <h4>Role Details</h4>
-            <roleform role="selectedRole" title="Role Details" submit-text="Update Role" submit="saveRole(role)" destroy="deleteRole(role)"></roleform>
+            <role-form role="selectedRole" title="Role Details" submit-text="Update Role" submit="saveRole(role)" destroy="deleteRole(role)"></role-form>
 
           </div>
           <div ng-show="currentView == 'form'" class="span6">
-            <roleform role="newRole" title="Role Details" submit-text="Create Role" submit="saveRole(role)"></roleform>
+            <role-form role="newRole" title="Role Details" submit-text="Create Role" submit="saveRole(role)"></role-form>
           </div>
         </div>      
         <div ng-hide="selectedRole">
@@ -42,7 +42,7 @@
             You can create one by entering the details on this page.
           </div>
           <div class="span6">
-            <roleform title="New Role" role="newRole" submit-text="Create Role" submit="saveRole(role)"></roleform>
+            <role-form title="New Role" role="newRole" submit-text="Create Role" submit="saveRole(role)"></role-form>
           </div>
         </div>
       </div>

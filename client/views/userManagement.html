@@ -13,7 +13,7 @@
     <div class="span10">
       <div>
         <div ng-show="selectedUser" >
-          <div class="span6">
+          <div class="span4">
             <h4>Users</h4>
             <ul class="nav nav-list" ng-repeat="user in users" >
               <li ng-class="{active: user._id == selectedUser._id}" >
@@ -22,22 +22,22 @@
               </li>
             </ul>
           </div>
-          <div ng-show="currentView == 'list'" class="span6">
-            <userform user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></userform>
+          <div ng-show="currentView == 'list'" class="span8">
+            <user-form user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></user-form>
           </div>
-          <div ng-show="currentView == 'form'" class="span6">
-            <userform title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></userform>
+          <div ng-show="currentView == 'form'" class="span8">
+            <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form>
           </div>
         </div>      
         <div ng-hide="selectedUser">
-          <div class="span6">
+          <div class="span4">
             <h4>Users</h4>
             No Users found for this organisation.
             You can create one by entering the details on this page.
           </div>
-          <div class="span6">
+          <div class="span4">
             <h4>Create New User</h4>
-            <userform title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></userform>
+            <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form>
           </div>
         </div>
       </div>
