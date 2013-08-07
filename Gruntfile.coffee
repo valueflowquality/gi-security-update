@@ -110,6 +110,13 @@ module.exports = (grunt) ->
           timeout: 3000
           ignoreLeaks: false
           reporter: 'dot'
+      unit:
+        src: ['test/server/**/*Spec.coffee']
+        options:
+          timeout: 3000
+          ignoreLeaks: false
+          reporter: 'spec'
+          ui: 'bdd'
 
     karma:
       singleUnit:
