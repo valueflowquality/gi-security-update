@@ -1,8 +1,8 @@
-angular.module('app').directive 'userform'
+angular.module('app').directive 'userForm'
 , ['Role'
 , (Role) ->
   restrict: 'E'
-  templateUrl: '/views/user-form.html'
+  templateUrl: '/views/userForm.html'
   scope:
     user: '='
     submit: '&'

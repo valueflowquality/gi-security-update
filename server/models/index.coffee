@@ -6,6 +6,7 @@ roles = require './roles'
 settings = require './settings'
 activities = require './activities'
 categories = require './categories'
+permissions = require './permissions'
 
 module.exports = (mongoose, crudModelFactory) ->
   environmentsModel = environments mongoose, crudModelFactory
@@ -19,3 +20,4 @@ module.exports = (mongoose, crudModelFactory) ->
   settings: settings mongoose, crudModelFactory, environmentsModel
   activities: activities mongoose, crudModelFactory
   categories: categories mongoose, crudModelFactory, filesModel
+  permissions: permissions mongoose, crudModelFactory

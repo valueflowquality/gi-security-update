@@ -1,6 +1,6 @@
-angular.module('app').directive 'roleform', ->
+angular.module('app').directive 'roleForm', ->
   restrict: 'E'
-  templateUrl: '/views/role-form.html'
+  templateUrl: '/views/roleForm.html'
   scope:
     role: '='
     submit: '&'

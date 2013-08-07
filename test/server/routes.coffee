@@ -1,5 +1,4 @@
 path = require 'path'
-gint = require 'gint-util'
 sinon = require 'sinon'
 assert = require 'assert'
 
