@@ -120,14 +120,14 @@ module.exports = (grunt) ->
 
     karma:
       singleUnit:
-        configFile: 'test/karma.conf.js'
+        configFile: 'test/conf/karma.conf.coffee'
         reporters: ['dots', 'growl']
         singleRun: true        
       unit:
-        configFile: 'test/karma.conf.js'
+        configFile: 'test/conf/karma.conf.coffee'
         reporters: ['dots', 'growl']
       travis:
-        configFile: 'test/karma.conf.js'
+        configFile: 'test/conf/karma.conf.coffee'
         singleRun: true
         browsers: [ 'PhantomJS' ]
       coverage:
