@@ -33,6 +33,16 @@ module.exports = (model, crudControllerFactory) ->
       else
         res.json 200
 
+  generateAPISecretForMe = (req, res) ->
+    if req.user.id is not req.body._id
+      res.json 401
+    else
+      model.resetAPISecret req.user.id, req.systemId, (err) ->
+        if err
+          res.json 404
+        else
+          res.json 200
+
   index = (req, res) ->
     crud.index req, res, () ->
       _.each res.gintResult, (u) ->
@@ -64,5 +74,6 @@ module.exports = (model, crudControllerFactory) ->
   showMe: showMe
   updateMe: updateMe
   destroyMe: destroyMe
+  generateAPISecretForMe: generateAPISecretForMe
   index: index
   show: findById

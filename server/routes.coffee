@@ -9,6 +9,9 @@ configure = (app, rest) ->
   app.del '/api/user'
   , app.middleware.userAction, app.controllers.user.destroyMe
 
+  app.post '/api/user/apiSecret'
+  , app.middleware.userAction, app.controllers.user.generateAPISecretForMe
+
   rest.routeResource 'roles', app
   , app.middleware.userAction, app.controllers.role
   # sysAdminAction routes
