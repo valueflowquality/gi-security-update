@@ -6,7 +6,8 @@ require
       ]
     'controllers/users':
       deps: [
-        'services/userAccountService'
+        'services/userAccount'
+        'services/permission'
       ]
     'controllers/role':
       deps: [
@@ -36,5 +37,6 @@ require
     'directives/userForm'
     'services/facebook'
     'services/setting'
+    'services/permission'
   ], () ->
     console.log 'gint-security loaded'
