@@ -1,5 +1,6 @@
 AWS = require 'aws-sdk'
 _ = require 'underscore'
+gint = require 'gint-util'
 
 module.exports = (models, crudControllerFactory) ->
   crudController  = crudControllerFactory(models.files)
@@ -65,10 +66,8 @@ module.exports = (models, crudControllerFactory) ->
       
                 else
                   res.json 404, "could not find file with that id"
-
-  name: models.files.name
-  index: crudController.index
-  create: create
-  update: crudController.update
-  destroy: destroy
-  show: crudController.show
+  
+  exports = gint.common.extend {}, crudController
+  exports.create = create
+  exports.destroy = destroy
+  exports

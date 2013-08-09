@@ -1,13 +1,12 @@
+gint = require 'gint-util'
+
 module.exports = (model, crudControllerFactory) ->
-  crudController  = crudControllerFactory(model)
+  crud  = crudControllerFactory(model)
     
   create = (req, res) ->
     req.body.user = req.user.id
-    crudController.create req, res
+    crud.create req, res
 
-  name: model.name
-  index: crudController.index
-  create: create
-  update: crudController.update
-  destroy: crudController.destroy
-  show: crudController.show
+  exports = gint.common.extend {}, crud
+  exports.create = create
+  exports
