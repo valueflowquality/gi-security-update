@@ -59,7 +59,6 @@ Strategy::authenticate = (req) ->
           else
             that._verify userId, systemId, verified
         else
-          console.log 'STATUS: ' + res.statusCode
           that.fail { message: 'Not Authorized'}
       
       playRequest.on 'error', (e) ->

@@ -4,9 +4,7 @@ strategies = require './strategies'
 
 module.exports = (users) ->
   passport.use new strategies.basic.Strategy((email, password, systemId, done) ->
-    console.log 'basic verify ' + email + ' ' + password + ' ' + systemId
     users.findOneBy 'email', email, systemId, (err, user) ->
-      console.log 'found user: ' + err + ' : ' + user
       if err
         done null, false, {message: err}
       else if not user
