@@ -13,6 +13,10 @@ require
       deps: [
         'services/role'
       ]
+    'controllers/permisssion':
+      deps: [
+        'services/resource'
+      ]
     'filters/userName':
       deps: [
         'services/user'
@@ -28,15 +32,20 @@ require
     'views'
     'routes'
     'filters/userName'
+    'filters/permissionUser'
+    'filters/permissionRestriction'
     'controllers/loginController'
     'controllers/logoutController'
     'controllers/userController'
     'controllers/users'
     'controllers/role'
+    'controllers/permission'
     'directives/roleForm'
     'directives/userForm'
+    'directives/permissionForm'
     'services/facebook'
     'services/setting'
     'services/permission'
+    'services/resource'
   ], () ->
     console.log 'gint-security loaded'
