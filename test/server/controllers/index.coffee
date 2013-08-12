@@ -22,6 +22,8 @@ module.exports = () ->
         environments: 'environments'
         files: 'files'
         activities: 'activities'
+        permissions: 'permissions'
+        resources: 'resources'
       controllers:
         crud: sinon.stub().returnsArg 0
 
@@ -88,6 +90,18 @@ module.exports = () ->
       assert app.controllers.crud.calledWith(app.models.environments), 'crud controller factory not called for environment'
       assert.property controllers, 'environment', 'Controllers does not export environment'
       expect(controllers.environment).to.equal app.models.environments
+      done()
+
+    it 'exports crud permission controller', (done) ->
+      assert app.controllers.crud.calledWith(app.models.permissions), 'crud controller factory not called for permission'
+      assert.property controllers, 'permission', 'Controllers does not export permission'
+      expect(controllers.permission).to.equal app.models.permissions
+      done()
+
+    it 'exports crud resource controller', (done) ->
+      assert app.controllers.crud.calledWith(app.models.resources), 'crud controller factory not called for resource'
+      assert.property controllers, 'resource', 'Controllers does not export resource'
+      expect(controllers.resource).to.equal app.models.resources
       done()
 
     activity()

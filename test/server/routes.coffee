@@ -32,6 +32,8 @@ module.exports = () ->
           activity: sinon.spy()
           category: sinon.spy()
           environment: sinon.spy()
+          permission: sinon.spy()
+          resource: sinon.spy()
 
       rest = 
         routeResource: sinon.spy()
@@ -84,4 +86,11 @@ module.exports = () ->
     it 'exports a Restful files resource', (done) ->
       assertRestfulForResource 'files', 'user', 'file'
       done()
-      
+
+    it 'exports a Restful permission resource', (done) ->
+      assertRestfulForResource 'permissions', 'user', 'permission'
+      done()
+
+    it 'exports a Restful resource resource', (done) ->
+      assertRestfulForResource 'resources', 'user', 'resource'
+      done()

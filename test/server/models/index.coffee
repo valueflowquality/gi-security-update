@@ -8,6 +8,7 @@ activities = require './activities'
 roles = require './roles'
 users = require './users'
 permissions = require './permissions'
+resources = require './resources'
 
 module.exports = () ->
   describe 'Models', ->
@@ -37,6 +38,7 @@ module.exports = () ->
         './categories': sinon.stub().returns {name: 'Category'}
         './activities': sinon.stub().returns {name: 'Activity'}
         './permissions': sinon.stub().returns {name: 'Permission'}
+        './resources': sinon.stub().returns {name: 'Resource'}
 
       mongooseMock = sinon.spy()
       crudModelFactoryMock = sinon.spy()
@@ -116,4 +118,11 @@ module.exports = () ->
 
     permissions()
 
+    it 'exports resources model', (done) ->
+      assert.ok stubs['./resources'].calledOnce
+      assert stubs['./resources'].calledWithExactly(mongooseMock, crudModelFactoryMock), 'resources not initalized'
+      assert.property models, 'resources', 'models does not export resources'
+      expect(models.resources.name).to.equal 'Resource'
+      done()
 
+    resources()

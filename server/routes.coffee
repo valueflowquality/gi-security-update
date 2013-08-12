@@ -37,4 +37,10 @@ configure = (app, rest) ->
   rest.routeResource 'files', app
   , app.middleware.userAction, app.controllers.file
 
+  rest.routeResource 'permissions', app
+  , app.middleware.userAction, app.controllers.permission
+
+  rest.routeResource 'resources', app
+  , app.middleware.userAction, app.controllers.resource
+
 exports.configure = configure
