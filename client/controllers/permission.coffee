@@ -3,7 +3,6 @@ angular.module('app').controller 'permissionController'
 , ($scope, Resource, Permission) ->
   
   $scope.resourceTypes = Resource.all()
-  $scope.submitText = "Add Permission"
   
   $scope.selectedPermissions = []
 
@@ -11,7 +10,7 @@ angular.module('app').controller 'permissionController'
     customSearch: false
     customSort: false
     searchProperties: ['resourceType']
-    searchFilters: []
+    searchFilters: ['permissionUser', 'permissionRestriction']
     displayCounts: true
     columns: 3
 
@@ -20,4 +19,12 @@ angular.module('app').controller 'permissionController'
 
   Permission.all().then (permissions) ->
     $scope.permissions = permissions
+
+  $scope.$watch 'selectedPermissions[0]',  (newVal, oldVal) ->
+    if newVal
+      $scope.permission = newVal
+      $scope.submitText = "Update Permission"
+    else
+      $scope.permission = {}
+      $scope.submitText = "Add Permission"
 ]

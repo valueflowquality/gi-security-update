@@ -1,6 +1,6 @@
 angular.module('app').directive 'permissionForm'
-, ['$q', '$timeout', '$http', 'Resource', 'User', 'Permission'
-, ($q, $timeout, $http, Resource, User, Permission) ->
+, ['$q', '$timeout', '$http', '$filter', 'Resource', 'User', 'Permission'
+, ($q, $timeout, $http, $filter, Resource, User, Permission) ->
   restrict: 'E'
   templateUrl: '/views/permissionForm.html'
   scope:
@@ -21,8 +21,7 @@ angular.module('app').directive 'permissionForm'
     scope.restrictions = Permission.restrictions
 
     scope.$watch 'permission', (newVal, oldVal) ->
-      if newVal and (not oldVal)
-        refreshPermissionFields()
+      refreshPermissionFields()
     
     scope.$watch 'selectedResourceType', (newVal, oldVal) ->
       if newVal
@@ -30,20 +29,25 @@ angular.module('app').directive 'permissionForm'
         getRelatedKeys newVal.name
     
     pluralise = (str) ->
-      result = str.toLowerCase()
-      suffix = 'ory'
-      if result.indexOf(suffix, result.length - suffix.length) isnt -1
-        result = result.substring(0, result.length - 1) + 'ies'
+      if str?
+        result = str.toLowerCase()
+        suffix = 'ory'
+        if result.indexOf(suffix, result.length - suffix.length) isnt -1
+          result = result.substring(0, result.length - 1) + 'ies'
+        else
+          result += 's'
+        result
       else
-        result += 's'
-      result
+        str
 
     getRelatedKeys = (name) ->
       uri = '/api/' + pluralise(name)
       $http.get(uri).success (data) ->
+        scope.selectedKeys = []
         scope.keys = data
         angular.forEach scope.keys, (key) ->
           key.id = key._id
+        getSelectedKeys()
 
     scope.deletePermission = ->
       scope.destroy {permission: scope.permission}
@@ -73,22 +77,32 @@ angular.module('app').directive 'permissionForm'
       deferred.promise
 
     getSelectedResourceType = () ->
+      scope.selectedResourceType = {}
       if scope.permission
         if scope.permission.resourceType
           angular.forEach scope.resourceTypes, (resource) ->
             if resource.name is scope.permission.resourceType
-              scope.resourceType = resource
+              scope.selectedResourceType = resource
     
     getSelectedUser = () ->
+      scope.selectedUser = {}
       if scope.permission
         if scope.permission.userId
           angular.forEach scope.users, (user) ->
             if user._id is scope.permission.userId
               scope.selectedUser = user
+
+    getSelectedKeys = () ->
+      scope.selectedKeys = []
+      if scope.permission and scope.permission.keys?
+        scope.selectedKeys = $filter('filter')(scope.keys, (key) ->
+          scope.permission.keys.indexOf(key._id) isnt -1
+        )
     
     refreshPermissionFields = () ->
       $timeout(getSelectedResourceType)      
       $timeout(getSelectedUser)
+      $timeout(getSelectedKeys)
 
     scope.save = () ->
       if scope.permission
