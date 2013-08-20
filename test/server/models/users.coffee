@@ -1,5 +1,4 @@
 path = require 'path'
-sinon = require 'sinon'
 expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
@@ -9,7 +8,8 @@ dir =  path.normalize __dirname + '../../../../server'
 module.exports = () ->
   describe 'Users', ->
     model = require(dir + '/models/users')(mocks.mongoose, mocks.crudModelFactory)
-
+    sinon = mocks.sinon
+    
     it 'Creates a User mongoose model', (done) ->
       expect(mocks.mongoose.model.calledWith('User'
       , sinon.match.any)).to.be.true

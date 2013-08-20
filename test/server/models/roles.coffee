@@ -1,5 +1,4 @@
 path = require 'path'
-sinon = require 'sinon'
 assert = require('chai').assert
 expect = require('chai').expect
 moment = require 'moment'
@@ -11,7 +10,8 @@ module.exports = () ->
   describe 'Roles', ->
 
     model = require(dir + '/models/roles')(mocks.mongoose, mocks.crudModelFactory)
-
+    sinon = mocks.sinon
+    
     it 'Creates a Role mongoose model', (done) ->
       expect(mocks.mongoose.model.calledWith('Role'
       , sinon.match.any)).to.be.true

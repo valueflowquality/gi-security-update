@@ -1,5 +1,4 @@
 path = require 'path'
-sinon = require 'sinon'
 expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
@@ -8,6 +7,7 @@ dir =  path.normalize __dirname + '../../../../server'
 
 module.exports = () ->
   describe 'Activities', ->
+    sinon = mocks.sinon
     model = require(dir + '/models/activities')(mocks.mongoose, mocks.crudModelFactory)
 
     it 'Creates an Activity mongoose model', (done) ->
