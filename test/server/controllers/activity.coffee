@@ -14,7 +14,9 @@ module.exports = () ->
         name: 'activities'
         create: ->
    
-    controller = require(dir + '/controllers/activity')(models.activities, mocks.crudControllerFactory)
+    controller = require(dir + '/controllers/activity')(
+      models.activities, mocks.crudControllerFactory
+    )
 
     it 'Has an index method', (done) ->
       expect(controller).to.have.ownProperty 'index'

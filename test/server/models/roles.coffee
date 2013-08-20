@@ -9,7 +9,9 @@ dir =  path.normalize __dirname + '../../../../server'
 module.exports = () ->
   describe 'Roles', ->
 
-    model = require(dir + '/models/roles')(mocks.mongoose, mocks.crudModelFactory)
+    model = require(dir + '/models/roles')(
+      mocks.mongoose, mocks.crudModelFactory
+    )
     sinon = mocks.sinon
     
     it 'Creates a Role mongoose model', (done) ->
@@ -30,4 +32,4 @@ module.exports = () ->
         done()
 
     describe 'Exports',  ->
-       mocks.exportsCrudModel 'Role', model
+      mocks.exportsCrudModel 'Role', model

@@ -23,11 +23,11 @@ module.exports = (config) ->
       'client/filters/*.coffee'
       'bin/client/js/views.js'
       'test/client/**/*.coffee'
-    ];
+    ]
     preprocessors:
       '**/*.coffee': 'coffee'
     reporters = 'dots'
-    port: 8080 
+    port: 8080
     colors: true
     logLevel: config.LOG_INFO
     autoWatch: false

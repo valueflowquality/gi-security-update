@@ -100,9 +100,9 @@ angular.module('app').directive 'permissionForm'
         )
     
     refreshPermissionFields = () ->
-      $timeout(getSelectedResourceType)      
-      $timeout(getSelectedUser)
-      $timeout(getSelectedKeys)
+      $timeout getSelectedResourceType
+      $timeout getSelectedUser
+      $timeout getSelectedKeys
 
     scope.save = () ->
       if scope.permission

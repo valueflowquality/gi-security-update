@@ -35,7 +35,7 @@ module.exports = () ->
           permission: sinon.spy()
           resource: sinon.spy()
 
-      rest = 
+      rest =
         routeResource: sinon.spy()
 
       securityFilter = app.middleware.publicAction
@@ -52,8 +52,9 @@ module.exports = () ->
       assert rest.routeResource.calledWith(resource, app, securityFilter)
       , 'routeResource ' + resource + ' not called with correct security filter'
       
-      assert rest.routeResource.calledWith(resource, app, securityFilter, app.controllers[controllerName])
-      , 'routeResource ' + resource + ' not called on correct controller'
+      assert rest.routeResource.calledWith(
+        resource, app, securityFilter, app.controllers[controllerName]
+      ), 'routeResource ' + resource + ' not called on correct controller'
 
     it 'exports a RESTful role resource', (done) ->
       assertRestfulForResource 'roles', 'user', 'role'

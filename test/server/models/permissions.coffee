@@ -9,7 +9,10 @@ dir =  path.normalize __dirname + '../../../../server'
 module.exports = () ->
   describe 'Permissions', ->
 
-    model = require(dir + '/models/permissions')(mocks.mongoose, mocks.crudModelFactory)
+    model = require(dir + '/models/permissions')(
+      mocks.mongoose, mocks.crudModelFactory
+    )
+    
     sinon = mocks.sinon
     it 'Creates a Permissions mongoose model', (done) ->
       expect(mocks.mongoose.model.calledWith('Permission'
@@ -45,4 +48,4 @@ module.exports = () ->
 
 
     describe 'Exports',  ->
-       mocks.exportsCrudModel 'Permission', model
+      mocks.exportsCrudModel 'Permission', model

@@ -10,7 +10,7 @@ module.exports = (models, crudControllerFactory) ->
     if file.primary
       #TODO: set all other files with this parent to primary = false
       res.json 200, file
-    else  
+    else
       res.json 200, file
 
   create = (req, res) ->
@@ -38,7 +38,8 @@ module.exports = (models, crudControllerFactory) ->
                 res.json 404, "AWS secret key not set"
               else
                 if req.params?.id
-                  models.files.findById req.params.id, req.systemId, (err, file) ->
+                  models.files.findById req.params.id, req.systemId
+                  , (err, file) ->
                     if err or (not file)
                       res.json 404, "could not find file with that id"
                     else
@@ -51,15 +52,17 @@ module.exports = (models, crudControllerFactory) ->
 
                       s3 = new AWS.S3()
 
-                      path = 'public/images/' + file.parentType + '/' + file.parentId + '/'
+                      path = 'public/images/' + file.parentType + '/' +
+                      file.parentId + '/'
 
-                      deleteParams = 
+                      deleteParams =
                         Bucket: awsBucket.value
-                        Delete: 
+                        Delete:
                           Objects: [ Key: path + file.name]
 
                       _.each file.s3alternates, (alternate) ->
-                        deleteParams.Delete.Objects.push { Key: path + alternate + file.name }
+                        obj = { Key: path + alternate + file.name }
+                        deleteParams.Delete.Objects.push obj
 
                       s3.deleteObjects deleteParams, (err, data) ->
                         crudController.destroy req, res
