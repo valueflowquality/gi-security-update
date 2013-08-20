@@ -1,7 +1,11 @@
+index = require './index'
 routes = require './routes'
 models = require './models'
 controllers = require './controllers'
+authentication = require './authentication'
 describe 'Gint-Security',  ->
-   routes()
-   controllers()
-   models()
+  index()
+  routes()
+  controllers()
+  models()
+  authentication()

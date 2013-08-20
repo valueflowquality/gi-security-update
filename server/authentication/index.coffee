@@ -1,7 +1,10 @@
 passport = require 'passport'
 _ = require 'underscore'
 
+permissionFilter = require './permissionFilter'
+
 module.exports = (app, options) ->
+  permissionsMiddleware = permissionFilter app
 
   passport.serializeUser = (user, done) ->
     obj =
@@ -33,7 +36,7 @@ module.exports = (app, options) ->
       res.json 500, {message: 'host not found on request object'}
 
   publicAction = (req, res, next) ->
-    systemCheck req, res, next
+    exports._systemCheck req, res, next
 
   hmacAuth = (req, res, next) ->
     if _.indexOf(options.strategies, 'Hmac') is -1
@@ -65,17 +68,17 @@ module.exports = (app, options) ->
       )(req, res, next)
 
   userAction = (req, res, next) ->
-    systemCheck req, res, () ->
+    exports.publicAction req, res, () =>
       if req.isAuthenticated()
-        next()
+        permissionsMiddleware req, res, next
       else
-        hmacAuth req, res, (err, user) ->
+        exports._hmacAuth req, res, (err, user) =>
           if user and (not err)
-            next()
+            permissionsMiddleware req, res, next
           else
-            playAuth req, res, (err, user) ->
+            exports._playAuth req, res, (err, user) ->
               if user and (not err)
-                next()
+                permissionsMiddleware req, res, next
               else
                 res.json 401, {}
 
@@ -129,8 +132,14 @@ module.exports = (app, options) ->
     if _.indexOf(options.strategies, 'Facebook') > -1
       facebook.routes app, publicAction
 
+  exports = 
   #Export the authentiaction action middleware
-  publicAction: publicAction
-  userAction: userAction
-  adminAction: adminAction
-  sysAdminAction: sysAdminAction
+    publicAction: publicAction
+    userAction: userAction
+    adminAction: adminAction
+    sysAdminAction: sysAdminAction
+    _systemCheck: systemCheck
+    _hmacAuth: hmacAuth
+    _playAuth: playAuth
+
+  exports

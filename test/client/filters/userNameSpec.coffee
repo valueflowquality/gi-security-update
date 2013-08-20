@@ -1,6 +1,5 @@
 describe 'userName filter', ->
   beforeEach module 'ngResource'
-  beforeEach module 'ui'
   beforeEach module 'app'
 
   #Mock (/ override) the User service that will be injected
@@ -18,23 +17,23 @@ describe 'userName filter', ->
 
   it 'should have a userName filter'
   , inject ['$filter', ($filter) ->
-    expect($filter('userName')).not.toBeNull()
+    expect($filter('userName')).not.to.be.null
   ]
 
   it 'should gracefully handle unknown ids'
   , inject [ '$filter', ($filter) ->
     expect($filter('userName')('456'))
-    .toEqual('456')
+    .to.equal '456'
   ]
 
   it 'should gracefully handle missing ids'
   , inject [ '$filter', ($filter) ->
     expect($filter('userName')())
-    .toEqual('Missing User Id')
+    .to.equal 'Missing User Id'
   ]
 
   it 'should convert known ids to user.firstName'
   , inject ['$filter', ($filter) ->
     expect($filter('userName')('123'))
-    .toEqual('Alice')
+    .to.equal 'Alice'
   ]

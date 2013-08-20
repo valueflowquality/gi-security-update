@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span6">
+      <datatable items="permissions" 
+                 selected-items="selectedPermissions"
+                 options="options" >
+        <div class="header">
+          <label>User</label>
+          <label>Resource</label>
+          <label>Restriction</label>
+        </div>
+        <div class="body">
+          <label class="filter">permissionUser</label>
+          <label class="property">resourceType</label>
+          <label class="filter">permissionRestriction</label>
+        </div>
+      </datatable>
+    </div>
+    <div class="span6">
+      <permission-form permission="permission" submit-text="{{submitText}}" submit="savePermission(permission)"></permission-form>
+    </div>
+  </div>
+</div>

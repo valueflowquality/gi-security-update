@@ -32,8 +32,10 @@ module.exports = () ->
           activity: sinon.spy()
           category: sinon.spy()
           environment: sinon.spy()
+          permission: sinon.spy()
+          resource: sinon.spy()
 
-      rest = 
+      rest =
         routeResource: sinon.spy()
 
       securityFilter = app.middleware.publicAction
@@ -50,8 +52,9 @@ module.exports = () ->
       assert rest.routeResource.calledWith(resource, app, securityFilter)
       , 'routeResource ' + resource + ' not called with correct security filter'
       
-      assert rest.routeResource.calledWith(resource, app, securityFilter, app.controllers[controllerName])
-      , 'routeResource ' + resource + ' not called on correct controller'
+      assert rest.routeResource.calledWith(
+        resource, app, securityFilter, app.controllers[controllerName]
+      ), 'routeResource ' + resource + ' not called on correct controller'
 
     it 'exports a RESTful role resource', (done) ->
       assertRestfulForResource 'roles', 'user', 'role'
@@ -84,4 +87,11 @@ module.exports = () ->
     it 'exports a Restful files resource', (done) ->
       assertRestfulForResource 'files', 'user', 'file'
       done()
-      
+
+    it 'exports a Restful permission resource', (done) ->
+      assertRestfulForResource 'permissions', 'user', 'permission'
+      done()
+
+    it 'exports a Restful resource resource', (done) ->
+      assertRestfulForResource 'resources', 'user', 'resource'
+      done()

@@ -1,5 +1,4 @@
 path = require 'path'
-sinon = require 'sinon'
 assert = require('chai').assert
 expect = require('chai').expect
 moment = require 'moment'
@@ -10,8 +9,11 @@ dir =  path.normalize __dirname + '../../../../server'
 module.exports = () ->
   describe 'Permissions', ->
 
-    model = require(dir + '/models/permissions')(mocks.mongoose, mocks.crudModelFactory)
-
+    model = require(dir + '/models/permissions')(
+      mocks.mongoose, mocks.crudModelFactory
+    )
+    
+    sinon = mocks.sinon
     it 'Creates a Permissions mongoose model', (done) ->
       expect(mocks.mongoose.model.calledWith('Permission'
       , sinon.match.any)).to.be.true
@@ -46,4 +48,4 @@ module.exports = () ->
 
 
     describe 'Exports',  ->
-       mocks.exportsCrudModel 'Permission', model
+      mocks.exportsCrudModel 'Permission', model

@@ -1,4 +1,5 @@
 _ = require 'underscore'
+gint = require 'gint-util'
 
 module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
@@ -33,6 +34,16 @@ module.exports = (model, crudControllerFactory) ->
       else
         res.json 200
 
+  generateAPISecretForMe = (req, res) ->
+    if req.user.id is not req.body._id
+      res.json 401
+    else
+      model.resetAPISecret req.user.id, req.systemId, (err) ->
+        if err
+          res.json 404
+        else
+          res.json 200
+
   index = (req, res) ->
     crud.index req, res, () ->
       _.each res.gintResult, (u) ->
@@ -58,11 +69,13 @@ module.exports = (model, crudControllerFactory) ->
       delete res.gintResult.password
       res.json 200, res.gintResult
 
-  create: create
-  update: update
-  destroy: crud.destroy
-  showMe: showMe
-  updateMe: updateMe
-  destroyMe: destroyMe
-  index: index
-  show: findById
+  exports = gint.common.extend {}, crud
+  exports.index = index
+  exports.show = findById
+  exports.create = create
+  exports.update = update
+  exports.showMe = showMe
+  exports.updateMe = updateMe
+  exports.destroyMe = destroyMe
+  exports.generateAPISecretForMe = generateAPISecretForMe
+  exports

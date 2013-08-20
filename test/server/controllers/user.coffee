@@ -9,7 +9,7 @@ dir =  path.normalize __dirname + '../../../../server'
 module.exports = () ->
   describe 'User', ->
 
-    alice = 
+    alice =
       firstName: 'Alice'
       password: '123'
     
@@ -28,7 +28,9 @@ module.exports = () ->
       update: (id, json, cb) ->
         cb null, json
    
-    controller = require(dir + '/controllers/user')(userModel, mocks.crudControllerFactory)
+    controller = require(dir + '/controllers/user')(
+      userModel, mocks.crudControllerFactory
+    )
 
     describe 'exports', ->
       it 'an index method', (done) ->

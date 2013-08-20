@@ -11,3 +11,5 @@ module.exports = (app) ->
   category:     app.controllers.crud app.models.categories
   system:       app.controllers.crud app.models.systems
   environment:  app.controllers.crud app.models.environments
+  permission:   app.controllers.crud app.models.permissions
+  resource:     app.controllers.crud app.models.resources

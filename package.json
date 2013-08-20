@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.17",
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.19",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
     "mongoose": "~3.6.5",
@@ -40,13 +40,13 @@
     "karma-chrome-launcher": "~0.1.0",
     "karma-firefox-launcher": "~0.1.0",
     "karma-html2js-preprocessor": "~0.1.0",
-    "karma-jasmine": "~0.1.0",
     "karma-requirejs": "~0.1.0",
     "karma-coffee-preprocessor": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma": "~0.10.1",
     "grunt-karma": "~0.6.1",
     "grunt-mocha-test": "~0.6.2",
-    "proxyquire": "~0.4.1"
+    "proxyquire": "~0.4.1",
+    "karma-mocha": "~0.1.0"
   }
 }

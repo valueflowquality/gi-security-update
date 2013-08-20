@@ -6,8 +6,8 @@ angular.module('app').controller 'userController'
     UserAccount.delete()
 
   $scope.resetApi = () ->
-    console.log 'reset api'
-    UserAccount.resetApi()
+    UserAccount.resetAPISecret().then () ->
+      $scope.user = UserAccount.get()
 
   $scope.user = UserAccount.get()
 ]

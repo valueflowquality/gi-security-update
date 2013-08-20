@@ -1,5 +1,4 @@
 path = require 'path'
-sinon = require 'sinon'
 expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
@@ -8,8 +7,12 @@ dir =  path.normalize __dirname + '../../../../server'
 
 module.exports = () ->
   describe 'Users', ->
-    model = require(dir + '/models/users')(mocks.mongoose, mocks.crudModelFactory)
-
+    model = require(dir + '/models/users')(
+      mocks.mongoose, mocks.crudModelFactory
+    )
+    
+    sinon = mocks.sinon
+    
     it 'Creates a User mongoose model', (done) ->
       expect(mocks.mongoose.model.calledWith('User'
       , sinon.match.any)).to.be.true
@@ -55,7 +58,8 @@ module.exports = () ->
 
       it 'roles: [{type: ObjectId, ref: Role}]', (done) ->
         expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'roles', [{type: 'ObjectId', ref: 'Role'}])).to.be.true
+        , sinon.match.has 'roles'
+        , [{type: 'ObjectId', ref: 'Role'}])).to.be.true
         done()
 
     describe 'Exports',  ->
@@ -68,7 +72,8 @@ module.exports = () ->
         it 'findOrCreate: function(json, callback) -> (err, obj)', (done) ->
           done()
 
-        it 'findOneByProviderId: function(id, systemId, callback) -> (err, obj)', (done) ->
+        it 'findOneByProviderId: function(id, systemId, callback)' +
+        '-> (err, obj)', (done) ->
           done()
 
 #   it 'Hashes password on creation', (done) ->

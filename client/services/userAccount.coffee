@@ -23,6 +23,13 @@ angular.module('app').factory 'UserAccount',
           deferred.resolve user
     deferred.promise
 
+
+  resetAPISecret = () ->
+    getMe().then (me) ->
+      $http.post('/api/user/apiSecret', {_id: me._id})
+
   get: resource.get
   getMe: getMe
+  resetAPISecret: resetAPISecret
+
 ]

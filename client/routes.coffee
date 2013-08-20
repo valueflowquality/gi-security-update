@@ -16,4 +16,7 @@ angular.module('app').config ['$routeProvider', '$locationProvider'
   .when '/users',
     controller: 'usersController'
     templateUrl: '/views/userManagement.html'
+  .when '/permissions',
+    controller: 'permissionController'
+    templateUrl: '/views/permissions.html'
 ]

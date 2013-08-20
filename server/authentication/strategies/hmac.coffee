@@ -55,7 +55,6 @@ hmac = (key, string, digest, fn) ->
   crypto.createHmac(fn, new Buffer(key, 'utf8')).update(string).digest(digest)
 
 Strategy::authenticate = (req, options) ->
-  console.log 'in hmac authenticate'
 
   verified = (err, user, info) =>
     if err
@@ -64,20 +63,23 @@ Strategy::authenticate = (req, options) ->
       return @fail info
 
     #TODO: get secret from the user id
-    verificationSecret = user.api_secret
+    verificationSecret = user.apiSecret
     verificationString = stringToSign req
-    verificationSignature = hmac verificationSecret
-    , verificationString, 'base64'
-   
-    if reqSignature != verificationSignature
-      @fail {message: 'Signature Verification Failure'}
+    if not verificationSecret?
+      @fail { message: 'User has not activiated API'}
     else
-      @success user, info
+      verificationSignature = hmac verificationSecret
+      , verificationString, 'base64'
+
+      if reqSignature != verificationSignature
+        @fail {message: 'Signature Verification Failure'}
+      else
+        @success user, info
 
   options = options or {}
   accessKey = req.headers[@_accessKeyField]
   reqSignature = req.headers[@_signatureField]
-  expiryDate = moment(parseInt(req.headers[@_expiryDateField],10))
+  expiryDate = moment(req.headers[@_expiryDateField])
   systemId = req.systemId or undefined
   
   if not accessKey or not reqSignature

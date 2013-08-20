@@ -1,0 +1,33 @@
+<div class="well form">
+  <label>User:</label>
+  <select2 options="users" selection="selectedUser" field="firstName" style="width:100%"/>
+  <label>Resource Type:</label>
+  <select2 options="resourceTypes" selection="selectedResourceType" field="name" style="width:100%"/>
+  <label>Restriction:</label>
+  <select ng-model="permission.restriction" ng-options="r.value as r.name for r in restrictions"></select>
+  <label>{{permission.resourceType.name}}</label>
+  <label>Keys:</label>
+  <select2 tags custom options="keys" selection="selectedKeys" field="name" style="width:100%"/>
+  <button class="btn btn-primary" ng-click="save()">
+    {{submitText}}
+  </button>
+  <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()" >
+    <i class="icon-white icon-trash" />
+  </button>
+
+</div>
+<modal visible="showDeleteModal"
+        title="Please Confirm Delete Action">
+  <div class="body">
+    <p>Delete this permission - are you sure?</p>
+    <p>Please continue only if you are 100% 
+      you understand what you're deleting.  
+      There is no way to retrieve the data after this point.</p>
+  </div>
+  <div class="footer">
+    <button ng-click="deletePermission()"
+            class="btn btn-danger">
+      Delete It!
+    </button>
+  </div>
+</modal>

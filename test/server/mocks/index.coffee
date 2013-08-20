@@ -1,6 +1,10 @@
+gint = require 'gint-util'
+
+
 module.exports =
   crudModel: require './crud'
   crudControllerFactory: require './crudControllerFactory'
-  mongoose: require './mongoose'
   exportsCrudModel: require './exportsCrudModel'
   crudModelFactory: require './crudModelFactory'
+  mongoose: gint.mocks.mongoose
+  sinon: gint.mocks.sinon

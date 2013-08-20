@@ -1,1 +1,1 @@
-angular.module('app', ['ngResource', 'ui']);
+angular.module('app', ['ngResource']);

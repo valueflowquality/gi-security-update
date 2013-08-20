@@ -19,7 +19,8 @@ module.exports = (name, model, overrides) ->
       expect(model).to.have.property 'findOne', 'crudModel findOne'
       done()
 
-    it 'findOneBy: function(key, value, systemId, callback) -> (err, obj)', (done) ->
+    it 'findOneBy: function(key, value, systemId, callback) -> (err, obj)'
+    , (done) ->
       expect(model).to.have.property 'findOneBy', 'crudModel findOneBy'
       done()
 

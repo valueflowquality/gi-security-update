@@ -31,12 +31,12 @@ module.exports = (mongoose, crudModelFactory) ->
     @lastName = split[1]
 
   userSchema.methods.resetAPISecret = (callback) ->
-    generateAPISecret (err, secret) =>
+    crypto.randomBytes 18, (err, buf) =>
       if err
         callback err
       else
-        @api_secret = secret
-        callback() if callback
+        @apiSecret = buf.toString 'base64'
+        @save callback
 
   userSchema.methods.comparePassword = (candidate, callback) ->
     if candidate?
@@ -70,7 +70,7 @@ module.exports = (mongoose, crudModelFactory) ->
   crud = crudModelFactory mongoose.model(name)
 
   update = (id, json, callback) ->
-    crud.findById id, (err, user) ->
+    crud.findById id, json.systemId, (err, user) ->
       if err
         callback err, null
       else
@@ -98,15 +98,18 @@ module.exports = (mongoose, crudModelFactory) ->
         crud.create json, (err, user) ->
           callback err, user
 
-  generateAPISecret = (callback) ->
-    'in generate api secret'
-    crypto.randomBytes 18, (err, buf) ->
-      callback err if err
-      result = buf.toString 'base64'
-      callback null, result
+  resetAPISecret = (id, systemId, callback) ->
+    crud.findById id, systemId, (err, user) ->
+      if err
+        callback err
+      else if user?
+        user.resetAPISecret callback
+      else
+        callback 'cannot find user'
 
   exports = crud
   exports.update = update
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId
+  exports.resetAPISecret = resetAPISecret
   exports
