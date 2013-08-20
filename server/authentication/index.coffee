@@ -36,7 +36,7 @@ module.exports = (app, options) ->
       res.json 500, {message: 'host not found on request object'}
 
   publicAction = (req, res, next) ->
-    @_systemCheck req, res, next
+    exports._systemCheck req, res, next
 
   hmacAuth = (req, res, next) ->
     if _.indexOf(options.strategies, 'Hmac') is -1
@@ -68,15 +68,15 @@ module.exports = (app, options) ->
       )(req, res, next)
 
   userAction = (req, res, next) ->
-    @publicAction req, res, () =>
+    exports.publicAction req, res, () =>
       if req.isAuthenticated()
         permissionsMiddleware req, res, next
       else
-        @_hmacAuth req, res, (err, user) =>
+        exports._hmacAuth req, res, (err, user) =>
           if user and (not err)
             permissionsMiddleware req, res, next
           else
-            @_playAuth req, res, (err, user) ->
+            exports._playAuth req, res, (err, user) ->
               if user and (not err)
                 permissionsMiddleware req, res, next
               else
@@ -132,11 +132,14 @@ module.exports = (app, options) ->
     if _.indexOf(options.strategies, 'Facebook') > -1
       facebook.routes app, publicAction
 
+  exports = 
   #Export the authentiaction action middleware
-  publicAction: publicAction
-  userAction: userAction
-  adminAction: adminAction
-  sysAdminAction: sysAdminAction
-  _systemCheck: systemCheck
-  _hmacAuth: hmacAuth
-  _playAuth: playAuth
+    publicAction: publicAction
+    userAction: userAction
+    adminAction: adminAction
+    sysAdminAction: sysAdminAction
+    _systemCheck: systemCheck
+    _hmacAuth: hmacAuth
+    _playAuth: playAuth
+
+  exports
