@@ -1,7 +1,7 @@
 {
   "author": "David Bochenski",
   "name": "gint-security",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt travis"
@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.19",
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.0.21",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
     "mongoose": "~3.6.5",

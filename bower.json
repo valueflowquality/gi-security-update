@@ -1,5 +1,5 @@
 {
   "name": "gint-security",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "./bin/gint-security.js"
 }
