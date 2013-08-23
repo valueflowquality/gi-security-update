@@ -160,7 +160,7 @@ angular.module('app').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('/views/roleForm.html', '<div class="well form"> <input type="hidden" id="hiddenSiteId" ng-model="role._id"/> <div class="control-group"> <label class="control-label">Name:</label> <div class="controls"> <input type="text" name="name" ng-model="role.name"/> </div> </div> <div class="control-group"> <div class="controls"> <button class="btn btn-primary" ng-click="submit({role: role})"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <i class="icon-white icon-trash"/> </button> </div> </div> </div> <modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a role - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteRole()" \ class="btn btn-danger"> Delete It! </button> </div> </modal>');
 	$templateCache.put('/views/test.html', '<div class="container-fluid"> <div class="row-fluid"> <h3>Test Page</h3> <h4>{{message}}</h4> </div> </div>');
 	$templateCache.put('/views/user.html', '<label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label> <label name="userId">Id: {{user._id}}</label> <label name="apiSecret">API Secret: {{user.apiSecret}}</label> <button class="btn btn-primary" ng-click="resetApi()">Create API Secret</button>');
-	$templateCache.put('/views/userForm.html', '<div class="well form"> <h4>Profile</h4> <div class="control-group"> <label class="control-label">First Name:</label> <div class="controls"> <input type="text" name="name" ng-model="user.firstName" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Surname:</label> <div class="controls"> <input type="text" name="lastName" ng-model="user.lastName" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Email:</label> <div class="controls"> <input type="text" name="email" ng-model="user.email" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Password:</label> <div class="controls"> <input type="password" name="password" ng-model="user.password" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <div class="controls"> <button class="btn btn-primary" ng-disabled="!unsavedChanges" ng-click="save()">{{submitText}}</button> </div> </div> </div> <div class="well form"> <h4>Roles</h4> <div class="control-group"> <h4>Assigned Roles</h4> <div class="span12" ng-repeat="role in userRoles"> <label>{{role.name}}</label> <button class="btn btn-danger" ng-click="removeFromRole(role)"> <i class="icon-white icon-trash"/> </button> </div> <h4>Available Roles</h4> <select ng-model="selectedRole" ng-options="role.name for role in notUserRoles"> </select> <div class="controls"> <button ng-click="addToRole(selectedRole)" class="btn btn-primary">Assign</button> </div> </div> <div class="control-group"> <div class="controls"> <button ng-disabled="!unsavedChanges" class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <i class="icon-white icon-trash"/> </button> </div> </div> </div> <modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a user - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteUser()" \ class="btn btn-danger"> Delete It! </button> </div> </modal>');
+	$templateCache.put('/views/userForm.html', '<div class="well form"> <h4>Profile</h4> <div class="control-group"> <label class="control-label">First Name:</label> <div class="controls"> <input type="text" name="name" ng-model="user.firstName" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Surname:</label> <div class="controls"> <input type="text" name="lastName" ng-model="user.lastName" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Email:</label> <div class="controls"> <input type="text" name="email" ng-model="user.email" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Password:</label> <div class="controls"> <input type="password" name="password" ng-model="user.password" ng-change="checkForChanges()"/> </div> </div> <h4>Roles</h4> <div class="control-group"> <h4>Assigned Roles</h4> <div class="span12" ng-repeat="role in userRoles"> <label>{{role.name}}</label> <button class="btn btn-danger" ng-click="removeFromRole(role)"> <i class="icon-white icon-trash"/> </button> </div> <h4>Available Roles</h4> <select ng-model="selectedRole" ng-options="role.name for role in notUserRoles"> </select> <div class="controls"> <button ng-click="addToRole(selectedRole)" class="btn btn-primary">Assign</button> </div> </div> <div class="control-group"> <div class="controls"> <button ng-disabled="!unsavedChanges" class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <i class="icon-white icon-trash"/> </button> </div> </div> </div> <modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a user - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteUser()" \ class="btn btn-danger"> Delete It! </button> </div> </modal>');
 	$templateCache.put('/views/userManagement.html', '<div class="container-fluid"> <div class="row-fluid"> <div class="span2"> <ul class="nav nav-list"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Users</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New User</a> </li> </ul> </div> <div class="span10"> <div> <div ng-show="selectedUser"> <div class="span4"> <h4>Users</h4> <ul class="nav nav-list" ng-repeat="user in users"> <li ng-class="{active: user._id==selectedUser._id}"> <a ng-click="selectUser(user)">{{user.firstName}}</a> </li> </ul> </div> <div ng-show="currentView==\'list\'" class="span8"> <user-form user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></user-form> </div> <div ng-show="currentView==\'form\'" class="span8"> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> <div ng-hide="selectedUser"> <div class="span4"> <h4>Users</h4> No Users found for this organisation. You can create one by entering the details on this page. </div> <div class="span4"> <h4>Create New User</h4> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> </div> </div> </div> </div>');
 }]);
 angular.module('app').config([
@@ -490,7 +490,9 @@ angular.module('app').controller('logoutController', [
   '$rootScope', '$scope', '$http', '$timeout', 'authService', function($rootScope, $scope, $http, $timeout, authService) {
     return $http.get('/api/logout').success(function() {
       $rootScope.me = {};
-      return $rootScope.loggedIn = false;
+      $rootScope.loggedIn = false;
+      $rootScope.isAdmin = false;
+      return $rootScope.isRestricted = false;
     });
   }
 ]);
@@ -599,7 +601,7 @@ angular.module('app').controller('usersController', [
     };
     $scope.saveUser = function(user) {
       return User.save(user, function() {
-        return $scope.getData;
+        return $scope.getData();
       });
     };
     $scope.getUsers = function() {
@@ -623,8 +625,8 @@ angular.module('app').controller('usersController', [
 ]);
 
 angular.module('app').factory('Role', [
-  '$resource', function($resource) {
-    var all, destroy, factory, get, methods, resource, roles, save, updateMasterList;
+  '$resource', '$filter', '$q', function($resource, $filter, $q) {
+    var all, destroy, factory, get, isInRole, methods, resource, roles, save, updateMasterList;
     methods = {
       query: {
         method: 'GET',
@@ -725,13 +727,34 @@ angular.module('app').factory('Role', [
         name: ''
       };
     };
+    isInRole = function(name, roleIds) {
+      var deferred;
+      deferred = $q.defer();
+      all(function(roles) {
+        var inRole, toCheck;
+        inRole = false;
+        toCheck = $filter('filter')(roles, function(role) {
+          return role.name.toLowerCase() === name.toLowerCase();
+        });
+        angular.forEach(toCheck, function(role) {
+          return angular.forEach(roleIds, function(id) {
+            if (id === role._id) {
+              return inRole = true;
+            }
+          });
+        });
+        return deferred.resolve(inRole);
+      });
+      return deferred.promise;
+    };
     return {
       query: all,
       all: all,
       get: get,
       create: factory,
       destroy: destroy,
-      save: save
+      save: save,
+      isInRole: isInRole
     };
   }
 ]);
@@ -909,6 +932,7 @@ angular.module('app').directive('userForm', [
           return refreshUserRoles();
         };
         scope.removeFromRole = function(role) {
+          scope.unsavedChanges = true;
           return angular.forEach(scope.user.roles, function(userRole, index) {
             if (userRole === role._id) {
               scope.user.roles.splice(index, 1);
