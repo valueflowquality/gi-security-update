@@ -1,5 +1,6 @@
 angular.module('app').factory 'Role'
-, ['$resource', ($resource) ->
+, ['$resource', '$filter', '$q'
+, ($resource, $filter, $q) ->
 
   methods =
     query:
@@ -75,10 +76,28 @@ angular.module('app').factory 'Role'
   factory = () ->
     name: ''
 
+
+  isInRole = (name, roleIds) ->
+    deferred = $q.defer()
+    all (roles) ->
+      inRole = false
+      toCheck = $filter('filter')(roles, (role) ->
+
+        role.name.toLowerCase() is name.toLowerCase()
+      )
+      angular.forEach toCheck, (role) ->
+        angular.forEach roleIds, (id) ->
+          if id is role._id
+            inRole = true
+
+      deferred.resolve inRole
+    deferred.promise
+
   query: all
   all: all
   get: get
   create: factory
   destroy: destroy
   save: save
+  isInRole: isInRole
 ]
