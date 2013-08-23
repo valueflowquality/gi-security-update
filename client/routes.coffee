@@ -10,7 +10,7 @@ angular.module('app').config ['$routeProvider', '$locationProvider'
   .when '/logout',
     controller: 'logoutController'
     templateUrl: '/views/logout.html'
-  .when '/role',
+  .when '/roles',
     controller: 'roleController'
     templateUrl: '/views/role.html'
   .when '/users',
