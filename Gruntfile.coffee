@@ -119,14 +119,7 @@ module.exports = (grunt) ->
           ui: 'bdd'
 
     karma:
-      singleUnit:
-        configFile: 'test/conf/karma.conf.coffee'
-        reporters: ['dots', 'growl']
-        singleRun: true        
       unit:
-        configFile: 'test/conf/karma.conf.coffee'
-        reporters: ['dots', 'growl']
-      travis:
         configFile: 'test/conf/karma.conf.coffee'
         singleRun: true
         browsers: [ 'PhantomJS' ]
@@ -151,10 +144,10 @@ module.exports = (grunt) ->
   , 'requirejs', 'copy:dev', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mochaTest:unit', 'clean:bin']
+  , ['build', 'mochaTest:unit', 'karma:unit', 'clean:bin']
 
   grunt.registerTask 'travis'
-  , ['build', 'mochaTest:travis', 'karma:travis' ]
+  , ['build', 'mochaTest:travis', 'karma:unit' ]
 
   grunt.registerTask 'coverage'
   , ['build', 'karma:coverage', 'clean:bin']

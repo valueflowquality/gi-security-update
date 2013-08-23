@@ -23,11 +23,12 @@ describe 'Role Controller', ->
 
   scope = {}
   ctrl = {}
-  $rootScope = {isAdmin: true}
+  $rootScope = {}
 
   beforeEach inject ($rootScope, $injector, $controller) ->
     roleService = mockRoleService
     scope = $rootScope.$new()
+    scope.isAdmin = true
     ctrl = $controller('roleController'
     , { $scope: scope, Role: mockRoleService, User: mockUserService })
 
