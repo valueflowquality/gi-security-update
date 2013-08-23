@@ -7,5 +7,6 @@ angular.module('app').controller 'logoutController'
   .success ->
     $rootScope.me = {}
     $rootScope.loggedIn = false
-
+    $rootScope.isAdmin = false
+    $rootScope.isRestricted = false
 ]

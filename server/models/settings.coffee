@@ -1,3 +1,5 @@
+gint = require 'gint-util'
+
 module.exports = (mongoose, crudModelFactory, environmentsModel) ->
 
   Schema = mongoose.Schema
@@ -118,7 +120,7 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
       else
         saveSetting setting, value, callback
         
-  exports = crud
+  exports = gint.common.extend {}, crud
   exports.get = get
   exports.set = set
   exports.name = name
