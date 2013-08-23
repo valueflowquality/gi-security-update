@@ -132,7 +132,7 @@ module.exports = (app, options) ->
     if _.indexOf(options.strategies, 'Facebook') > -1
       facebook.routes app, publicAction
 
-  exports = 
+  exports =
   #Export the authentiaction action middleware
     publicAction: publicAction
     userAction: userAction
