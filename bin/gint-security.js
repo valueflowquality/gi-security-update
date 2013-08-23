@@ -174,7 +174,7 @@ angular.module('app').config([
     }).when('/logout', {
       controller: 'logoutController',
       templateUrl: '/views/logout.html'
-    }).when('/role', {
+    }).when('/roles', {
       controller: 'roleController',
       templateUrl: '/views/role.html'
     }).when('/users', {
@@ -583,7 +583,7 @@ angular.module('app').factory('Permission', [
 ]);
 
 angular.module('app').controller('usersController', [
-  '$scope', 'User', function($scope, User) {
+  '$scope', '$location', 'User', function($scope, $location, User) {
     $scope.newUser = User.create();
     $scope.currentView = 'list';
     $scope.getData = function() {
@@ -620,7 +620,11 @@ angular.module('app').controller('usersController', [
     $scope.show = function(view) {
       return $scope.currentView = view;
     };
-    return $scope.getData();
+    if ($scope.isAdmin) {
+      return $scope.getData();
+    } else {
+      return $location.path('/login');
+    }
   }
 ]);
 
@@ -762,12 +766,9 @@ angular.module('app').factory('Role', [
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 angular.module('app').controller('roleController', [
-  '$scope', 'Role', 'User', function($scope, Role, User) {
+  '$scope', '$location', 'Role', 'User', function($scope, $location, Role, User) {
     var refreshRoleUsers, reset;
     $scope.roles = [];
-    User.query(function(results) {
-      return $scope.users = results;
-    });
     reset = function() {
       $scope.newRole = Role.create();
       return $scope.getRoles();
@@ -809,13 +810,20 @@ angular.module('app').controller('roleController', [
     $scope.show = function(selector) {
       return $scope.currentView = selector;
     };
-    $scope.show('list');
-    return reset();
+    if ($scope.isAdmin) {
+      User.query(function(results) {
+        return $scope.users = results;
+      });
+      $scope.show('list');
+      return reset();
+    } else {
+      return $location.path('/login');
+    }
   }
 ]);
 
 angular.module('app').controller('permissionController', [
-  '$scope', 'Resource', 'Permission', function($scope, Resource, Permission) {
+  '$scope', '$location', 'Resource', 'Permission', function($scope, $location, Resource, Permission) {
     $scope.resourceTypes = Resource.all();
     $scope.selectedPermissions = [];
     $scope.options = {
@@ -829,18 +837,22 @@ angular.module('app').controller('permissionController', [
     $scope.savePermission = function(permission) {
       return Permission.save(permission);
     };
-    Permission.all().then(function(permissions) {
-      return $scope.permissions = permissions;
-    });
-    return $scope.$watch('selectedPermissions[0]', function(newVal, oldVal) {
-      if (newVal) {
-        $scope.permission = newVal;
-        return $scope.submitText = "Update Permission";
-      } else {
-        $scope.permission = {};
-        return $scope.submitText = "Add Permission";
-      }
-    });
+    if ($scope.isAdmin) {
+      Permission.all().then(function(permissions) {
+        return $scope.permissions = permissions;
+      });
+      return $scope.$watch('selectedPermissions[0]', function(newVal, oldVal) {
+        if (newVal) {
+          $scope.permission = newVal;
+          return $scope.submitText = "Update Permission";
+        } else {
+          $scope.permission = {};
+          return $scope.submitText = "Add Permission";
+        }
+      });
+    } else {
+      return $location.path('/login');
+    }
   }
 ]);
 
