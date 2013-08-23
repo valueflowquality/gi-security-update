@@ -17,7 +17,7 @@ angular.module('app').controller 'usersController'
 
   $scope.saveUser = (user) ->
     User.save user, () ->
-      $scope.getData
+      $scope.getData()
     
   $scope.getUsers = () ->
     $scope.users = User.query()
