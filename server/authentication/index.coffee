@@ -84,21 +84,49 @@ module.exports = (app, options) ->
 
   adminAction = (req, res, next) ->
     userAction req, res, () ->
-      #so we know we're logged in
-      #TODO: check roles
-      next()
+      isAdmin req.user, (ok) ->
+        if ok
+          next()
+        else 
+          res.json 401, {}
 
   sysAdminAction = (req, res, next) ->
     userAction req, res, () ->
-      #so we know we're logged in
-      #TODO: check roles
-      next()
+      isSysAdmin req.user, (ok) ->
+        if ok
+          next()
+        else 
+          res.json 401, {}
+
+  isInRole = (role, user, callback) ->
+    result = false;
+    app.models.roles.findOneBy 'name', role, user.systemId
+    , (err, obj) ->
+      if obj and not err
+        _.each(user.roles, (role) ->
+          if role.toString() is obj._id.toString()
+            result = true
+        )
+        callback(result) if callback
+      else
+        callback(false) if callback
+
+  isRestricted = (user, callback) ->
+    isInRole 'Restricted', user, callback
+
+  isAdmin = (user, callback) ->
+    isInRole 'Admin', user, callback
+
+  isSysAdmin = (user, callback) ->
+    isInRole 'SysAdmin', user, callback
 
   loginStatus = (req, res) ->
     if req.isAuthenticated()
-      res.json 200, { loggedIn: true }
+      isAdmin req.user, (isA) ->
+        isRestricted req.user, (isR) ->
+          res.json 200, { loggedIn: true, isAdmin: isA, isRestricted: isR }
     else
-      res.json 200, { loggedIn: false }
+      res.json 200, { loggedIn: false, isAdmin: false, isRestricted: true }
 
   logout = (req, res) ->
     req.logout()
