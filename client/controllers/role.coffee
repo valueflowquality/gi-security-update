@@ -1,11 +1,8 @@
 angular.module('app').controller 'roleController'
-, ['$scope', 'Role', 'User'
-, ($scope, Role, User) ->
+, ['$scope','$location', 'Role', 'User'
+, ($scope, $location, Role, User) ->
 
   $scope.roles = []
- 
-  User.query (results) ->
-    $scope.users = results
   
   reset = () ->
     $scope.newRole = Role.create()
@@ -38,8 +35,13 @@ angular.module('app').controller 'roleController'
 
   $scope.show = (selector) ->
     $scope.currentView = selector
-  
-  $scope.show 'list'
-  reset()
 
+  if $scope.isAdmin
+    User.query (results) ->
+      $scope.users = results
+      
+    $scope.show 'list'
+    reset()
+  else
+    $location.path '/login'
 ]
