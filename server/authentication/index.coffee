@@ -87,7 +87,7 @@ module.exports = (app, options) ->
       isAdmin req.user, (ok) ->
         if ok
           next()
-        else 
+        else
           res.json 401, {}
 
   sysAdminAction = (req, res, next) ->
@@ -95,11 +95,11 @@ module.exports = (app, options) ->
       isSysAdmin req.user, (ok) ->
         if ok
           next()
-        else 
+        else
           res.json 401, {}
 
   isInRole = (role, user, callback) ->
-    result = false;
+    result = false
     app.models.roles.findOneBy 'name', role, user.systemId
     , (err, obj) ->
       if obj and not err
