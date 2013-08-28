@@ -2,6 +2,7 @@ passport = require 'passport'
 util = require 'util'
 http = require 'http'
 _ = require 'underscore'
+moment = require 'moment'
 
 Strategy = (options, verify) ->
   if (typeof options == 'function')
@@ -21,6 +22,8 @@ Strategy = (options, verify) ->
 
 # Inherit from `passport.Strategy`.
 util.inherits Strategy, passport.Strategy
+
+cache = {}
 
 Strategy::authenticate = (req) ->
   if req.headers.cookie?
@@ -51,20 +54,35 @@ Strategy::authenticate = (req) ->
           @success user, info
 
       that = @
-      playRequest = http.request playRequestOptions, (res) ->
+      isValidatedInCache = false
 
-        if res.statusCode is 200
-          if that._passReqToCallback
-            that._verify req, userId, systemId, verified
-          else
-            that._verify userId, systemId, verified
+      if cache[userId]?
+        now = moment()
+        if moment(cache[userId]).isAfter(now)
+          isValidatedInCache = true
+
+      if isValidatedInCache
+        if that._passReqToCallback
+          that._verify req, userId, systemId, verified
         else
-          that.fail { message: 'Not Authorized'}
-      
-      playRequest.on 'error', (e) ->
-        that.fail { message: 'problem with request: ' + e.message }
-      
-      playRequest.end()
+          that._verify userId, systemId, verified
+      else
+
+        playRequest = http.request playRequestOptions, (res) ->
+
+          if res.statusCode is 200
+            cache[userId] = moment().add('days', 1)
+            if that._passReqToCallback
+              that._verify req, userId, systemId, verified
+            else
+              that._verify userId, systemId, verified
+          else
+            that.fail { message: 'Not Authorized'}
+        
+        playRequest.on 'error', (e) ->
+          that.fail { message: 'problem with request: ' + e.message }
+        
+        playRequest.end()
 
     else
       @fail 'Not signed into play'
