@@ -104,7 +104,7 @@ module.exports = (grunt) ->
         tasks: ['coffeeLint:tests', 'karma:singleUnit']
 
     mochaTest:
-      travis:
+      ci:
         src: ['test/server/**/*Spec.coffee']
         options:
           timeout: 3000
@@ -146,8 +146,8 @@ module.exports = (grunt) ->
   grunt.registerTask 'default'
   , ['build', 'mochaTest:unit', 'karma:unit', 'clean:bin']
 
-  grunt.registerTask 'travis'
-  , ['build', 'mochaTest:travis', 'karma:unit' ]
+  grunt.registerTask 'ci'
+  , ['build', 'mochaTest:ci', 'karma:unit' ]
 
   grunt.registerTask 'coverage'
   , ['build', 'karma:coverage', 'clean:bin']
