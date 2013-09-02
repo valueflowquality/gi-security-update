@@ -18,7 +18,7 @@ module.exports = () ->
       password: '456'
 
     userModel =
-      name: 'activities'
+      name: 'users'
       create: (json, cb) ->
         cb null, json
       find: (options, cb) ->
