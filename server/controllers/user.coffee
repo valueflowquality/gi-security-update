@@ -44,6 +44,17 @@ module.exports = (model, crudControllerFactory) ->
         else
           res.json 200
 
+  stripPasswords = (res) ->
+    if _.isArray res.gintResult
+      _.each res.gintResult, (r) ->
+        r.obj.password = null
+        delete r.obj.password
+      res.json res.gintResultCode, res.gintResult
+    else
+      res.gintResult.password = null
+      delete res.gintResult.password
+      res.json 200, res.gintResult
+
   index = (req, res) ->
     crud.index req, res, () ->
       _.each res.gintResult, (u) ->
@@ -53,21 +64,16 @@ module.exports = (model, crudControllerFactory) ->
 
   findById = (req, res) ->
     crud.show req, res, () ->
-      res.gintResult.password = null
-      delete res.gintResult.password
-      res.json 200, res.gintResult
+      stripPasswords res
 
   create = (req, res) ->
     crud.create req, res, () ->
-      res.gintResult.password = null
-      delete res.gintResult.password
-      res.json 200, res.gintResult
+      stripPasswords res
 
   update = (req, res) ->
     crud.update req, res, () ->
-      res.gintResult.password = null
-      delete res.gintResult.password
-      res.json 200, res.gintResult
+      stripPasswords res
+     
 
   exports = gint.common.extend {}, crud
   exports.index = index
