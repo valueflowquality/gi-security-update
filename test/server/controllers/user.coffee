@@ -1,21 +1,15 @@
 _ = require 'underscore'
 path = require 'path'
 expect = require('chai').expect
-
-mocks = require '../mocks'
+sinon = require 'sinon'
 
 dir =  path.normalize __dirname + '../../../../server'
 
 module.exports = () ->
   describe 'User', ->
 
-    alice =
-      firstName: 'Alice'
-      password: '123'
-    
-    bob =
-      firstName: 'Bob'
-      password: '456'
+    alice = null   
+    bob = null
 
     userModel =
       name: 'users'
@@ -28,107 +22,185 @@ module.exports = () ->
       update: (id, json, cb) ->
         cb null, json
    
-    controller = require(dir + '/controllers/user')(
-      userModel, mocks.crudControllerFactory
-    )
+    controllerFactory = require dir + '/controllers/user'
 
-    describe 'exports', ->
-      it 'an index method', (done) ->
-        expect(controller).to.have.ownProperty 'index'
-        done()
+    describe 'Exports', ->
+      controller = null
+      
+      crudController =
+        create: ->
+        index: ->
+        show: ->
+        update: ->
+        destroy: 'crud destroy'
 
-      it 'a create method', (done) ->
-        expect(controller).to.have.ownProperty 'create'
-        done()
+      crudControllerFactory = () ->
+        crudController
 
-      it 'a show method', (done) ->
-        expect(controller).to.have.ownProperty 'show'
-        done()
+      beforeEach ->
+        controller = controllerFactory userModel, crudControllerFactory
+        alice =
+          firstName: 'Alice'
+          password: '123'
+    
+        bob =
+          firstName: 'Bob'
+          password: '456'
 
-      it 'an update method', (done) ->
-        expect(controller).to.have.ownProperty 'update'
-        done()
+      describe 'Standard Crud', ->
+        it 'destroy: function(req, res)', (done) ->
+          expect(controller).to.have.ownProperty 'destroy'
+          expect(controller.destroy).to.equal 'crud destroy'
+          done()
 
-      it 'a destroy method', (done) ->
-        expect(controller).to.have.ownProperty 'destroy'
-        done()
+      describe 'Overridden Crud', ->
+        it 'index: function(req, res)', (done) ->
+          expect(controller).to.have.ownProperty 'index'
+          done()
 
-    describe 'Index', ->
-      it 'Does not transmit passwords', (done) ->
-        req =
-          query:
-            max: 3
-        res =
-          json: (code, result) ->
-            _.each result, (user) ->
-              expect(user.password).to.not.exist
-              expect(user).to.not.have.property 'password'
-            done()
-        controller.index req, res
+        describe 'Index', ->
+          
+          beforeEach ->
+            sinon.stub crudController, "index"
+            crudController.index.callsArg 2
 
-    describe 'Show', ->
-      it 'Does not transmit passwords', (done) ->
-        req =
-          params:
-            id: 'validId'
-        res =
-          json: (code, result) ->
-            expect(result.password).to.not.exist
-            expect(result).to.not.have.property 'password'
-            done()
-        controller.show req, res
+          afterEach ->
+            crudController.index.restore()
 
-    describe 'Create', ->
-      it 'Does not transmit passwords', (done) ->
-        req =
-          body:
-            firstName: 'Bob'
-            password: 'a plain password'
-        res =
-          json: (code, result) ->
-            expect(result.password).to.not.exist
-            expect(result).to.not.have.property 'password'
-            done()
-        controller.create req, res
+          it 'Does not transmit passwords', (done) ->
 
-    describe 'Update', ->
-      it 'Does not transmit passwords', (done) ->
-        req =
-          params:
-            id: '123'
-          body:
-            firstName: 'Bob'
-            password: 'a plain password'
-        res =
-          json: (code, result) ->
-            expect(result.password).to.not.exist
-            expect(result).to.not.have.property 'password'
-            done()
-        controller.update req, res
+            req =
+              query:
+                max: 3
+            res =
+              gintResult: [alice, bob]
+              json: (code, result) ->
+                _.each result, (user) ->
+                  expect(user.password).to.not.exist
+                  expect(user).to.not.have.property 'password'
+                done()
 
-    describe 'showMe', ->
-      it 'Does not transmit passwords', (done) ->
-        req =
-          user:
-            id: 'validId'
-        res =
-          json: (code, result) ->
-            expect(result.password).to.not.exist
-            expect(result).to.not.have.property 'password'
-            done()
-        controller.showMe req, res
+            controller.index req, res
 
-    describe 'UpdateMe', ->
-      it 'Does not transmit passwords', (done) ->
-        req =
-          user:
-            id: '123'
-          body:
-            _id: '123'
-            password: 'a password'
-        res =
-          json: (code, result) ->
-            expect(result.password).to.not.exist
-            expect(result).to.not.have.property 'password'
-            done()
-        controller.updateMe req, res
+        it 'create: function(req, res)', (done) ->
+          expect(controller).to.have.ownProperty 'create'
+          done()
+
+        describe 'Create', ->
+
+          beforeEach ->
+            sinon.stub crudController, "create"
+            crudController.create.callsArg 2
+
+          afterEach ->
+            crudController.create.restore()
+
+          it 'Does not transmit passwords', (done) ->
+            res =
+              gintResult: alice
+              json: (code, result) ->
+                expect(result.password).to.not.exist
+                expect(result).to.not.have.property 'password'
+                done()
+
+            controller.create null, res
+
+          it 'Does not transmit password after sucessful bulk create', (done) ->
+            res =
+              gintResult: [{message: "ok", obj: alice},{message: "ok", obj: bob}]
+              gintResultCode: 200
+
+              json: (code, result) ->
+                expect(code).to.equal 200
+                _.each result, (r) ->
+                  expect(r.obj.password).to.not.exist
+                  expect(r.obj).to.not.have.property 'password'
+                done()
+
+            controller.create null, res
+
+          it 'Does not transmit password after failed bulk create', (done) ->
+            res =
+              gintResult: [{message: "not ok", obj: alice},{message: "ok", obj: bob}]
+              gintResultCode: 500
+              
+              json: (code, result) ->
+                expect(code).to.equal 500
+                _.each result, (r) ->
+                  expect(r.obj.password).to.not.exist
+                  expect(r.obj).to.not.have.property 'password'
+                done()
+
+            controller.create null, res
+
+        it 'update: function(req, res)', (done) ->
+          expect(controller).to.have.ownProperty 'update'
+          done()
+
+        describe 'Update', ->
+          beforeEach ->
+            sinon.stub crudController, "update"
+            crudController.update.callsArg 2
+
+          afterEach ->
+            crudController.update.restore()
+          
+          it 'Does not transmit passwords', (done) ->
+            res =
+              gintResult: bob
+              json: (code, result) ->
+                expect(result.password).to.not.exist
+                expect(result).to.not.have.property 'password'
+                done()
+            controller.update null, res
+
+        it 'show: function(req, res)', (done) ->
+          expect(controller).to.have.ownProperty 'show'
+          done()
+      
+        describe 'Show', ->
+          beforeEach ->
+            sinon.stub crudController, "show"
+            crudController.show.callsArg 2
+
+          afterEach ->
+            crudController.show.restore()
+
+          it 'Does not transmit passwords', (done) ->
+            res =
+              gintResult: alice
+              json: (code, result) ->
+                expect(result.password).to.not.exist
+                expect(result).to.not.have.property 'password'
+                done()
+            console.log alice
+            controller.show null, res
+
+      describe 'Other', ->
+
+        describe 'showMe: function(req, res)', ->
+          it 'Does not transmit passwords', (done) ->
+            req =
+              user:
+                id: 'validId'
+            res =
+              json: (code, result) ->
+                expect(result.password).to.not.exist
+                expect(result).to.not.have.property 'password'
+                done()
+            controller.showMe req, res
+
+        describe 'updateme: function(req, res)', ->
+          it 'Does not transmit passwords', (done) ->
+            req =
+              user:
+                id: '123'
+              body:
+                _id: '123'
+                password: 'a password'
+            res =
+              json: (code, result) ->
+                expect(result.password).to.not.exist
+                expect(result).to.not.have.property 'password'
+                done()
+            controller.updateMe req, res
