@@ -173,7 +173,6 @@ module.exports = () ->
                 expect(result.password).to.not.exist
                 expect(result).to.not.have.property 'password'
                 done()
-            console.log alice
             controller.show null, res
 
       describe 'Other', ->
