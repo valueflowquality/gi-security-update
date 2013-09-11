@@ -3,7 +3,7 @@ routes = require './routes'
 
 configure = (app, mongoose, options) ->
   
-  models = require('./models')(mongoose, app.models.crud)
+  models = require('./models')(mongoose, gint.common.crudModelFactory)
 
   gint.common.extend app.models, models
   gint.common.extend app.controllers, require('./controllers')(app)

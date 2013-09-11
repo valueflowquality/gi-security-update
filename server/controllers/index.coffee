@@ -1,15 +1,16 @@
+gint = require 'gint-util'
 user = require './user'
 activity = require './activity'
 file = require './file'
-
+conFac = gint.common.crudControllerFactory
 module.exports = (app) ->
-  user:         user app.models.users, app.controllers.crud
-  activity:     activity app.models.activities, app.controllers.crud
-  file:         file app.models, app.controllers.crud
-  role:         app.controllers.crud app.models.roles
-  setting:      app.controllers.crud app.models.settings
-  category:     app.controllers.crud app.models.categories
-  system:       app.controllers.crud app.models.systems
-  environment:  app.controllers.crud app.models.environments
-  permission:   app.controllers.crud app.models.permissions
-  resource:     app.controllers.crud app.models.resources
+  user:         user app.models.users, conFac
+  activity:     activity app.models.activities, conFac
+  file:         file app.models, conFac
+  role:         conFac app.models.roles
+  setting:      conFac app.models.settings
+  category:     conFac app.models.categories
+  system:       conFac app.models.systems
+  environment:  conFac app.models.environments
+  permission:   conFac app.models.permissions
+  resource:     conFac app.models.resources
