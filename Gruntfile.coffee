@@ -105,7 +105,7 @@ module.exports = (grunt) ->
 
     mochaTest:
       unit:
-        src: ['test/server/**/*Spec.coffee']
+        src: ['test/server/testSpec.coffee']
         options:
           timeout: 3000
           ignoreLeaks: false
@@ -123,6 +123,12 @@ module.exports = (grunt) ->
         browsers: [ 'Chrome' ]
         reporters: ['dots', 'coverage']
 
+    cucumberjs:
+      integration:
+        src: 'test/server/integration/features'
+        options:
+          format: "pretty"
+    
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
@@ -132,13 +138,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-karma'
   grunt.loadNpmTasks 'grunt-mocha-test'
+  grunt.loadNpmTasks 'grunt-cucumber'
 
   grunt.registerTask 'build'
   , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','copy:libs'
   , 'requirejs', 'copy:dev', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build', 'mochaTest:unit', 'karma:unit', 'clean:bin']
+  , ['build','cucumberjs:integration', 'mochaTest:unit', 'karma:unit', 'clean:bin']
 
   grunt.registerTask 'ci'
   , ['default']
