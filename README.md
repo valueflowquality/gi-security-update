@@ -12,6 +12,7 @@ It also supports session based security for human users logged in via facebook.
 Testing:
 
 Server Unit tests use Mocha, Chai
+
 Client Unit tests use Mocha, Karma
 
 Server Integration tests use Cucumber.js and supertest
