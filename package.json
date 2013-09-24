@@ -54,6 +54,7 @@
     "grunt-cucumber": "~0.2.3",
     "supertest": "~0.8.0",
     "mongodb": "~1.3.19",
-    "gint-sdk": "git+ssh://git@github.com:Gintellect/gint-sdk-node.git"
+    "gint-sdk": "git+ssh://git@github.com:Gintellect/gint-sdk-node.git",
+    "bower": "~1.2.6"
   }
 }

@@ -114,14 +114,9 @@ module.exports = (grunt) ->
 
     karma:
       unit:
-        configFile: 'test/conf/karma.conf.coffee'
+        configFile: 'test/client/karma.conf.coffee'
         singleRun: true
         browsers: [ 'PhantomJS' ]
-      coverage:
-        configFile: 'test/karmaCoverage.conf.js'
-        singleRun: true
-        browsers: [ 'Chrome' ]
-        reporters: ['dots', 'coverage']
 
     cucumberjs:
       integration:
