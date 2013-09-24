@@ -7,15 +7,13 @@ module.exports = (config) ->
     basePath: '../../'
     frameworks: ['mocha']
     files :[
-      'test/libs/mocha.conf.js'
-      './node_modules/chai/chai.js'
-      'test/libs/chai-should.js'
+      'bower_modules/chai/chai.js'
+      'bower_modules/sinon/lib/sinon.js'
+      'bower_modules/jquery/jquery.js'
+      'bower_modules/angular/angular.js'
+      'bower_modules/angular-resource/angular-resource.js'
+      'bower_modules/angular-mocks/angular-mocks.js'
       'test/libs/chai-expect.js'
-      'test/libs/sinon-1.6.0.js'
-      'test/libs/jquery-1.8.3.js'
-      'test/libs/angular.js'
-      'test/libs/angular-resource.js'
-      'test/libs/angular-mocks.js'
       'test/libs/app.js'
       'client/controllers/*.coffee'
       'client/directives/*.coffee'
@@ -34,5 +32,5 @@ module.exports = (config) ->
     browsers: ['Chrome']
     singleRun: false
     plugins: [
-      'karma-jasmine'
+      'karma-mocha'
     ]

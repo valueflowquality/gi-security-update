@@ -1,5 +1,13 @@
 {
   "name": "gint-security",
   "version": "0.0.21",
-  "main": "./bin/gint-security.js"
+  "main": "./bin/gint-security.js",
+  "devDependencies": {
+    "angular": "1.2.0-rc.2",
+    "angular-resource": "1.2.0-rc.2",
+    "angular-mocks": "1.2.0-rc.2",
+    "sinon": "~1.7.3",
+    "jquery": "1.8.3",
+    "chai": "~1.8.0"
+  }
 }
