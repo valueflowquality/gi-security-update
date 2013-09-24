@@ -1,6 +1,7 @@
 moment = require 'moment'
 sdk = require 'gint-sdk'
 ObjectID = require('mongodb').ObjectID
+expect = require('chai').expect
 
 aTest = () ->
   @World = require('../support/world').World
@@ -59,9 +60,8 @@ aTest = () ->
     req.expect(401, next)
 
   @Then /^it replies with ok$/, (next) ->
-    console.log res.statusCode
+    expect(res.statusCode, "Incorrect statusCode returned").to.equal 200
     next()
-    #req.expect(200, next)
 
   @Then /^it returns with error message (.*) in the response body$/, (msg, next) ->
     req.expect {message: msg}
@@ -72,7 +72,11 @@ aTest = () ->
     next()
 
   @Then /^it returns the list of users in the message body$/, (next) ->
-    console.log res.body
+    expect(res.body.length, "Incorrect number of users returned").to.equal 1
+    user1 = res.body[0]
+    expect(user1.firstName).to.equal 'Alice'
+    expect(user1._id).to.equal '5240630360d7400b18000001'
+    expect(user1.apiSecret).to.equal 'notVerySecret'
     next()
 
 module.exports = aTest
