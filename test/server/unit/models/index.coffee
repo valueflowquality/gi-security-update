@@ -20,7 +20,7 @@ module.exports = () ->
     environmentsStub = null
     
     beforeEach (done) ->
-      dir =  path.normalize __dirname + '../../../../server'
+      dir =  path.normalize __dirname + '../../../../../server'
 
       filesStub =
         name: 'File'

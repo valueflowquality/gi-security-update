@@ -3,7 +3,7 @@ expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
 
-dir =  path.normalize __dirname + '../../../../server'
+dir =  path.normalize __dirname + '../../../../../server'
 
 module.exports = () ->
   describe 'Activities', ->

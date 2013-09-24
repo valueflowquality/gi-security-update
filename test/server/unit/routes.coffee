@@ -2,7 +2,7 @@ path = require 'path'
 sinon = require 'sinon'
 assert = require 'assert'
 
-dir =  path.normalize __dirname + '../../../server'
+dir =  path.normalize __dirname + '../../../../server'
 
 module.exports = () ->
 

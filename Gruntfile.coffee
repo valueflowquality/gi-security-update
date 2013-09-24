@@ -105,7 +105,7 @@ module.exports = (grunt) ->
 
     mochaTest:
       unit:
-        src: ['test/server/testSpec.coffee']
+        src: ['test/server/unit/testSpec.coffee']
         options:
           timeout: 3000
           ignoreLeaks: false

@@ -27,7 +27,7 @@ module.exports = () ->
         resources: 'resources'
 
     beforeEach ->
-      dir =  path.normalize __dirname + '../../../../server'
+      dir =  path.normalize __dirname + '../../../../../server'
 
       crudConFac = sinon.stub().returnsArg 0
 

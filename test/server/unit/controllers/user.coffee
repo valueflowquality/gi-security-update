@@ -3,7 +3,7 @@ path = require 'path'
 expect = require('chai').expect
 sinon = require 'sinon'
 
-dir =  path.normalize __dirname + '../../../../server'
+dir =  path.normalize __dirname + '../../../../../server'
 
 module.exports = () ->
   describe 'User', ->

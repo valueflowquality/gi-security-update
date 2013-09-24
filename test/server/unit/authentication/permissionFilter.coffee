@@ -6,7 +6,7 @@ module.exports = () ->
   describe 'permissionFilter: Module', ->
 
     describe 'Public', ->
-      dir =  path.normalize __dirname + '../../../../server'
+      dir =  path.normalize __dirname + '../../../../../server'
       app =
         models:
           permissions:

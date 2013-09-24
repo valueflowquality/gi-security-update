@@ -10,7 +10,7 @@ module.exports = ->
     module = null
 
     beforeEach (done) ->
-      dir =  path.normalize __dirname + '../../../server'
+      dir =  path.normalize __dirname + '../../../../server'
 
       stubs =
         './routes': sinon.stub().returns { configure : -> }

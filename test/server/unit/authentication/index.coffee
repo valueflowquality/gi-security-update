@@ -8,7 +8,7 @@ permissionFilter = require './permissionFilter'
 module.exports = () ->
   describe 'Authentication', ->
     describe 'Public', ->
-      dir =  path.normalize __dirname + '../../../../server'
+      dir =  path.normalize __dirname + '../../../../../server'
       permissionsMiddlewareSpy = sinon.spy()
       stubs =
        './permissionFilter': sinon.stub().returns permissionsMiddlewareSpy
