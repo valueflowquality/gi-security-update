@@ -7,3 +7,5 @@ temp/
 npm-debug.log
 
 .DS_Store
+
+test/client/e2e/.env

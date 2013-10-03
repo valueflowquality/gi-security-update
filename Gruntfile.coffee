@@ -3,6 +3,10 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
 
+    env:
+      test:
+        src: 'test/client/e2e/.env'
+
     clean:
       reset:
         src: ['bin']
@@ -103,6 +107,12 @@ module.exports = (grunt) ->
         files: ['test/client/**/*.coffee']
         tasks: ['coffeeLint:tests', 'karma:singleUnit']
 
+    express:
+      test:
+        options:
+          hostname: '*'
+          server: 'example/server/app.coffee'
+
     mochaTest:
       unit:
         src: ['test/server/unit/testSpec.coffee']
@@ -123,6 +133,10 @@ module.exports = (grunt) ->
         src: 'test/server/integration/features'
         options:
           format: "pretty"
+      e2e:
+        src: 'test/client/e2e/features'
+        options:
+          format: "progress"
     
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -134,6 +148,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-karma'
   grunt.loadNpmTasks 'grunt-mocha-test'
   grunt.loadNpmTasks 'grunt-cucumber'
+  grunt.loadNpmTasks 'grunt-express'
+  grunt.loadNpmTasks 'grunt-env'
 
   grunt.registerTask 'build'
   , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','copy:libs'
@@ -144,6 +160,12 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'ci'
   , ['default']
+
+  grunt.registerTask 'e2e', [
+    'express:test'
+    'env:test'
+    'cucumberjs:e2e'
+  ]
 
   grunt.registerTask 'coverage'
   , ['build', 'karma:coverage', 'clean:bin']
