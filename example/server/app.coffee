@@ -1,9 +1,14 @@
 express = require 'express'
 gint = require 'gint-util'
-security = require '../../../server'
+security = require '../../server'
 
 MongoStore = require('connect-mongo')(express)
 mongoose = require 'mongoose'
+
+path = require 'path'
+dir =  path.normalize __dirname + "/../client"
+
+console.log dir
 
 app = express()
 
@@ -37,5 +42,8 @@ app.configure ->
   security.configure app, mongoose, testConf.security
 
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
+
+  app.get '*', app.middleware.publicAction, (req, res) ->
+    res.sendfile "#{dir}/index.html"
 
 exports = module.exports = app

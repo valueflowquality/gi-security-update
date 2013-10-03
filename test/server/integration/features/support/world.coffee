@@ -1,5 +1,5 @@
 supertest = require 'supertest'
-app = require '../../app'
+app = require '../../../../../example/server/app'
 mongo = require 'mongodb'
 
 class World
