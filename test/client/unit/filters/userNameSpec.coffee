@@ -1,6 +1,6 @@
 describe 'userName filter', ->
-  beforeEach module 'ngResource'
-  beforeEach module 'app'
+  beforeEach angular.mock.module 'ngResource'
+  beforeEach angular.mock.module 'app'
 
   #Mock (/ override) the User service that will be injected
   beforeEach(module(($provide) ->

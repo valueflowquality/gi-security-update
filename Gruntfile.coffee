@@ -114,7 +114,7 @@ module.exports = (grunt) ->
 
     karma:
       unit:
-        configFile: 'test/client/karma.conf.coffee'
+        configFile: 'test/client/unit/karma.conf.coffee'
         singleRun: true
         browsers: [ 'PhantomJS' ]
 

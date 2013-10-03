@@ -4,7 +4,7 @@
 # base path, that will be used to resolve files and exclude
 module.exports = (config) ->
   config.set
-    basePath: '../../'
+    basePath: '../../../'
     frameworks: ['mocha']
     files :[
       'bower_modules/chai/chai.js'
@@ -13,13 +13,13 @@ module.exports = (config) ->
       'bower_modules/angular/angular.js'
       'bower_modules/angular-resource/angular-resource.js'
       'bower_modules/angular-mocks/angular-mocks.js'
-      'test/client/app.js'
+      'test/client/unit/app.js'
       'client/controllers/*.coffee'
       'client/directives/*.coffee'
       'client/services/*.coffee'
       'client/filters/*.coffee'
       'bin/client/js/views.js'
-      'test/client/**/*.coffee'
+      'test/client/unit/**/*.coffee'
     ]
     preprocessors:
       '**/*.coffee': 'coffee'
