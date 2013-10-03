@@ -43,6 +43,8 @@ app.configure ->
 
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
 
+  console.log 'step1'
+
   app.get '*', app.middleware.publicAction, (req, res) ->
     res.sendfile "#{dir}/index.html"
 

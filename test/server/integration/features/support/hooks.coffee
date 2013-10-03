@@ -33,7 +33,7 @@ createUsers = (db, cb) ->
       cb()
 
 initializeDB = (cb) ->
-  mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/wssTest', (err, db) ->
+  mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/gint-security-test', (err, db) ->
     db.dropDatabase (err, ok) ->
       createSystems db, () ->
         createEnvironments db, () ->
