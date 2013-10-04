@@ -32,11 +32,33 @@ createUsers = (db, cb) ->
     coll.insert alice, (err, docs) ->
       cb()
 
-exports.initializeDB = (cb) ->
+wrapDbFunction = (dbFunction, cb) ->
   mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/gint-security-test', (err, db) ->
+    dbFunction db, () ->
+      db.close()
+      cb()
+
+exports.setSetting = (key, value, cb) ->
+  setting =
+    key: key
+    parent:
+      key: sysId
+      resourceType: 'System'
+  update =
+    $set:
+      value: value
+  options =
+    upsert: true
+
+  wrapDbFunction (db, callback) ->
+    db.createCollection 'settings', (err, coll) ->
+      coll.update setting, update, options, callback
+  , cb
+
+exports.initializeDB = (cb) ->
+  wrapDbFunction (db, callback) ->
     db.dropDatabase (err, ok) ->
       createSystems db, () ->
         createEnvironments db, () ->
-          createUsers db, () ->
-            db.close()
-            cb()
+          createUsers db, callback
+  , cb

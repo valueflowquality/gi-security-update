@@ -16,19 +16,19 @@ worldDefinition = () ->
       callback()
 
   capabilities = webdriver.Capabilities.chrome()
-  .merge
-    username: process.env.SAUCE_USERNAME
-    accessKey: process.env.SAUCE_ACCESS_KEY
-    name: 'gint-security protractor test'
-    browserName: 'Chrome'
-    platform: 'Windows 7'
-    'record-video': true
-    'tunnel-identifier': process.env.DRONE_BUILD_NUMBER
+  # .merge
+  #   username: process.env.SAUCE_USERNAME
+  #   accessKey: process.env.SAUCE_ACCESS_KEY
+  #   name: 'gint-security protractor test'
+  #   browserName: 'Chrome'
+  #   platform: 'Windows 7'
+  #   'record-video': true
+  #   'tunnel-identifier': process.env.DRONE_BUILD_NUMBER
 
   @BeforeFeatures (event, callback) ->
     console.log 'test/client/e2e/features/support/world@BeforeFeatures'
     driver = new webdriver.Builder().
-    usingServer('http://192.168.1.72:4445/wd/hub').
+    usingServer('http://192.168.1.72:4444/wd/hub').
     withCapabilities(capabilities).build()
 
     ptor = protractor.wrapDriver driver
