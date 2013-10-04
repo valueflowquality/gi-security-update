@@ -45,7 +45,7 @@ aTest = () ->
     next()
   
   @When /^the request is addressed to a known host$/, (next) ->
-    req.set('Host', 'test.gintsecurity.com')
+    req.set('Host', 'test.gint-security.com')
     next()
 
   @When /^the reply is received$/, (next) ->
