@@ -6,5 +6,6 @@ Feature: login
 
   Scenario: View the login page
     Given I am on the homepage
+    Then I should not see a username input box
     When I navigate to the login page
     Then I should see a username input box

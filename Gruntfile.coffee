@@ -136,7 +136,7 @@ module.exports = (grunt) ->
       e2e:
         src: 'test/client/e2e/features'
         options:
-          format: "progress"
+          format: "pretty"
     
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -156,10 +156,13 @@ module.exports = (grunt) ->
   , 'requirejs', 'copy:dev', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build','cucumberjs:integration', 'mochaTest:unit', 'karma:unit', 'clean:bin']
+  , ['build','cucumberjs:integration', 'mochaTest:unit', 'karma:unit']
 
-  grunt.registerTask 'ci'
-  , ['default']
+  grunt.registerTask 'ci', [
+    'default'
+    'express:test'
+    'cucumberjs:e2e'
+  ]
 
   grunt.registerTask 'e2e', [
     'express:test'
