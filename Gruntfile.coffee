@@ -160,8 +160,6 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'ci', [
     'default'
-    'express:test'
-    'cucumberjs:e2e'
   ]
 
   grunt.registerTask 'e2e', [
