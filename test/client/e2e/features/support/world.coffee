@@ -23,6 +23,7 @@ worldDefinition = () ->
     browserName: 'Chrome'
     platform: 'Windows 7'
     'record-video': true
+    'tunnel-identifier': process.env.DRONE_BUILD_NUMBER
 
   @BeforeFeatures (event, callback) ->
     console.log 'test/client/e2e/features/support/world@BeforeFeatures'
