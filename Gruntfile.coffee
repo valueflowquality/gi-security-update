@@ -162,6 +162,11 @@ module.exports = (grunt) ->
     'default'
   ]
 
+  grunt.registerTask 'unit', [
+    'build'
+    'mochaTest:unit'
+  ]
+
   grunt.registerTask 'e2e', [
     'express:test'
     'env:test'
