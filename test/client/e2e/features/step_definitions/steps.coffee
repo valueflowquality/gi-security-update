@@ -9,7 +9,8 @@ module.exports = ->
     @browser.get('http://test.gint-security.com:3000' + path).then ->
       callback()
 
-  @When /^facebook (is|is not) an approved login method$/, (approved, callback) ->
+  @When /^facebook (is|is not) an approved login method$/
+  , (approved, callback) ->
     allowFacebookLogin = false
     if approved is 'is'
       allowFacebookLogin = true
@@ -30,7 +31,8 @@ module.exports = ->
     if which is 'should'
       shouldI = true
 
-    @browser.isElementPresent(@By.input 'cred.username').then (usernamePresent) ->
+    @browser.isElementPresent(@By.input 'cred.username')
+    .then (usernamePresent) ->
       if usernamePresent isnt shouldI
         message = "Username input incorrectly shown"
         if shouldI
@@ -39,12 +41,14 @@ module.exports = ->
       else
         callback()
 
-  @Then /^I (should|should not) see a login with facebook button$/, (which, callback) ->
+  @Then /^I (should|should not) see a login with facebook button$/
+  , (which, callback) ->
     shouldI = false
     if which is 'should'
       shouldI = true
 
-    @browser.isElementPresent(@By.css "div.loginWithFacebook").then (imgPresent) ->
+    @browser.isElementPresent(@By.css "div.loginWithFacebook")
+    .then (imgPresent) ->
       if imgPresent isnt shouldI
         message = "Login With facebook button should not be present"
         if shouldI

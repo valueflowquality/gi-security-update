@@ -63,7 +63,8 @@ aTest = () ->
     expect(res.statusCode, "Incorrect statusCode returned").to.equal 200
     next()
 
-  @Then /^it returns with error message (.*) in the response body$/, (msg, next) ->
+  @Then /^it returns with error message (.*) in the response body$/
+  , (msg, next) ->
     req.expect {message: msg}
     next()
 

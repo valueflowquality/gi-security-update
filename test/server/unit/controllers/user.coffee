@@ -8,7 +8,7 @@ dir =  path.normalize __dirname + '../../../../../server'
 module.exports = () ->
   describe 'User', ->
 
-    alice = null   
+    alice = null
     bob = null
 
     userModel =
@@ -107,7 +107,10 @@ module.exports = () ->
 
           it 'Does not transmit password after sucessful bulk create', (done) ->
             res =
-              gintResult: [{message: "ok", obj: alice},{message: "ok", obj: bob}]
+              gintResult: [
+                {message: "ok", obj: alice}
+                {message: "ok", obj: bob}
+              ]
               gintResultCode: 200
 
               json: (code, result) ->
@@ -121,7 +124,10 @@ module.exports = () ->
 
           it 'Does not transmit password after failed bulk create', (done) ->
             res =
-              gintResult: [{message: "not ok", obj: alice},{message: "ok", obj: bob}]
+              gintResult: [
+                {message: "not ok", obj: alice}
+                {message: "ok", obj: bob}
+              ]
               gintResultCode: 500
               
               json: (code, result) ->

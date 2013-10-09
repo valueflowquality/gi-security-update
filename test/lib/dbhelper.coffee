@@ -33,7 +33,8 @@ createUsers = (db, cb) ->
       cb()
 
 wrapDbFunction = (dbFunction, cb) ->
-  mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/gint-security-test', (err, db) ->
+  mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/gint-security-test'
+  , (err, db) ->
     dbFunction db, () ->
       db.close()
       cb()
