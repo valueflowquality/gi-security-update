@@ -5,10 +5,8 @@
 module.exports = (config) ->
   config.set
     basePath: '../../../'
-    frameworks: ['mocha']
+    frameworks: ['mocha', 'sinon-chai']
     files :[
-      'bower_modules/chai/chai.js'
-      'bower_modules/sinon/lib/sinon.js'
       'bower_modules/jquery/jquery.js'
       'bower_modules/angular/angular.js'
       'bower_modules/angular-resource/angular-resource.js'

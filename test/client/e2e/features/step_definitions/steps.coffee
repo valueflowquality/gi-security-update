@@ -15,7 +15,7 @@ module.exports = ->
     if approved is 'is'
       allowFacebookLogin = true
 
-    dbhelper.setSetting 'loginViaFacebook', allowFacebookLogin, callback
+    dbhelper.setSetting 'loginWithFacebook', allowFacebookLogin, callback
 
   @Then /^I should see a welcome message/, (callback) ->
     @browser.findElement(@By.tagName 'p').getText().then (text) =>

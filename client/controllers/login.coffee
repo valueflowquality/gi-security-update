@@ -29,4 +29,12 @@ angular.module('app').controller 'loginController'
       Facebook.init appId[0].value
     else
       console.log 'error initializing facebook login'
+
+    allowFacebookLogin = $filter('filter')(settings, (setting) ->
+      setting.key is 'loginWithFacebook'
+    )
+    if allowFacebookLogin?.length > 0
+      $scope.allowFacebookLogin = allowFacebookLogin[0].value
+    else
+      $scope.allowFacebookLogin = false
 ]
