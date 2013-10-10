@@ -9,6 +9,7 @@ roles = require './roles'
 users = require './users'
 permissions = require './permissions'
 resources = require './resources'
+settings = require './settings'
 
 module.exports = () ->
   describe 'Models', ->
@@ -125,6 +126,8 @@ module.exports = () ->
       assert.property models, 'roles', 'models does not export settings'
       expect(models.settings.name).to.equal 'Setting'
       done()
+
+    settings()
 
     it 'exports permissions model', (done) ->
       assert.ok stubs['./permissions'].calledOnce

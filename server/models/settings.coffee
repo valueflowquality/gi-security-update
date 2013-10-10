@@ -3,19 +3,16 @@ gint = require 'gint-util'
 module.exports = (mongoose, crudModelFactory, environmentsModel) ->
 
   Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
 
   name = 'Setting'
 
   schema =
-    systemId: ObjectId
+    systemId: 'ObjectId'
     key: 'String'
     value: 'String'
     parent:
-      key:
-        type: ObjectId
-      resourceType:
-        type: 'String'
+      key: 'ObjectId'
+      resourceType: 'String'
 
   settingSchema = new Schema schema
   
@@ -123,5 +120,4 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
   exports = gint.common.extend {}, crud
   exports.get = get
   exports.set = set
-  exports.name = name
   exports
