@@ -10,6 +10,7 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
     systemId: 'ObjectId'
     key: 'String'
     value: 'String'
+    acl: 'String'
     parent:
       key: 'ObjectId'
       resourceType: 'String'

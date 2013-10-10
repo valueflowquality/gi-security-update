@@ -22,28 +22,25 @@ module.exports = () ->
       done()
 
     describe 'Schema', ->
-
-      it 'systemId: ObjectId', (done) ->
+      modelTest = (name, type) ->
         expect(mocks.mongoose.model.calledWith(modelName
-        , sinon.match.hasOwn 'systemId', 'ObjectId')).to.be.true
-        done()
+        , sinon.match.hasOwn name, type)
+        , name + " not defined correctly on " + modelName).to.be.true
 
-      it 'key: String', (done) ->
-        expect(mocks.mongoose.model.calledWith(modelName
-        , sinon.match.hasOwn 'key', 'String')).to.be.true
-        done()
+      it 'systemId: ObjectId', ->
+        modelTest 'systemId', 'ObjectId'
 
-      it 'value: String', (done) ->
-        expect(mocks.mongoose.model.calledWith(modelName
-        , sinon.match.hasOwn 'value', 'String')).to.be.true
-        done()
+      it 'key: String', ->
+        modelTest 'key', 'String'
 
-      it 'parent: {key: ObjectId, resourcetype: String}', (done) ->
-        expect(mocks.mongoose.model.calledWith(modelName
-        , sinon.match.hasOwn 'parent'
-        , {key: 'ObjectId', resourceType: 'String'})
-        ).to.be.true
-        done()
+      it 'value: String', ->
+        modelTest 'value', 'String'
+
+      it 'parent: {key: ObjectId, resourceType: String}', ->
+        modelTest 'parent', {key: 'ObjectId', resourceType: 'String'}
+
+      it 'acl: String', ->
+        modelTest 'acl', 'String'
 
     describe 'Exports',  ->
       mocks.exportsCrudModel modelName, model
