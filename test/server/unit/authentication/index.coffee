@@ -355,11 +355,12 @@ module.exports = () ->
               done()
 
 
-            it 'calls back with any errors', (done) ->
+            it 'supresses any errors', (done) ->
               app.models.settings.get.callsArgWith 3, "an error", null
               authentication._getSystemStrategies req,  (err, result) ->
-                expect(err).to.equal 'an error'
-                expect(result).to.not.exist
+                expect(err).to.not.exist
+                expect(result).to.exist
+                expect(result.length).to.equal 0
                 done()
 
             it 'calls back with the result', (done) ->
@@ -371,6 +372,49 @@ module.exports = () ->
                 expect(result[0]).to.equal 'facebook'
                 expect(result[1]).to.equal 'Hmac'
                 expect(result[2]).to.equal 'Play'
+                expect(err).to.not.exist
+                done()
+
+            it 'omits false settings from result', (done) ->
+              setting1 =
+                key: 'loginWithFacebook'
+                value: false
+              
+              setting2 =
+                key: 'loginWithHmac'
+                value: true
+
+              setting3 =
+                key: 'loginWithPlay'
+                value: true
+
+              app.models.settings.get.callsArgWith 3, null, setting1
+              app.models.settings.get.callsArgWith 3, null, setting2
+              app.models.settings.get.callsArgWith 3, null, setting3
+              
+              authentication._getSystemStrategies req,  (err, result) ->
+                expect(result.length).to.equal 2
+                expect(result[0]).to.equal 'Hmac'
+                expect(result[1]).to.equal 'Play'
+                expect(err).to.not.exist
+                done()
+
+            it 'omits missing settings from result', (done) ->
+              setting1 =
+                key: 'loginWithFacebook'
+                value: true
+              
+              setting3 =
+                key: 'loginWithPlay'
+                value: false
+
+              app.models.settings.get.callsArgWith 3, null, setting1
+              app.models.settings.get.callsArgWith 3, "setting not found", null
+              app.models.settings.get.callsArgWith 3, null, setting3
+              
+              authentication._getSystemStrategies req,  (err, result) ->
+                expect(result.length).to.equal 1
+                expect(result[0]).to.equal 'facebook'
                 expect(err).to.not.exist
                 done()
 

@@ -1,6 +1,5 @@
 supertest = require 'supertest'
 app = require '../../../../../example/server/app'
-mongo = require 'mongodb'
 
 class World
   constructor: (callback) ->

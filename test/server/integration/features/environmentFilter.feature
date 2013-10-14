@@ -1,5 +1,6 @@
 Feature: Checks requests have an environment
   Background:
+    Given Hmac is a valid authentication method
     Given a request to get all users
     And a valid expiry date
 

@@ -2,12 +2,16 @@ moment = require 'moment'
 sdk = require 'gint-sdk'
 ObjectID = require('mongodb').ObjectID
 expect = require('chai').expect
+dbHelper = require '../../../../lib/dbhelper'
 
 aTest = () ->
   @World = require('../support/world').World
 
   req = null
   res = null
+
+  @Given /^Hmac is a valid authentication method$/, (next) ->
+    dbHelper.setSetting 'loginWithHmac', true, next
 
   @Given /^a request to get all (.*)$/, (url, next) ->
     req = @request.get '/api/' + url

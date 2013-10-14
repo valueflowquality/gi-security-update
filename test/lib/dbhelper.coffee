@@ -42,9 +42,10 @@ wrapDbFunction = (dbFunction, cb) ->
 exports.setSetting = (key, value, cb) ->
   setting =
     key: key
+    systemId: sysId
     parent:
       key: sysId
-      resourceType: 'System'
+      resourceType: 'system'
   update =
     $set:
       value: value

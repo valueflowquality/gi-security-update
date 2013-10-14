@@ -27,9 +27,11 @@ module.exports = (app) ->
       app.models.settings.get name, req.systemId, req.environmentId
       , (err, result) ->
         if err
-          cb(err) if cb
+          cb() if cb
         else if result?.value
           cb(null, param) if cb
+        else
+          cb() if cb
 
     async.parallel [
       (cb) ->
@@ -42,7 +44,10 @@ module.exports = (app) ->
       if err
         callback(err, null) if callback
       else
-        callback(err, results) if callback
+        isDefined = (value, cb) ->
+          cb(value?)
+        async.filter results, isDefined, (filteredResults) ->
+          callback(err, filteredResults) if callback
 
   systemCheck = (req, res, next) ->
     #find environment by host
