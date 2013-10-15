@@ -26,12 +26,12 @@ worldDefinition = () ->
   #   'tunnel-identifier': process.env.DRONE_BUILD_NUMBER
 
   @BeforeFeatures (event, callback) ->
-    console.log 'test/client/e2e/features/support/world@BeforeFeatures'
     driver = new webdriver.Builder().
     usingServer('http://192.168.1.72:4444/wd/hub').
     withCapabilities(capabilities).build()
 
     ptor = protractor.wrapDriver driver
+    ptor.driver.manage().timeouts().setScriptTimeout 10000
     dbhelper.initializeDB callback
 
   @AfterFeatures (event, callback) ->

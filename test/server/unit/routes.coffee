@@ -43,6 +43,8 @@ module.exports = () ->
         securityFilter = app.middleware.userAction
       else if security is 'admin'
         securityFilter = app.middleware.adminAction
+      else if security is 'public-read'
+        securityFilter = app.middleware.publicReadAction
 
       module.configure app, rest
 
@@ -64,8 +66,8 @@ module.exports = () ->
       assertRestfulForResource 'users', 'user', 'user'
       done()
 
-    it 'exports a RESTful settings resource', (done) ->
-      assertRestfulForResource 'settings', 'user', 'setting'
+    it 'exports a RESTful public-read settings resource', (done) ->
+      assertRestfulForResource 'settings', 'public-read', 'setting'
       done()
 
     it 'exports a RESTful activities resource', (done) ->

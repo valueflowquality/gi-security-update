@@ -70,6 +70,16 @@ module.exports = (app) ->
   publicAction = (req, res, next) ->
     exports._systemCheck req, res, next
 
+  publicReadAction = (req, res, next) ->
+    if req.route.method is 'get'
+      systemCheck req, res, () ->
+        if not req.query?
+          req.query = {}
+        req.query.acl = 'public-read'
+        next()
+    else
+      res.json 401, {msg: 'not authorized'}
+
   hmacAuth = (req, res, next) ->
     if _.indexOf(req.strategies, 'Hmac') is -1
       next 'Hmac strategy not supported', null
@@ -185,6 +195,7 @@ module.exports = (app) ->
   exports =
   #Export the authentiaction action middleware
     publicAction: publicAction
+    publicReadAction: publicReadAction
     userAction: userAction
     adminAction: adminAction
     sysAdminAction: sysAdminAction

@@ -39,10 +39,16 @@ wrapDbFunction = (dbFunction, cb) ->
       db.close()
       cb()
 
-exports.setSetting = (key, value, cb) ->
+exports.setSetting = (key, value, acl, cb) ->
+
+  if not cb?
+    cb = acl
+    acl = null
+
   setting =
     key: key
     systemId: sysId
+    acl: acl
     parent:
       key: sysId
       resourceType: 'system'

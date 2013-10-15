@@ -129,6 +129,10 @@ module.exports = (grunt) ->
         browsers: [ 'PhantomJS' ]
 
     cucumberjs:
+      unit:
+        src: 'test/features'
+        options:
+          format: "pretty"
       integration:
         src: 'test/server/integration/features'
         options:
@@ -156,7 +160,7 @@ module.exports = (grunt) ->
   , 'requirejs', 'copy:dev', 'clean:temp']
 
   grunt.registerTask 'default'
-  , ['build','cucumberjs:integration', 'mochaTest:unit', 'karma:unit']
+  , ['build', 'mochaTest:unit', 'cucumberjs:unit', 'karma:unit', 'cucumberjs:integration' ]
 
   grunt.registerTask 'ci', [
     'default'
@@ -171,6 +175,11 @@ module.exports = (grunt) ->
     'express:test'
     'env:test'
     'cucumberjs:e2e'
+  ]
+
+  grunt.registerTask 'test', [
+    'default'
+    'e2e'
   ]
 
   grunt.registerTask 'coverage'

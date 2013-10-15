@@ -22,14 +22,6 @@ angular.module('app').controller 'loginController'
         finishLogin()
 
   Setting.all().then (settings) ->
-    appId = $filter('filter')(settings, (setting) ->
-      setting.key is 'facebookAppId'
-    )
-    if appId?
-      Facebook.init appId[0].value
-    else
-      console.log 'error initializing facebook login'
-
     allowFacebookLogin = $filter('filter')(settings, (setting) ->
       setting.key is 'loginWithFacebook'
     )
@@ -37,4 +29,14 @@ angular.module('app').controller 'loginController'
       $scope.allowFacebookLogin = allowFacebookLogin[0].value
     else
       $scope.allowFacebookLogin = false
+      
+    if $scope.allowFacebookLogin
+      appId = $filter('filter')(settings, (setting) ->
+        setting.key is 'facebookAppId'
+      )
+      if appId?.length > 0
+        Facebook.init appId[0].value
+      else
+        console.log 'error initializing facebook login'
+
 ]

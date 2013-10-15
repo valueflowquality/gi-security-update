@@ -16,7 +16,6 @@ testConf =
     port: '27017'
     name: 'gint-security-test'
   security:
-    strategies: ['Hmac', 'Basic']
     sessionSecret: 'testSecret'
 
 app.configure ->

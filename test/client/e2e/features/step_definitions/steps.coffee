@@ -1,7 +1,7 @@
 dbhelper = require '../../../../lib/dbhelper'
 module.exports = ->
 
-  @Given /^I (?:am on|navigate to|visit) the (.*)page$/, (page, callback) ->
+  @Given /^I (?:am on|navigate to|visit) the (.*) page$/, (page, callback) ->
     path = '/'
     if page isnt 'home'
       path += page
@@ -15,7 +15,8 @@ module.exports = ->
     if approved is 'is'
       allowFacebookLogin = true
 
-    dbhelper.setSetting 'loginWithFacebook', allowFacebookLogin, callback
+    dbhelper.setSetting 'loginWithFacebook', allowFacebookLogin
+    , 'public-read', callback
 
   @Then /^I should see a welcome message/, (callback) ->
     @browser.findElement(@By.tagName 'p').getText().then (text) =>

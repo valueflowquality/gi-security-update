@@ -26,8 +26,6 @@ describe 'Login controller', ->
       all: () ->
         then: allSettingsResult
 
-    mockFilterService = sinon.stub()
-
     mockFacebookService =
       init: sinon.spy()
 
@@ -51,59 +49,6 @@ describe 'Login controller', ->
       expect(mockSettingService.all.calledOnce).to.be.true
       done()
 
-    it 'filters the settings looking for facebookAppId', (done) ->
-      fun = ->
-        null
-      allSettingsResult.callsArgWith 0, ['setting1', 'setting2']
-
-      mockFilterService.returns fun
-
-      dependencies.$filter = mockFilterService
-
-      ctrl = controller 'loginController', dependencies
-
-      expect(mockFilterService.calledWithExactly 'filter').to.be.true
-      done()
-
-    it 'passes settings and a function into two filters', (done) ->
-      settingResult = [
-        {key: 'setting1', value: 'setting1'}
-        {key: 'setting2', value: 'setting2'}
-      ]
-      allSettingsResult.callsArgWith 0, settingResult
-      allSettingsResult.callsArgWith 0, settingResult
-      aSpy = sinon.spy()
-      mockFilterService.returns aSpy
-      dependencies.$filter = mockFilterService
-      ctrl = controller 'loginController', dependencies
-      expect(aSpy.calledTwice).to.be.true
-      expect(aSpy.alwaysCalledWith settingResult, sinon.match.func)
-      .to.be.true
-      done()
-
-    it 'inits facebook with on the setting with key facebookAppId', (done) ->
-      allSettingsResult.callsArgWith 0, [
-        {key: 'setting1', value: 'setting1'}
-        {key: 'facebookAppId', value: 'setting2'}
-      ]
-      ctrl = controller 'loginController', dependencies
-      expect(mockFacebookService.init.calledWithExactly 'setting2').to.be.true
-      expect(console.log.called).to.be.false
-      done()      
-
-    it 'logs an error to the console if no appId setting found', (done) ->
-      allSettingsResult.callsArgWith 0, [
-        {key: 'setting1', value: 'setting1'}
-        {key: 'facebookAppId', value: 'setting2'}
-      ]
-      aSpy = sinon.spy()
-      mockFilterService.returns aSpy
-      dependencies.$filter = mockFilterService
-      ctrl = controller 'loginController', dependencies
-      expect(console.log.calledWithExactly 'error initializing facebook login')
-      .to.be.true
-      done()
-
     it 'sets allowFacebookLogin to the value in facebookAppId setting'
     , (done) ->
       allSettingsResult.callsArgWith 0, [
@@ -113,15 +58,47 @@ describe 'Login controller', ->
       ]
       ctrl = controller 'loginController', dependencies
       expect(scope.allowFacebookLogin).to.equal 'bob'
-      done()      
+      done()
 
     it 'sets allowFacebookLogin to false if no setting'
+    , (done) ->
+      allSettingsResult.callsArgWith 0, []
+      ctrl = controller 'loginController', dependencies
+      expect(scope.allowFacebookLogin).to.equal false
+      done()
+
+    it 'does not init facebook if facebook login is not enabled'
     , (done) ->
       allSettingsResult.callsArgWith 0, [
         {key: 'setting1', value: 'setting1'}
         {key: 'facebookAppId', value: 'setting2'}
       ]
       ctrl = controller 'loginController', dependencies
-      expect(scope.allowFacebookLogin).to.equal false
-      done()      
+      expect(mockFacebookService.init.notCalled, 'facebook was initialised')
+      .to.be.true
+      expect(console.log.notCalled, 'tried to intialize facebook')
+      .to.be.true
+      done()
 
+    it 'inits facebook with on the setting with key facebookAppId ' +
+    'if facebook login is enabled', (done) ->
+      allSettingsResult.callsArgWith 0, [
+        {key: 'setting1', value: 'setting1'}
+        {key: 'loginWithFacebook', value: true}
+        {key: 'facebookAppId', value: 'setting2'}
+      ]
+      ctrl = controller 'loginController', dependencies
+      expect(mockFacebookService.init.calledWithExactly 'setting2').to.be.true
+      expect(console.log.called).to.be.false
+      done()
+
+    it 'logs an error to the console if no appId setting found', (done) ->
+      allSettingsResult.callsArgWith 0, [
+        {key: 'setting1', value: 'setting1'}
+        {key: 'loginWithFacebook', value: true}
+      ]
+      ctrl = controller 'loginController', dependencies
+      expect(console.log.calledWithExactly('error initializing facebook login')
+      ,"initializing facebook login had problem")
+      .to.be.true
+      done()

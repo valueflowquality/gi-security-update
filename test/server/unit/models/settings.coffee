@@ -13,7 +13,7 @@ module.exports = () ->
       mocks.mongoose, mocks.crudModelFactory
     )
     
-    modelName = 'Setting'    
+    modelName = 'Setting'
     sinon = mocks.sinon
     
     it 'Creates a Settings mongoose model', (done) ->
@@ -50,9 +50,10 @@ module.exports = () ->
           done()
           
       describe 'Other', ->
-        it 'get: function(name, systemId, environmentId, callback) -> (err, obj)', (done) ->
+        it 'get: (name, systemId, environmentId, callback) -> (err, obj)'
+        , (done) ->
           done()
 
-        it 'set: function(name, value, systemId, environmentId, callback) -> (err)' +
+        it 'set: (name, value, systemId, environmentId, callback) -> (err)' +
         '-> (err, obj)', (done) ->
           done()
