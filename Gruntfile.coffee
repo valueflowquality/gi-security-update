@@ -155,20 +155,26 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-express'
   grunt.loadNpmTasks 'grunt-env'
 
-  grunt.registerTask 'build'
-  , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','copy:libs'
-  , 'requirejs', 'copy:dev', 'clean:temp']
-
-  grunt.registerTask 'default'
-  , ['build', 'mochaTest:unit', 'cucumberjs:unit', 'karma:unit', 'cucumberjs:integration' ]
-
-  grunt.registerTask 'ci', [
-    'default'
+  grunt.registerTask 'build', [
+    'clean'
+    'coffeeLint'
+    'coffee'
+    'ngTemplateCache'
+    'copy:libs'
+    'requirejs'
+    'copy:dev'
+    'clean:temp'
   ]
 
   grunt.registerTask 'unit', [
-    'build'
     'mochaTest:unit'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+  ]
+
+  grunt.registerTask 'integration', [
+    'cucumberjs:integration'
   ]
 
   grunt.registerTask 'e2e', [
@@ -178,15 +184,18 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'test', [
-    'default'
+    'build'
+    'unit'
+    'integration'
     'e2e'
   ]
 
-  grunt.registerTask 'coverage'
-  , ['build', 'karma:coverage', 'clean:bin']
+  grunt.registerTask 'default', [
+    'build'
+    'unit'
+    'integration'
+  ]
 
-  grunt.registerTask 'ciserver'
-  , ['build', 'karma:unit']
-
-  grunt.registerTask 'run'
-  , [ 'build', 'watch']
+  grunt.registerTask 'ci', [
+    'default'
+  ]
