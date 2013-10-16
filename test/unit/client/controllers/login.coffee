@@ -14,9 +14,11 @@ describe 'Login controller', ->
   q = null
   dependencies = null
 
-  beforeEach inject (_$rootScope_, $injector, $controller, $q, $filter) ->
+  beforeEach inject ($rootScope, $httpBackend, $injector, $controller, $q
+  , $filter) ->
     controller = $controller
-    scope = _$rootScope_.$new()
+    scope = $rootScope.$new()
+    mockHttpService = $httpBackend
 
     q = $q
     
@@ -31,7 +33,6 @@ describe 'Login controller', ->
 
     dependencies =
       $scope: scope
-      $http: mockHttpService
       $filter: $filter
       authService: mockAuthService
       Facebook: mockFacebookService
@@ -102,3 +103,32 @@ describe 'Login controller', ->
       ,"initializing facebook login had problem")
       .to.be.true
       done()
+
+    it 'sets scope.loginStatus.failed to false', (done) ->
+      ctrl = controller 'loginController', dependencies
+      expect(scope.loginStatus.failed).to.be.false
+      done()
+  describe '$scope functions', ->
+    beforeEach ->
+      ctrl = controller 'loginController', dependencies
+
+    describe '$scope.login()', ->
+      it 'sets $scope.loginStatus.failed to true if login fails', (done) ->
+        scope.cred =
+          username: 'bob@acme.com'
+          password: 'pswd'
+        mockHttpService.expectPOST('/api/login', scope.cred)
+        .respond(401)
+        scope.login()
+        mockHttpService.flush()
+        expect(scope.loginStatus.failed, 'loginStatus.failed not set')
+        .to.be.true
+        done()
+
+    describe '$scope.dismissLoginAlert()', () ->
+      it 'sets $scope.loginStatus.failed to false', (done) ->
+        scope.loginStatus.failed = true
+        scope.dismissLoginAlert()
+        expect(scope.loginStatus.failed).to.be.false
+        done()
+

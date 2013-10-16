@@ -57,3 +57,28 @@ module.exports = ->
         callback.fail new Error(message)
       else
         callback()
+
+  @When /^I log in with incorrect details$/, (next) ->
+    @browser.findElement(@By.input 'cred.username').sendKeys('faker@bob.com')
+    @browser.findElement(@By.input 'cred.password').sendKeys('notapassword')
+    @browser.findElement(@By.css 'button.basicLogin').click()
+    next()
+
+  @When /^I click to dismiss the login fail message$/, (next) ->
+    @browser.findElement(@By.css 'button.dismissLogin').click()
+    next()
+
+  @Then /^I (should|should not) see a message telling me login has failed$/
+  , (which, next) ->
+    shouldI = false
+    if which is 'should'
+      shouldI = true
+
+    @browser.isElementPresent(@By.css "div.alert").then (found) ->
+      if found isnt shouldI
+        message = "Login fail alert should not be present"
+        if shouldI
+          message = "Could not find Login fail alert"
+        next.fail new Error(message)
+      else
+        next()

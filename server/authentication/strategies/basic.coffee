@@ -25,7 +25,6 @@ util.inherits Strategy, passport.Strategy
 
 
 Strategy::authenticate = (req, options) ->
-  console.log 'basic authentication'
   options = options or {}
 
   username = req.body[@_userNameField] or undefined
