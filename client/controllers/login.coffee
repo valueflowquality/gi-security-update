@@ -5,6 +5,9 @@ angular.module('app').controller 'loginController'
 , authService, Facebook, Setting) ->
   #when we're in this controller we should keep testing to see
   #if the user has managed to login yet.
+  $scope.loginStatus =
+    failed: false
+
   finishLogin = () ->
     $http.get('/api/loginstatus')
     .success (data, status) ->
@@ -13,13 +16,18 @@ angular.module('app').controller 'loginController'
         authService.loginConfirmed()
 
   $scope.login = () ->
-    $http.post('/api/login', $scope.cred).success () ->
+    $http.post('/api/login', $scope.cred).success( () ->
       finishLogin()
+    ).error () ->
+      $scope.loginStatus.failed = true
 
   $scope.loginWithFacebook = () ->
     Facebook.login().then (loggedIn) ->
       if loggedIn
         finishLogin()
+
+  $scope.dismissLoginAlert = () ->
+    $scope.loginStatus.failed = false
 
   Setting.all().then (settings) ->
     allowFacebookLogin = $filter('filter')(settings, (setting) ->

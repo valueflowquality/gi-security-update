@@ -5,7 +5,7 @@ module.exports = (grunt) ->
 
     env:
       test:
-        src: 'test/client/e2e/.env'
+        src: 'test/e2e/.env'
 
     clean:
       reset:
@@ -115,7 +115,7 @@ module.exports = (grunt) ->
 
     mochaTest:
       unit:
-        src: ['test/server/unit/testSpec.coffee']
+        src: ['test/unit/server/mocha/testSpec.coffee']
         options:
           timeout: 3000
           ignoreLeaks: false
@@ -124,21 +124,21 @@ module.exports = (grunt) ->
 
     karma:
       unit:
-        configFile: 'test/client/unit/karma.conf.coffee'
+        configFile: 'test/unit/client/karma.conf.coffee'
         singleRun: true
         browsers: [ 'PhantomJS' ]
 
     cucumberjs:
       unit:
-        src: 'test/features'
+        src: 'test/unit/server/cucumber'
         options:
           format: "pretty"
       integration:
-        src: 'test/server/integration/features'
+        src: 'test/integration/server'
         options:
           format: "pretty"
       e2e:
-        src: 'test/client/e2e/features'
+        src: 'test/e2e'
         options:
           format: "pretty"
     
@@ -167,17 +167,19 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'unit', [
-    'mochaTest:unit'
+    'build'
     'mochaTest:unit'
     'cucumberjs:unit'
     'karma:unit'
   ]
 
   grunt.registerTask 'integration', [
+    'build'
     'cucumberjs:integration'
   ]
 
   grunt.registerTask 'e2e', [
+    'build'
     'express:test'
     'env:test'
     'cucumberjs:e2e'
@@ -185,17 +187,25 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test', [
     'build'
-    'unit'
-    'integration'
-    'e2e'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+    'cucumberjs:integration'
+    'express:test'
+    'env:test'
+    'cucumberjs:e2e'
   ]
 
   grunt.registerTask 'default', [
-    'build'
-    'unit'
-    'integration'
+    'test'
   ]
 
   grunt.registerTask 'ci', [
     'default'
+  ]
+
+  grunt.registerTask 'server', [
+    'build'
+    'express'
+    'express-keepalive'
   ]
