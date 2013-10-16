@@ -167,16 +167,19 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'unit', [
+    'build'
     'mochaTest:unit'
     'cucumberjs:unit'
     'karma:unit'
   ]
 
   grunt.registerTask 'integration', [
+    'build'
     'cucumberjs:integration'
   ]
 
   grunt.registerTask 'e2e', [
+    'build'
     'express:test'
     'env:test'
     'cucumberjs:e2e'
@@ -184,17 +187,25 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test', [
     'build'
-    'unit'
-    'integration'
-    'e2e'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+    'cucumberjs:integration'
+    'express:test'
+    'env:test'
+    'cucumberjs:e2e'
   ]
 
   grunt.registerTask 'default', [
-    'build'
-    'unit'
-    'integration'
+    'test'
   ]
 
   grunt.registerTask 'ci', [
     'default'
+  ]
+
+  grunt.registerTask 'server', [
+    'build'
+    'express'
+    'express-keepalive'
   ]
