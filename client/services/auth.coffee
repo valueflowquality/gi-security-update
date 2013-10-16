@@ -37,26 +37,3 @@ angular.module('app').provider 'authService', () ->
 
   $get: get
   pushToBuffer: pushToBuffer
-
-angular.module('app').config ['$httpProvider','authServiceProvider'
-  , ($httpProvider, authServiceProvider) ->
-    
-    $httpProvider.responseInterceptors.push ['$rootScope', '$q'
-    , ($rootScope, $q) ->
-      success = (response) ->
-        response
- 
-      error = (response) ->
-        if response.status == 401
-          deferred = $q.defer()
-          authServiceProvider.pushToBuffer response.config, deferred
-          $rootScope.$broadcast 'event:auth-loginRequired'
-          deferred.promise
-        else
-          $q.reject response
- 
-      (promise) ->
-        promise.then success, error
-    ]
-
-  ]

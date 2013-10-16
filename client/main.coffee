@@ -27,6 +27,7 @@ require
         'services/setting'
       ]
     'services/facebook': deps: ['libs/facebook']
+    'interceptors/auth': deps: ['services/auth']
   [
     'libs/facebook'
     'views'
@@ -44,7 +45,8 @@ require
     'directives/roleForm'
     'directives/userForm'
     'directives/permissionForm'
-    'responseInterceptors/auth'
+    'interceptors/auth'
+    'services/auth'
     'services/facebook'
     'services/setting'
     'services/permission'
