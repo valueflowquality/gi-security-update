@@ -201,7 +201,11 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'ci', [
-    'test'
+    'build'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+    'cucumberjs:integration'
   ]
 
   grunt.registerTask 'server', [
