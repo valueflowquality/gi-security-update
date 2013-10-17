@@ -24,7 +24,7 @@ angular.module('app').controller 'roleController'
       $scope.roles = roles
       if roles.length > 0
         $scope.selectedRole = roles[0]
-        refreshRoleUsers()
+        refreshRoleUsers roles[0]
 
   $scope.selectRole = (role) ->
     $scope.selectedRole = role
