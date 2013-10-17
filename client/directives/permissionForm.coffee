@@ -24,14 +24,14 @@ angular.module('app').directive 'permissionForm'
       refreshPermissionFields()
     
     scope.$watch 'selectedResourceType', (newVal, oldVal) ->
-      if newVal
+      if newVal?.name
         scope.selectedKeys = []
         getRelatedKeys newVal.name
     
     pluralise = (str) ->
       if str?
         result = str.toLowerCase()
-        suffix = 'ory'
+        suffix = 'y'
         if result.indexOf(suffix, result.length - suffix.length) isnt -1
           result = result.substring(0, result.length - 1) + 'ies'
         else
