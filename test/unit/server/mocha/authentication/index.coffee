@@ -96,11 +96,6 @@ module.exports = () ->
             expect(app.use.calledWith app.router).to.be.true
             done()
 
-          it 'creates an api route for loginstatus', (done) ->
-            expect(app.get.calledWith '/api/loginstatus', sinon.match.func)
-            .to.be.true
-            done()
-
           it 'creates an api route for logout', (done) ->
             expect(app.get.calledWith '/api/logout', sinon.match.func)
             .to.be.true
