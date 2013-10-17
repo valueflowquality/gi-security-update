@@ -201,7 +201,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'ci', [
-    'default'
+    'test'
   ]
 
   grunt.registerTask 'server', [
