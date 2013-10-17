@@ -21,14 +21,24 @@ describe 'Role Controller', ->
     query: (callback) ->
       callback []
 
+  mockAuthService =
+    isAdmin: ->
+      then: (cb) ->
+        cb true
+
   scope = {}
   ctrl = {}
 
   beforeEach inject ($rootScope, $injector, $controller) ->
     scope = $rootScope.$new()
-    scope.isAdmin = true
-    ctrl = $controller('roleController'
-    , { $scope: scope, Role: mockRoleService, User: mockUserService })
+
+    dependencies =
+      $scope: scope
+      Role: mockRoleService
+      User: mockUserService
+      Auth: mockAuthService
+
+    ctrl = $controller 'roleController', dependencies
 
   describe 'initializing', ->
     it 'should create an empty role',() ->
