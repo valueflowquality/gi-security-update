@@ -1,4 +1,14 @@
-<label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label>
-<label name="userId">Id: {{user._id}}</label>
-<label name="apiSecret">API Secret: {{user.apiSecret}}</label>
-<button class="btn btn-primary" ng-click="resetApi()">Create API Secret</button>
+<div class="form" role="form">
+  <div class="form-group">
+    <label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label>
+  </div>
+  <div class="form-group">
+    <label name="userId">Id: {{user._id}}</label>
+  </div>
+  <div class="form-group">
+    <label name="apiSecret">API Secret: {{user.apiSecret}}</label>
+  </div>
+  <div class="form-group">
+    <button class="form-control btn btn-primary" ng-click="resetApi()">Create API Secret</button>
+  </div>
+</div>

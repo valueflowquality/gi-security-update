@@ -1,6 +1,6 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span6">
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
       <datatable items="permissions" 
                  selected-items="selectedPermissions"
                  options="options" >
@@ -16,7 +16,7 @@
         </div>
       </datatable>
     </div>
-    <div class="span6">
+    <div class="col-md-6">
       <permission-form permission="permission" submit-text="{{submitText}}" submit="savePermission(permission)"></permission-form>
     </div>
   </div>
