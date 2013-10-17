@@ -1,8 +1,11 @@
 angular.module('app').controller 'permissionController'
-, ['$scope', '$location', 'Resource', 'Permission'
-, ($scope, $location, Resource, Permission) ->
+, ['$scope', '$location', 'Resource', 'Permission', 'Auth'
+, ($scope, $location, Resource, Permission, Auth) ->
   
-  $scope.resourceTypes = Resource.all()
+  Resource.all().then (rts) ->
+    console.log 'rts'
+    console.log rts
+    $scope.resourceTypes = rts
   
   $scope.selectedPermissions = []
 
@@ -17,18 +20,19 @@ angular.module('app').controller 'permissionController'
   $scope.savePermission = (permission) ->
     Permission.save permission
 
-  if $scope.isAdmin
-    Permission.all().then (permissions) ->
-      $scope.permissions = permissions
+  Auth.isAdmin().then (isAdmin) ->
+    if isAdmin
+      Permission.all().then (permissions) ->
+        $scope.permissions = permissions
 
-    $scope.$watch 'selectedPermissions[0]',  (newVal, oldVal) ->
-      if newVal
-        $scope.permission = newVal
-        $scope.submitText = "Update Permission"
-      else
-        $scope.permission = {}
-        $scope.submitText = "Add Permission"
-  else
-    $location.path '/login'
+      $scope.$watch 'selectedPermissions[0]',  (newVal, oldVal) ->
+        if newVal
+          $scope.permission = newVal
+          $scope.submitText = "Update Permission"
+        else
+          $scope.permission = {}
+          $scope.submitText = "Add Permission"
+    else
+      $location.path '/login'
 
 ]

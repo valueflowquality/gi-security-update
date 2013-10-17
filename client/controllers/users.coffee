@@ -1,6 +1,6 @@
 angular.module('app').controller 'usersController'
-, ['$scope', '$location', 'User'
-, ($scope, $location, User) ->
+, ['$scope', '$location', 'User', 'Auth'
+, ($scope, $location, User, Auth) ->
 
   $scope.newUser = User.create()
   $scope.currentView = 'list'
@@ -33,9 +33,10 @@ angular.module('app').controller 'usersController'
   $scope.show = (view) ->
     $scope.currentView = view
 
-  if $scope.isAdmin
-    $scope.getData()
-  else
-    $location.path '/login'
+  Auth.isAdmin().then (isAdmin) ->
+    if isAdmin
+      $scope.getData()
+    else
+      $location.path '/login'
 
 ]

@@ -1,7 +1,6 @@
 angular.module('app').controller 'roleController'
-, ['$scope','$location', 'Role', 'User'
-, ($scope, $location, Role, User) ->
-
+, ['$scope','$location', 'Role', 'User', 'Auth'
+, ($scope, $location, Role, User, Auth) ->
   $scope.roles = []
   
   reset = () ->
@@ -10,9 +9,10 @@ angular.module('app').controller 'roleController'
 
   refreshRoleUsers = (role) ->
     $scope.roleUsers = []
-    angular.forEach $scope.users, (user) ->
-      if role._id in user.roles
-        $scope.roleUsers.push user
+    if role?._id?
+      angular.forEach $scope.users, (user) ->
+        if role._id in user.roles
+          $scope.roleUsers.push user
 
   $scope.saveRole = (role, callback) ->
     Role.save role, () ->
@@ -24,6 +24,7 @@ angular.module('app').controller 'roleController'
       $scope.roles = roles
       if roles.length > 0
         $scope.selectedRole = roles[0]
+        refreshRoleUsers()
 
   $scope.selectRole = (role) ->
     $scope.selectedRole = role
@@ -36,12 +37,15 @@ angular.module('app').controller 'roleController'
   $scope.show = (selector) ->
     $scope.currentView = selector
 
-  if $scope.isAdmin
-    User.query (results) ->
-      $scope.users = results
-      
-    $scope.show 'list'
-    reset()
-  else
-    $location.path '/login'
+  Auth.isAdmin().then (isAdmin) ->
+    if isAdmin
+      User.query (results) ->
+        $scope.users = results
+        refreshRoleUsers($scope.selectedRole)
+        
+      $scope.show 'list'
+      reset()
+    else
+      console.log 'redirecting to login'
+      $location.path '/login'
 ]

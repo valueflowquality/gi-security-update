@@ -161,14 +161,6 @@ module.exports = (app) ->
   isSysAdmin = (user, callback) ->
     isInRole 'SysAdmin', user, callback
 
-  loginStatus = (req, res) ->
-    if req.isAuthenticated()
-      isAdmin req.user, (isA) ->
-        isRestricted req.user, (isR) ->
-          res.json 200, { loggedIn: true, isAdmin: isA, isRestricted: isR }
-    else
-      res.json 200, { loggedIn: false, isAdmin: false, isRestricted: true }
-
   logout = (req, res) ->
     req.logout()
     res.send 200
@@ -187,7 +179,6 @@ module.exports = (app) ->
   #Having fired up passport authentication
   #link in the authentication routes:
 
-  app.get   '/api/loginstatus', loginStatus
   app.get   '/api/logout', logout
   basic.routes app, publicAction
   facebook.routes app, publicAction
