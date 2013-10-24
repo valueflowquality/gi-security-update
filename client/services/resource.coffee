@@ -1,5 +1,5 @@
 angular.module('app').factory 'Resource'
-, ['$resource', 'Crud'
+, ['$resource', 'giCrud'
 , ($resource, Crud) ->
 
   Crud.factory 'resources', true

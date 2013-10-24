@@ -1,5 +1,5 @@
 angular.module('app').factory 'Setting'
-, ['Crud'
+, ['giCrud'
 , (Crud) ->
 
   crudService = Crud.factory 'settings', true
