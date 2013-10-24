@@ -15,7 +15,7 @@ worldDefinition = () ->
       @assert = assert
       callback()
 
-  capabilities = webdriver.Capabilities.chrome()
+  capabilities = webdriver.Capabilities.firefox()
   # .merge
   #   username: process.env.SAUCE_USERNAME
   #   accessKey: process.env.SAUCE_ACCESS_KEY
