@@ -1,4 +1,4 @@
-module.exports = (mongoose, crudModelFactory) ->
+module.exports = (dal) ->
 
   modelName = 'Role'
 
@@ -6,6 +6,6 @@ module.exports = (mongoose, crudModelFactory) ->
     systemId: 'ObjectId'
     name: 'String'
 
-  mongoose.model modelName, schema
+  dal.model modelName, schema
 
-  crudModelFactory mongoose.model(modelName)
+  dal.crudFactory dal.model(modelName)

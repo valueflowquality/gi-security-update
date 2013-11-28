@@ -1,8 +1,6 @@
 gint = require 'gint-util'
 
-module.exports = (mongoose, crudModelFactory, environmentsModel) ->
-
-  Schema = mongoose.Schema
+module.exports = (dal, environmentsModel) ->
 
   name = 'Setting'
 
@@ -14,12 +12,10 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
     parent:
       key: 'ObjectId'
       resourceType: 'String'
+ 
+  dal.model name, schema
 
-  settingSchema = new Schema schema
-  
-  mongoose.model name, settingSchema
-
-  crud = crudModelFactory mongoose.model(name)
+  crud = dal.crudFactory dal.model(name)
 
   get = (name, systemId, environmentId, callback) ->
     if not environmentId?

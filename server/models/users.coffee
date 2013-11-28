@@ -2,11 +2,8 @@ crypto = require 'crypto'
 bcrypt = require 'bcrypt'
 gint = require 'gint-util'
 
-module.exports = (mongoose, crudModelFactory) ->
-  
+module.exports = (dal) ->
   name = 'User'
-
-  Schema = mongoose.Schema
 
   SALT_WORK_FACTOR = 10
 
@@ -20,18 +17,17 @@ module.exports = (mongoose, crudModelFactory) ->
     userIds: [{provider: 'String', providerId: 'String'}]
     roles: [{type: 'ObjectId', ref: 'Role'}]
 
+  model = dal.model name, schema
 
-  userSchema = new Schema schema
-
-  userSchema.virtual('name').get () ->
+  model.schema.virtual('name').get () ->
     @firstName + ' ' + @lastName
 
-  userSchema.virtual('name').set (name) ->
+  model.schema.virtual('name').set (name) ->
     split = name.split ' '
     @firstName = split[0]
     @lastName = split[1]
 
-  userSchema.methods.resetAPISecret = (callback) ->
+  model.schema.methods.resetAPISecret = (callback) ->
     crypto.randomBytes 18, (err, buf) =>
       if err
         callback err
@@ -39,7 +35,7 @@ module.exports = (mongoose, crudModelFactory) ->
         @apiSecret = buf.toString 'base64'
         @save callback
 
-  userSchema.methods.comparePassword = (candidate, callback) ->
+  model.schema.methods.comparePassword = (candidate, callback) ->
     if candidate?
       if @password?
         bcrypt.compare candidate, @password, (err, isMatch) ->
@@ -51,7 +47,7 @@ module.exports = (mongoose, crudModelFactory) ->
     else
       callback 'password does not meet minimum requirements', false
 
-  userSchema.pre 'save', (next) ->
+  model.schema.pre 'save', (next) ->
     user = @
 
     if not @isModified('password')
@@ -66,9 +62,8 @@ module.exports = (mongoose, crudModelFactory) ->
         user.password = hash
         next()
   
-  mongoose.model name, userSchema
 
-  crud = crudModelFactory mongoose.model(name)
+  crud = dal.crudFactory dal.model(name)
 
   update = (id, json, callback) ->
     crud.findById id, json.systemId, (err, user) ->

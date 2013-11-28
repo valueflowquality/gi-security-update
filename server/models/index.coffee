@@ -9,17 +9,15 @@ categories = require './categories'
 permissions = require './permissions'
 resources = require './resources'
 
-module.exports = (mongoose, crudModelFactory) ->
-  environmentsModel = environments mongoose, crudModelFactory
-  filesModel = files mongoose, crudModelFactory
-  
-  systems: systems mongoose, crudModelFactory
+module.exports = (dal) ->
+  environmentsModel = environments dal
+  systems: systems dal
   environments: environmentsModel
-  files: filesModel
-  users: users mongoose, crudModelFactory
-  roles: roles mongoose, crudModelFactory
-  settings: settings mongoose, crudModelFactory, environmentsModel
-  activities: activities mongoose, crudModelFactory
-  categories: categories mongoose, crudModelFactory, filesModel
-  permissions: permissions mongoose, crudModelFactory
-  resources: resources mongoose, crudModelFactory
+  files: files dal
+  users: users dal
+  roles: roles dal
+  settings: settings dal, environmentsModel
+  activities: activities dal
+  categories: categories dal
+  permissions: permissions dal
+  resources: resources dal

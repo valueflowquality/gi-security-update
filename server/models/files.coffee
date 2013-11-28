@@ -1,12 +1,9 @@
-module.exports = (mongoose, crudModelFactory) ->
-  require('mongoose-long')(mongoose)
-
-  Schema = mongoose.Schema
+module.exports = (dal) ->
 
   modelName = 'File'
 
   schema =
-    systemId: Schema.Types.ObjectId
+    systemId: 'ObjectId'
     parentId: 'String'
     parentType: 'String'
     name: 'String'
@@ -16,12 +13,8 @@ module.exports = (mongoose, crudModelFactory) ->
     order: 'Number'
     title: 'String'
     description: 'String'
-    size: Schema.Types.Long
+    size: 'Long'
     s3alternates: ['String']
 
-  fileSchema = new Schema schema
-
-  mongoose.model modelName, fileSchema
-  exports = crudModelFactory mongoose.model(modelName)
-  exports.name = modelName
-  exports
+  dal.model modelName, schema
+  dal.crudFactory dal.model(modelName)

@@ -1,4 +1,4 @@
-module.exports = (mongoose, crudModelFactory) ->
+module.exports = (dal) ->
 
   modelName = 'Activity'
 
@@ -23,7 +23,6 @@ module.exports = (mongoose, crudModelFactory) ->
     parent:
       key: 'ObjectId'
       resourceType: 'String'
+  dal.model modelName, schema
 
-  mongoose.model modelName, schema
-
-  crudModelFactory mongoose.model(modelName)
+  dal.crudFactory dal.model(modelName)

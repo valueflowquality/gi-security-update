@@ -3,27 +3,31 @@ assert = require('chai').assert
 expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
-
+sinon = mocks.sinon
 dir =  path.normalize __dirname + '../../../../../../server'
 
 module.exports = () ->
   describe 'Settings', ->
-
-    model = require(dir + '/models/settings')(
-      mocks.mongoose, mocks.crudModelFactory
-    )
-    
+    model = null
     modelName = 'Setting'
-    sinon = mocks.sinon
+
+    beforeEach (done) ->
+      sinon.spy mocks.dal, 'model'
+      model = require(dir + '/models/settings')(mocks.dal)
+      done()
     
-    it 'Creates a Settings mongoose model', (done) ->
-      expect(mocks.mongoose.model.calledWith(modelName
+    afterEach (done) ->
+      mocks.dal.model.restore()
+      done()
+    
+    it 'Creates a Settings dal model', (done) ->
+      expect(mocks.dal.model.calledWith(modelName
       , sinon.match.any)).to.be.true
       done()
 
     describe 'Schema', ->
       modelTest = (name, type) ->
-        expect(mocks.mongoose.model.calledWith(modelName
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.hasOwn name, type)
         , name + " not defined correctly on " + modelName).to.be.true
 
@@ -43,7 +47,8 @@ module.exports = () ->
         modelTest 'acl', 'String'
 
     describe 'Exports',  ->
-      mocks.exportsCrudModel modelName, model
+      mut = require(dir + '/models/settings')(mocks.dal)
+      mocks.exportsCrudModel modelName, mut
       
       describe 'Overriden Crud', ->
         it 'Has no overridden crud', (done) ->

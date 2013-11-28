@@ -1,7 +1,4 @@
-module.exports = (mongoose, crudModelFactory) ->
-
-  Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
+module.exports = (dal) ->
 
   name = 'Environment'
 
@@ -9,11 +6,9 @@ module.exports = (mongoose, crudModelFactory) ->
     systemId: 'ObjectId'
     host: 'String'
 
-  environmentSchema = new Schema schema
-  mongoose.model name, environmentSchema
-  model = mongoose.model(name)
+  model = dal.model name, schema
 
-  #This is special - it's the only model function
+  #This is special - it's a model function
   #that does not filter by systemId (as it is used to find systemIds)
   getForHost = (host, callback) ->
     model.findOne {host: host}, (err, env) ->
@@ -27,7 +22,6 @@ module.exports = (mongoose, crudModelFactory) ->
       else
         callback "Environment Not Found", null
 
-  exports = crudModelFactory model
+  exports = dal.crudFactory model
   exports.forHost = getForHost
-  exports.name = name
   exports

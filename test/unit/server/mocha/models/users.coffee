@@ -2,68 +2,74 @@ path = require 'path'
 expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
-
+sinon = mocks.sinon
 dir =  path.normalize __dirname + '../../../../../../server'
 
 module.exports = () ->
   describe 'Users', ->
-    model = require(dir + '/models/users')(
-      mocks.mongoose, mocks.crudModelFactory
-    )
+    model = null
+    modelName = 'User'
+    beforeEach (done) ->
+      sinon.spy mocks.dal, 'model'
+      model = require(dir + '/models/users')(mocks.dal)
+      done()
     
-    sinon = mocks.sinon
+    afterEach (done) ->
+      mocks.dal.model.restore()
+      done()
     
-    it 'Creates a User mongoose model', (done) ->
-      expect(mocks.mongoose.model.calledWith('User'
+    it 'Creates a User dal model', (done) ->
+      expect(mocks.dal.model.calledWith(modelName
       , sinon.match.any)).to.be.true
       done()
 
     describe 'Schema', ->
 
       it 'systemId: ObjectId', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'systemId', 'ObjectId')).to.be.true
         done()
       
       it 'firstName: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'firstName', 'String')).to.be.true
         done()
 
       it 'lastName: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'lastName', 'String')).to.be.true
         done()
 
       it 'email: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'email', 'String')).to.be.true
         done()
 
       it 'password: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'password', 'String')).to.be.true
         done()
 
       it 'apiSecret: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'apiSecret', 'String')).to.be.true
         done()
 
       it 'userIds: [{provider: String, providerId: String}]', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'userIds'
         , [{provider: 'String', providerId: 'String'}])).to.be.true
         done()
 
       it 'roles: [{type: ObjectId, ref: Role}]', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
+        expect(mocks.dal.model.calledWith(modelName
         , sinon.match.has 'roles'
         , [{type: 'ObjectId', ref: 'Role'}])).to.be.true
         done()
 
     describe 'Exports',  ->
-      mocks.exportsCrudModel 'User', model, {update: true}
+      mut = require(dir + '/models/users')(mocks.dal)
+      mocks.exportsCrudModel 'User', mut, {update: true}
       
       describe 'Overriden Crud', ->
         it 'update: function(id, json, callback) -> (err, obj)', (done) ->

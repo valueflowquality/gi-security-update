@@ -1,4 +1,4 @@
-module.exports = (mongoose, crudModelFactory) ->
+module.exports = (dal) ->
 
   modelName = 'Permission'
 
@@ -9,6 +9,6 @@ module.exports = (mongoose, crudModelFactory) ->
     restriction: 'Number'
     keys: ['ObjectId']
 
-  mongoose.model modelName, schema
+  dal.model modelName, schema
 
-  crudModelFactory mongoose.model(modelName)
+  dal.crudFactory dal.model(modelName)

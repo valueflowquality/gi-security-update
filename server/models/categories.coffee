@@ -1,13 +1,10 @@
-module.exports = (mongoose, crudModelFactory) ->
-
-  Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
+module.exports = (dal) ->
 
   modelName = 'Category'
 
   schema =
-    systemId: ObjectId
-    parentId: ObjectId
+    systemId: 'ObjectId'
+    parentId: 'ObjectId'
     title: 'String'
     pluralTitle: 'String'
     description: 'String'
@@ -22,9 +19,5 @@ module.exports = (mongoose, crudModelFactory) ->
       value: 'String'
     ]
 
-  categorySchema = new Schema schema
-
-  mongoose.model modelName, categorySchema, 'categories'
-  exports = crudModelFactory mongoose.model(modelName)
-  exports.name = modelName
-  exports
+  dal.model modelName, schema, 'categories'
+  dal.crudFactory dal.model(modelName)
