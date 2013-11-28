@@ -1,7 +1,7 @@
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span6">
-      <datatable items="permissions" 
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <gi-datatable items="permissions" 
                  selected-items="selectedPermissions"
                  options="options" >
         <div class="header">
@@ -14,9 +14,9 @@
           <label class="property">resourceType</label>
           <label class="filter">permissionRestriction</label>
         </div>
-      </datatable>
+      </gi-datatable>
     </div>
-    <div class="span6">
+    <div class="col-md-6">
       <permission-form permission="permission" submit-text="{{submitText}}" submit="savePermission(permission)"></permission-form>
     </div>
   </div>

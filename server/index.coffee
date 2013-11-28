@@ -1,13 +1,14 @@
 gint = require 'gint-util'
 routes = require './routes'
-
+controllers = require './controllers'
+authentication = require './authentication'
+modelsFactory = require './models'
 configure = (app, mongoose, options) ->
-  
-  models = require('./models')(mongoose, app.models.crud)
 
+  models = modelsFactory(mongoose, gint.common.crudModelFactory)
   gint.common.extend app.models, models
-  gint.common.extend app.controllers, require('./controllers')(app)
-  gint.common.extend app.middleware, require('./authentication')(app, options)
+  gint.common.extend app.controllers, controllers(app)
+  gint.common.extend app.middleware, authentication(app, options)
 
   gint.common.registerResourceTypes mongoose, models
   

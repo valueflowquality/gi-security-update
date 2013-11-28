@@ -53,6 +53,7 @@ angular.module('app').directive 'userForm'
       refreshUserRoles()
 
     scope.removeFromRole = (role) ->
+      scope.unsavedChanges = true
       angular.forEach scope.user.roles, (userRole, index) ->
         if userRole is role._id
           scope.user.roles.splice index, 1

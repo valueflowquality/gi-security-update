@@ -21,12 +21,13 @@ require
       deps: [
         'services/user'
       ]
-    'controllers/loginController':
+    'controllers/login':
       deps: [
         'services/facebook'
         'services/setting'
       ]
     'services/facebook': deps: ['libs/facebook']
+    'interceptors/auth': deps: ['services/auth']
   [
     'libs/facebook'
     'views'
@@ -34,15 +35,18 @@ require
     'filters/userName'
     'filters/permissionUser'
     'filters/permissionRestriction'
-    'controllers/loginController'
+    'controllers/login'
     'controllers/logoutController'
     'controllers/userController'
     'controllers/users'
     'controllers/role'
     'controllers/permission'
+    'directives/auth'
     'directives/roleForm'
     'directives/userForm'
     'directives/permissionForm'
+    'interceptors/auth'
+    'services/auth'
     'services/facebook'
     'services/setting'
     'services/permission'

@@ -1,14 +1,25 @@
 <div class="hero-unit">
-  <h3>Please Login</h3>
-  <div class="well form-inline">
-    <input type="text" ng-model="cred.username" class="input" placeholder="Email">
-    <input type="password" ng-model="cred.password" class="input-small" placeholder="Password">
-    <button ng-disabled="!cred.username || !cred.password" class="btn btn-primary" 
-                ng-click="login()">
-          Login
-    </button>
+  <div class="alert alert-danger" ng-if="loginStatus.failed">
+    <button type="button" 
+            class="close dismissLogin" 
+            ng-click="dismissLoginAlert()">&times;</button>
+    <strong>Login Failed!</strong>: Username / Password was incorrect
   </div>
-  <div class="well form">
+  <h3>Please Login</h3>
+  <div  class="well form-inline">
+    <input  type="text" 
+            ng-model="cred.username" 
+            class="input" 
+            placeholder="Email">
+    <input  type="password" 
+            ng-model="cred.password" 
+            class="input-small" 
+            placeholder="Password">
+    <button ng-disabled="!cred.username || !cred.password" 
+            class="btn btn-primary basicLogin" 
+            ng-click="login()">Login</button>
+  </div>
+  <div class="well form loginWithFacebook" ng-if="allowFacebookLogin">
     <button ng-click="loginWithFacebook()"><img src="/img/login-with-facebook.png" width="154" height="22"></button> 
   </div>
 </div>

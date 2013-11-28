@@ -1,5 +1,6 @@
 crypto = require 'crypto'
 bcrypt = require 'bcrypt'
+gint = require 'gint-util'
 
 module.exports = (mongoose, crudModelFactory) ->
   
@@ -107,7 +108,7 @@ module.exports = (mongoose, crudModelFactory) ->
       else
         callback 'cannot find user'
 
-  exports = crud
+  exports = gint.common.extend {}, crud
   exports.update = update
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId

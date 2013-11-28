@@ -1,4 +1,5 @@
 node_modules/
+bower_modules/
 bin/
 !bin/gint-security.js
 coverage/
@@ -6,3 +7,5 @@ temp/
 npm-debug.log
 
 .DS_Store
+
+test/client/e2e/.env

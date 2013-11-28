@@ -1,6 +1,6 @@
 angular.module('app').controller 'usersController'
-, ['$scope', 'User'
-, ($scope, User) ->
+, ['$scope', '$location', 'User', 'Auth'
+, ($scope, $location, User, Auth) ->
 
   $scope.newUser = User.create()
   $scope.currentView = 'list'
@@ -17,7 +17,7 @@ angular.module('app').controller 'usersController'
 
   $scope.saveUser = (user) ->
     User.save user, () ->
-      $scope.getData
+      $scope.getData()
     
   $scope.getUsers = () ->
     $scope.users = User.query()
@@ -33,5 +33,10 @@ angular.module('app').controller 'usersController'
   $scope.show = (view) ->
     $scope.currentView = view
 
-  $scope.getData()
+  Auth.isAdmin().then (isAdmin) ->
+    if isAdmin
+      $scope.getData()
+    else
+      $location.path '/login'
+
 ]

@@ -3,6 +3,10 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json')
 
+    env:
+      test:
+        src: 'test/e2e/.env'
+
     clean:
       reset:
         src: ['bin']
@@ -103,15 +107,15 @@ module.exports = (grunt) ->
         files: ['test/client/**/*.coffee']
         tasks: ['coffeeLint:tests', 'karma:singleUnit']
 
-    mochaTest:
-      travis:
-        src: ['test/server/**/*Spec.coffee']
+    express:
+      test:
         options:
-          timeout: 3000
-          ignoreLeaks: false
-          reporter: 'dot'
+          hostname: '*'
+          server: 'example/server/app.coffee'
+
+    mochaTest:
       unit:
-        src: ['test/server/**/*Spec.coffee']
+        src: ['test/unit/server/mocha/testSpec.coffee']
         options:
           timeout: 3000
           ignoreLeaks: false
@@ -119,23 +123,25 @@ module.exports = (grunt) ->
           ui: 'bdd'
 
     karma:
-      singleUnit:
-        configFile: 'test/conf/karma.conf.coffee'
-        reporters: ['dots', 'growl']
-        singleRun: true        
       unit:
-        configFile: 'test/conf/karma.conf.coffee'
-        reporters: ['dots', 'growl']
-      travis:
-        configFile: 'test/conf/karma.conf.coffee'
+        configFile: 'test/unit/client/karma.conf.coffee'
         singleRun: true
         browsers: [ 'PhantomJS' ]
-      coverage:
-        configFile: 'test/karmaCoverage.conf.js'
-        singleRun: true
-        browsers: [ 'Chrome' ]
-        reporters: ['dots', 'coverage']
 
+    cucumberjs:
+      unit:
+        src: 'test/unit/server/cucumber'
+        options:
+          format: "pretty"
+      integration:
+        src: 'test/integration/server'
+        options:
+          format: "pretty"
+      e2e:
+        src: 'test/e2e'
+        options:
+          format: "pretty"
+    
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
@@ -145,22 +151,65 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-karma'
   grunt.loadNpmTasks 'grunt-mocha-test'
+  grunt.loadNpmTasks 'grunt-cucumber'
+  grunt.loadNpmTasks 'grunt-express'
+  grunt.loadNpmTasks 'grunt-env'
 
-  grunt.registerTask 'build'
-  , ['clean', 'coffeeLint', 'coffee', 'ngTemplateCache','copy:libs'
-  , 'requirejs', 'copy:dev', 'clean:temp']
+  grunt.registerTask 'build', [
+    'clean'
+    'coffeeLint'
+    'coffee'
+    'ngTemplateCache'
+    'copy:libs'
+    'requirejs'
+    'copy:dev'
+    'clean:temp'
+  ]
 
-  grunt.registerTask 'default'
-  , ['build', 'mochaTest:unit', 'clean:bin']
+  grunt.registerTask 'unit', [
+    'build'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+  ]
 
-  grunt.registerTask 'travis'
-  , ['build', 'mochaTest:travis', 'karma:travis' ]
+  grunt.registerTask 'integration', [
+    'build'
+    'cucumberjs:integration'
+  ]
 
-  grunt.registerTask 'coverage'
-  , ['build', 'karma:coverage', 'clean:bin']
+  grunt.registerTask 'e2e', [
+    'build'
+    'express:test'
+    'env:test'
+    'cucumberjs:e2e'
+  ]
 
-  grunt.registerTask 'ciserver'
-  , ['build', 'karma:unit']
+  grunt.registerTask 'test', [
+    'build'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+    'cucumberjs:integration'
+    'express:test'
+    'env:test'
+    'cucumberjs:e2e'
+  ]
 
-  grunt.registerTask 'run'
-  , [ 'build', 'watch']
+  grunt.registerTask 'default', [
+    'build'
+  ]
+
+  grunt.registerTask 'ci', [
+    'build'
+    'mochaTest:unit'
+    'cucumberjs:unit'
+    'karma:unit'
+    'cucumberjs:integration'
+  ]
+
+  grunt.registerTask 'server', [
+    'build'
+    'express'
+    'express-keepalive'
+  ]

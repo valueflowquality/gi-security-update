@@ -1,5 +1,5 @@
 angular.module('app').factory 'Permission'
-, ['$resource', 'Crud'
+, ['$resource', 'giCrud'
 , ($resource, Crud) ->
 
   restrictions=

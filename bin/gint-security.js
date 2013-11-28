@@ -152,14 +152,15 @@ void(0);
 }).call({}, window.inDapIF ? parent.window : window);
 } catch (e) {new Image().src="http:\/\/www.facebook.com\/" + 'common/scribe_endpoint.php?c=jssdk_error&m='+encodeURIComponent('{"error":"LOAD", "extra": {"name":"'+e.name+'","line":"'+(e.lineNumber||e.line)+'","script":"'+(e.fileName||e.sourceURL||e.script)+'","stack":"'+(e.stackTrace||e.stack)+'","message":"'+e.message+'"}}');};
 angular.module('app').run(['$templateCache', function ($templateCache) {
-	$templateCache.put('/views/login.html', '<div class="hero-unit"> <h3>Please Login</h3> <div class="well form-inline"> <input type="text" ng-model="cred.username" class="input" placeholder="Email"> <input type="password" ng-model="cred.password" class="input-small" placeholder="Password"> <button ng-disabled="!cred.username || !cred.password" class="btn btn-primary" ng-click="login()"> Login </button> </div> <div class="well form"> <button ng-click="loginWithFacebook()"><img src="/img/login-with-facebook.png" width="154" height="22"></button> </div> </div> ');
+	$templateCache.put('/views/login.html', '<div class="hero-unit"> <div class="alert alert-danger" ng-if="loginStatus.failed"> <button type="button" class="close dismissLogin" ng-click="dismissLoginAlert()">&times;</button> <strong>Login Failed!</strong>: Username / Password was incorrect </div> <h3>Please Login</h3> <div class="well form-inline"> <input type="text" ng-model="cred.username" class="input" placeholder="Email"> <input type="password" ng-model="cred.password" class="input-small" placeholder="Password"> <button ng-disabled="!cred.username || !cred.password" class="btn btn-primary basicLogin" ng-click="login()">Login</button> </div> <div class="well form loginWithFacebook" ng-if="allowFacebookLogin"> <button ng-click="loginWithFacebook()"><img src="/img/login-with-facebook.png" width="154" height="22"></button> </div> </div>');
 	$templateCache.put('/views/logout.html', '<div class="hero-unit"> <h3>You have been securely logged out</h3> <a href="/login" class="btn btn-primary">Log Back In</a> </div>');
-	$templateCache.put('/views/role.html', '<div class="container-fluid"> <div class="row-fluid"> <div class="span2"> <ul class="nav nav-list"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Roles</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New Role</a> </li> </ul> </div> <div class="span10"> <div> <div ng-show="selectedRole"> <div class="span6"> <h4>Roles</h4> <ul class="nav nav-list" ng-repeat="role in roles"> <li ng-class="{active: role.name==selectedRole.name}"> <a ng-click="selectRole(role)">{{role.name}}</a> </li> </ul> <div> <h4>Role Members</h4> <div ng-repeat="user in roleUsers">{{user.first_name}}</div> </div> </div> <div ng-show="currentView==\'list\'" class="span6"> <h4>Role Details</h4> <role-form role="selectedRole" title="Role Details" submit-text="Update Role" submit="saveRole(role)" destroy="deleteRole(role)"></role-form> </div> <div ng-show="currentView==\'form\'" class="span6"> <role-form role="newRole" title="Role Details" submit-text="Create Role" submit="saveRole(role)"></role-form> </div> </div> <div ng-hide="selectedRole"> <div class="span6"> <h4>Roles</h4> No Roles found for this organisation. You can create one by entering the details on this page. </div> <div class="span6"> <role-form title="New Role" role="newRole" submit-text="Create Role" submit="saveRole(role)"></role-form> </div> </div> </div> </div> </div> </div>');
-	$templateCache.put('/views/roleForm.html', '<div class="well form"> <input type="hidden" id="hiddenSiteId" ng-model="role._id"/> <div class="control-group"> <label class="control-label">Name:</label> <div class="controls"> <input type="text" name="name" ng-model="role.name"/> </div> </div> <div class="control-group"> <div class="controls"> <button class="btn btn-primary" ng-click="submit({role: role})"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <i class="icon-white icon-trash"/> </button> </div> </div> </div> <modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a role - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteRole()" \ class="btn btn-danger"> Delete It! </button> </div> </modal>');
-	$templateCache.put('/views/test.html', '<div class="container-fluid"> <div class="row-fluid"> <h3>Test Page</h3> <h4>{{message}}</h4> </div> </div>');
-	$templateCache.put('/views/user.html', '<label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label> <label name="userId">Id: {{user._id}}</label> <label name="apiSecret">API Secret: {{user.apiSecret}}</label> <button class="btn btn-primary" ng-click="resetApi()">Create API Secret</button>');
-	$templateCache.put('/views/userForm.html', '<div class="well form"> <h4>Profile</h4> <div class="control-group"> <label class="control-label">First Name:</label> <div class="controls"> <input type="text" name="name" ng-model="user.firstName" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Surname:</label> <div class="controls"> <input type="text" name="lastName" ng-model="user.lastName" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Email:</label> <div class="controls"> <input type="text" name="email" ng-model="user.email" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <label class="control-label">Password:</label> <div class="controls"> <input type="password" name="password" ng-model="user.password" ng-change="checkForChanges()"/> </div> </div> <div class="control-group"> <div class="controls"> <button class="btn btn-primary" ng-disabled="!unsavedChanges" ng-click="save()">{{submitText}}</button> </div> </div> </div> <div class="well form"> <h4>Roles</h4> <div class="control-group"> <h4>Assigned Roles</h4> <div class="span12" ng-repeat="role in userRoles"> <label>{{role.name}}<label> <button class="btn btn-danger" ng-click="removeFromRole(role)"> <i class="icon-white icon-trash"/> </button> </div> <h4>Available Roles</h4> <select ng-model="selectedRole" ng-options="role.name for role in notUserRoles"> </select> <div class="controls"> <button ng-click="addToRole(selectedRole)" class="btn btn-primary">Assign</button> </div> </div> <div class="control-group"> <div class="controls"> <button ng-disabled="!unsavedChanges" class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <i class="icon-white icon-trash"/> </button> </div> </div> </div> <modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a user - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteUser()" \ class="btn btn-danger"> Delete It! </button> </div> </modal>');
-	$templateCache.put('/views/userManagement.html', '<div class="container-fluid"> <div class="row-fluid"> <div class="span2"> <ul class="nav nav-list"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Users</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New User</a> </li> </ul> </div> <div class="span10"> <div> <div ng-show="selectedUser"> <div class="span4"> <h4>Users</h4> <ul class="nav nav-list" ng-repeat="user in users"> <li ng-class="{active: user._id==selectedUser._id}"> <a ng-click="selectUser(user)">{{user.firstName}}</a> </li> </ul> </div> <div ng-show="currentView==\'list\'" class="span8"> <user-form user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></user-form> </div> <div ng-show="currentView==\'form\'" class="span8"> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> <div ng-hide="selectedUser"> <div class="span4"> <h4>Users</h4> No Users found for this organisation. You can create one by entering the details on this page. </div> <div class="span4"> <h4>Create New User</h4> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> </div> </div> </div> </div>');
+	$templateCache.put('/views/permissionForm.html', '<div class="well form"> <div class="form-group" <label>User:</label> <gi-select2 options="users" selection="selectedUser" field="firstName" style="width:100%"/> </div> <div class="form-group"> <label>Resource Type:</label> <gi-select2 options="resourceTypes" selection="selectedResourceType" field="name" style="width:100%"/> </div> <div class="form-group"> <label>Restriction:</label> <select class="form-control" ng-model="permission.restriction" ng-options="r.value as r.name for r in restrictions"></select> </div> <div class="form-group"> <label>{{permission.resourceType.name}}</label> <label>Keys:</label> <gi-select2 tags custom options="keys" selection="selectedKeys" field="name" style="width:100%"/> </div> <button class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> <gi-modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete this permission - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deletePermission()" class="btn btn-danger"> Delete It! </button> </div> </gi-modal>');
+	$templateCache.put('/views/permissions.html', '<div class="container"> <div class="row"> <div class="col-md-6"> <gi-datatable items="permissions" selected-items="selectedPermissions" options="options"> <div class="header"> <label>User</label> <label>Resource</label> <label>Restriction</label> </div> <div class="body"> <label class="filter">permissionUser</label> <label class="property">resourceType</label> <label class="filter">permissionRestriction</label> </div> </gi-datatable> </div> <div class="col-md-6"> <permission-form permission="permission" submit-text="{{submitText}}" submit="savePermission(permission)"></permission-form> </div> </div> </div>');
+	$templateCache.put('/views/role.html', '<div class="container"> <div class="row"> <div class="col-md-2"> <ul class="nav nav-pills nav-stacked"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Roles</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New Role</a> </li> </ul> </div> <div class="col-md-10"> <div> <div ng-show="selectedRole"> <div class="col-md-6"> <h4>Roles</h4> <ul class="nav nav-pills nav-stacked" ng-repeat="role in roles"> <li ng-class="{active: role.name==selectedRole.name}"> <a ng-click="selectRole(role)">{{role.name}}</a> </li> </ul> <div> <h4>Role Members</h4> <div ng-repeat="user in roleUsers">{{user.firstName}}</div> </div> </div> <div ng-show="currentView==\'list\'" class="col-md-6"> <h4>Role Details</h4> <role-form role="selectedRole" title="Role Details" submit-text="Update Role" submit="saveRole(role)" destroy="deleteRole(role)"></role-form> </div> <div ng-show="currentView==\'form\'" class="col-md-6"> <role-form role="newRole" title="Role Details" submit-text="Create Role" submit="saveRole(role)"></role-form> </div> </div> <div ng-hide="selectedRole"> <div class="col-md-6"> <h4>Roles</h4> No Roles found for this organisation. You can create one by entering the details on this page. </div> <div class="col-md-6"> <role-form title="New Role" role="newRole" submit-text="Create Role" submit="saveRole(role)"></role-form> </div> </div> </div> </div> </div> </div>');
+	$templateCache.put('/views/roleForm.html', '<div class="well form" role="form"> <input type="hidden" id="hiddenSiteId" ng-model="role._id"/> <div class="form-group"> <label>Name:</label> <input type="text" class="form-control" name="name" ng-model="role.name"/> </div> <button class="btn btn-primary" ng-click="submit({role: role})"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> <gi-modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a role - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteRole()" class="btn btn-danger"> Delete It! </button> </div> </gi-modal>');
+	$templateCache.put('/views/user.html', '<div class="form" role="form"> <div class="form-group"> <label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label> </div> <div class="form-group"> <label name="userId">Id: {{user._id}}</label> </div> <div class="form-group"> <label name="apiSecret">API Secret: {{user.apiSecret}}</label> </div> <div class="form-group"> <button class="btn btn-primary" ng-click="resetApi()">Create API Secret</button> </div> </div>');
+	$templateCache.put('/views/userForm.html', '<div class="well form"> <h4>Profile</h4> <div class="form-group"> <label>First Name:</label> <input type="text" name="name" class="form-control" ng-model="user.firstName" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Surname:</label> <input type="text" name="lastName" class="form-control" ng-model="user.lastName" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Email:</label> <input type="text" name="email" class="form-control" ng-model="user.email" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Password:</label> <input type="password" name="password" class="form-control" ng-model="user.password" ng-change="checkForChanges()"/> </div> <h4>Roles</h4> <div class="form-group"> <h4>Assigned Roles</h4> <div class="col-md-12" ng-repeat="role in userRoles"> <label>{{role.name}}</label> <button class="btn btn-danger" ng-click="removeFromRole(role)"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> <div ng-if="notUserRoles.length> 0"> <h4>Available Roles</h4> <select class="form-control" ng-model="selectedRole" ng-options="role.name for role in notUserRoles"> </select> <button ng-click="addToRole(selectedRole)" class="btn btn-primary">Assign</button> </div> </div> <div class="form-group"> <button ng-disabled="!unsavedChanges" class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> </div> <gi-modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a user - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteUser()" \ class="btn btn-danger"> Delete It! </button> </div> </gi-modal>');
+	$templateCache.put('/views/userManagement.html', '<div class="container"> <div class="row"> <div class="col-md-2"> <ul class="nav nav-pills nav-stacked"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Users</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New User</a> </li> </ul> </div> <div class="col-md-10"> <div> <div ng-show="selectedUser"> <div class="col-md-4"> <h4>Users</h4> <ul class="nav nav-pills nav-stacked" ng-repeat="user in users"> <li ng-class="{active: user._id==selectedUser._id}"> <a ng-click="selectUser(user)">{{user.firstName}}</a> </li> </ul> </div> <div ng-show="currentView==\'list\'" class="col-md-8"> <user-form user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></user-form> </div> <div ng-show="currentView==\'form\'" class="col-md-8"> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> <div ng-hide="selectedUser"> <div class="col-md-4"> <h4>Users</h4> No Users found for this organisation. You can create one by entering the details on this page. </div> <div class="col-md-4"> <h4>Create New User</h4> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> </div> </div> </div> </div>');
 }]);
 angular.module('app').config([
   '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -172,12 +173,15 @@ angular.module('app').config([
     }).when('/logout', {
       controller: 'logoutController',
       templateUrl: '/views/logout.html'
-    }).when('/role', {
+    }).when('/roles', {
       controller: 'roleController',
       templateUrl: '/views/role.html'
     }).when('/users', {
       controller: 'usersController',
       templateUrl: '/views/userManagement.html'
+    }).when('/permissions', {
+      controller: 'permissionController',
+      templateUrl: '/views/permissions.html'
     });
   }
 ]);
@@ -325,6 +329,36 @@ angular.module('app').filter('userName', [
   }
 ]);
 
+angular.module('app').filter('permissionUser', [
+  '$filter', function($filter) {
+    return function(permission) {
+      var result;
+      result = 'Unknown';
+      if (permission && permission.userId) {
+        result = $filter('userName')(permission.userId);
+      }
+      return result;
+    };
+  }
+]);
+
+angular.module('app').filter('permissionRestriction', [
+  'Permission', function(Permission) {
+    return function(permission) {
+      var result;
+      result = "N/A";
+      if (permission && permission.restriction) {
+        angular.forEach(Permission.restrictions, function(res) {
+          if (res.value === permission.restriction) {
+            return result = res.name;
+          }
+        });
+      }
+      return result;
+    };
+  }
+]);
+
 angular.module('app').factory('Facebook', [
   '$rootScope', '$http', '$q', function($rootScope, $http, $q) {
     var attemptServerLogin, init, login, loginStatus, _appId, _facebookResponse;
@@ -393,7 +427,7 @@ angular.module('app').factory('Facebook', [
 ]);
 
 angular.module('app').factory('Setting', [
-  '$resource', 'Crud', function($resource, Crud) {
+  'giCrud', function(Crud) {
     var create, crudService;
     crudService = Crud.factory('settings', true);
     create = function() {
@@ -415,48 +449,54 @@ angular.module('app').factory('Setting', [
 ]);
 
 angular.module('app').controller('loginController', [
-  '$scope', '$http', '$filter', 'authService', 'Facebook', 'Setting', function($scope, $http, $filter, authService, Facebook, Setting) {
-    var finishLogin;
-    finishLogin = function() {
-      return $http.get('/api/loginstatus').success(function(data, status) {
-        if (data.loggedIn) {
-          $scope.getLoggedInUser();
-          return authService.loginConfirmed();
-        }
-      });
+  '$scope', '$http', '$filter', 'Auth', 'Facebook', 'Setting', function($scope, $http, $filter, Auth, Facebook, Setting) {
+    $scope.loginStatus = {
+      failed: false
     };
     $scope.login = function() {
       return $http.post('/api/login', $scope.cred).success(function() {
-        return finishLogin();
+        return Auth.loginConfirmed();
+      }).error(function() {
+        return $scope.loginStatus.failed = true;
       });
     };
     $scope.loginWithFacebook = function() {
       return Facebook.login().then(function(loggedIn) {
         if (loggedIn) {
-          return finishLogin();
+          return Auth.loginConfirmed();
         }
       });
     };
+    $scope.dismissLoginAlert = function() {
+      return $scope.loginStatus.failed = false;
+    };
     return Setting.all().then(function(settings) {
-      var appId;
-      appId = $filter('filter')(settings, function(setting) {
-        return setting.key === 'facebookAppId';
+      var allowFacebookLogin, appId;
+      allowFacebookLogin = $filter('filter')(settings, function(setting) {
+        return setting.key === 'loginWithFacebook';
       });
-      if (appId != null) {
-        return Facebook.init(appId[0].value);
+      if ((allowFacebookLogin != null ? allowFacebookLogin.length : void 0) > 0) {
+        $scope.allowFacebookLogin = allowFacebookLogin[0].value;
       } else {
-        return console.log('error initializing facebook login');
+        $scope.allowFacebookLogin = false;
+      }
+      if ($scope.allowFacebookLogin) {
+        appId = $filter('filter')(settings, function(setting) {
+          return setting.key === 'facebookAppId';
+        });
+        if ((appId != null ? appId.length : void 0) > 0) {
+          return Facebook.init(appId[0].value);
+        } else {
+          return console.log('error initializing facebook login');
+        }
       }
     });
   }
 ]);
 
 angular.module('app').controller('logoutController', [
-  '$rootScope', '$scope', '$http', '$timeout', 'authService', function($rootScope, $scope, $http, $timeout, authService) {
-    return $http.get('/api/logout').success(function() {
-      $rootScope.me = {};
-      return $rootScope.loggedIn = false;
-    });
+  'Auth', function(Auth) {
+    return Auth.logout();
   }
 ]);
 
@@ -466,8 +506,9 @@ angular.module('app').controller('userController', [
       return UserAccount["delete"]();
     };
     $scope.resetApi = function() {
-      console.log('reset api');
-      return UserAccount.resetApi();
+      return UserAccount.resetAPISecret().then(function() {
+        return $scope.user = UserAccount.get();
+      });
     };
     return $scope.user = UserAccount.get();
   }
@@ -475,7 +516,7 @@ angular.module('app').controller('userController', [
 
 angular.module('app').factory('UserAccount', [
   '$resource', '$rootScope', '$http', '$q', function($resource, $rootScope, $http, $q) {
-    var getMe, methods, resource;
+    var getMe, methods, resetAPISecret, resource;
     methods = {
       query: {
         method: 'GET',
@@ -502,15 +543,50 @@ angular.module('app').factory('UserAccount', [
       }
       return deferred.promise;
     };
+    resetAPISecret = function() {
+      return getMe().then(function(me) {
+        return $http.post('/api/user/apiSecret', {
+          _id: me._id
+        });
+      });
+    };
     return {
       get: resource.get,
-      getMe: getMe
+      getMe: getMe,
+      resetAPISecret: resetAPISecret
     };
   }
 ]);
 
+angular.module('app').factory('Permission', [
+  '$resource', 'giCrud', function($resource, Crud) {
+    var exports, restrictions;
+    restrictions = [
+      {
+        name: 'Deny',
+        value: 1
+      }, {
+        name: 'Create',
+        value: 2
+      }, {
+        name: 'Read',
+        value: 4
+      }, {
+        name: 'Update',
+        value: 8
+      }, {
+        name: 'Destroy',
+        value: 16
+      }
+    ];
+    exports = Crud.factory('permissions', true);
+    exports.restrictions = restrictions;
+    return exports;
+  }
+]);
+
 angular.module('app').controller('usersController', [
-  '$scope', 'User', function($scope, User) {
+  '$scope', '$location', 'User', 'Auth', function($scope, $location, User, Auth) {
     $scope.newUser = User.create();
     $scope.currentView = 'list';
     $scope.getData = function() {
@@ -528,7 +604,7 @@ angular.module('app').controller('usersController', [
     };
     $scope.saveUser = function(user) {
       return User.save(user, function() {
-        return $scope.getData;
+        return $scope.getData();
       });
     };
     $scope.getUsers = function() {
@@ -547,13 +623,19 @@ angular.module('app').controller('usersController', [
     $scope.show = function(view) {
       return $scope.currentView = view;
     };
-    return $scope.getData();
+    return Auth.isAdmin().then(function(isAdmin) {
+      if (isAdmin) {
+        return $scope.getData();
+      } else {
+        return $location.path('/login');
+      }
+    });
   }
 ]);
 
 angular.module('app').factory('Role', [
-  '$resource', function($resource) {
-    var all, destroy, factory, get, methods, resource, roles, save, updateMasterList;
+  '$resource', '$filter', '$q', function($resource, $filter, $q) {
+    var all, destroy, factory, get, isInRole, methods, resource, roles, save, updateMasterList;
     methods = {
       query: {
         method: 'GET',
@@ -654,13 +736,34 @@ angular.module('app').factory('Role', [
         name: ''
       };
     };
+    isInRole = function(name, roleIds) {
+      var deferred;
+      deferred = $q.defer();
+      all(function(roles) {
+        var inRole, toCheck;
+        inRole = false;
+        toCheck = $filter('filter')(roles, function(role) {
+          return role.name.toLowerCase() === name.toLowerCase();
+        });
+        angular.forEach(toCheck, function(role) {
+          return angular.forEach(roleIds, function(id) {
+            if (id === role._id) {
+              return inRole = true;
+            }
+          });
+        });
+        return deferred.resolve(inRole);
+      });
+      return deferred.promise;
+    };
     return {
       query: all,
       all: all,
       get: get,
       create: factory,
       destroy: destroy,
-      save: save
+      save: save,
+      isInRole: isInRole
     };
   }
 ]);
@@ -668,24 +771,23 @@ angular.module('app').factory('Role', [
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 angular.module('app').controller('roleController', [
-  '$scope', 'Role', 'User', function($scope, Role, User) {
+  '$scope', '$location', 'Role', 'User', 'Auth', function($scope, $location, Role, User, Auth) {
     var refreshRoleUsers, reset;
     $scope.roles = [];
-    User.query(function(results) {
-      return $scope.users = results;
-    });
     reset = function() {
       $scope.newRole = Role.create();
       return $scope.getRoles();
     };
     refreshRoleUsers = function(role) {
       $scope.roleUsers = [];
-      return angular.forEach($scope.users, function(user) {
-        var _ref;
-        if (_ref = role._id, __indexOf.call(user.roles, _ref) >= 0) {
-          return $scope.roleUsers.push(user);
-        }
-      });
+      if ((role != null ? role._id : void 0) != null) {
+        return angular.forEach($scope.users, function(user) {
+          var _ref;
+          if (_ref = role._id, __indexOf.call(user.roles, _ref) >= 0) {
+            return $scope.roleUsers.push(user);
+          }
+        });
+      }
     };
     $scope.saveRole = function(role, callback) {
       return Role.save(role, function() {
@@ -699,7 +801,8 @@ angular.module('app').controller('roleController', [
       return Role.query(function(roles) {
         $scope.roles = roles;
         if (roles.length > 0) {
-          return $scope.selectedRole = roles[0];
+          $scope.selectedRole = roles[0];
+          return refreshRoleUsers(roles[0]);
         }
       });
     };
@@ -715,8 +818,83 @@ angular.module('app').controller('roleController', [
     $scope.show = function(selector) {
       return $scope.currentView = selector;
     };
-    $scope.show('list');
-    return reset();
+    return Auth.isAdmin().then(function(isAdmin) {
+      if (isAdmin) {
+        User.query(function(results) {
+          $scope.users = results;
+          return refreshRoleUsers($scope.selectedRole);
+        });
+        $scope.show('list');
+        return reset();
+      } else {
+        console.log('redirecting to login');
+        return $location.path('/login');
+      }
+    });
+  }
+]);
+
+angular.module('app').controller('permissionController', [
+  '$scope', '$location', 'Resource', 'Permission', 'Auth', function($scope, $location, Resource, Permission, Auth) {
+    Resource.all().then(function(rts) {
+      console.log('rts');
+      console.log(rts);
+      return $scope.resourceTypes = rts;
+    });
+    $scope.selectedPermissions = [];
+    $scope.options = {
+      customSearch: false,
+      customSort: false,
+      searchProperties: ['resourceType'],
+      searchFilters: ['permissionUser', 'permissionRestriction'],
+      displayCounts: true,
+      columns: 3
+    };
+    $scope.savePermission = function(permission) {
+      return Permission.save(permission);
+    };
+    return Auth.isAdmin().then(function(isAdmin) {
+      if (isAdmin) {
+        Permission.all().then(function(permissions) {
+          return $scope.permissions = permissions;
+        });
+        return $scope.$watch('selectedPermissions[0]', function(newVal, oldVal) {
+          if (newVal) {
+            $scope.permission = newVal;
+            return $scope.submitText = "Update Permission";
+          } else {
+            $scope.permission = {};
+            return $scope.submitText = "Add Permission";
+          }
+        });
+      } else {
+        return $location.path('/login');
+      }
+    });
+  }
+]);
+
+angular.module('app').directive('auth', [
+  '$location', '$rootScope', function($location, $rootScope) {
+    var link;
+    link = function(scope, elem, attrs) {
+      var path;
+      path = $location.path();
+      scope.$on('event:auth-loginRequired', function() {
+        path = $location.path();
+        return $location.path('/login');
+      });
+      return scope.$on('event:auth-loginConfirmed', function() {
+        if (path === '/logout' || path === '/login') {
+          path = '/';
+        }
+        return $location.path(path);
+      });
+    };
+    return {
+      link: link,
+      restrict: 'C'
+    };
   }
 ]);
 
@@ -808,6 +986,7 @@ angular.module('app').directive('userForm', [
           return refreshUserRoles();
         };
         scope.removeFromRole = function(role) {
+          scope.unsavedChanges = true;
           return angular.forEach(scope.user.roles, function(userRole, index) {
             if (userRole === role._id) {
               scope.user.roles.splice(index, 1);
@@ -824,6 +1003,310 @@ angular.module('app').directive('userForm', [
         return getRoles();
       }
     };
+  }
+]);
+
+angular.module('app').directive('permissionForm', [
+  '$q', '$timeout', '$http', '$filter', 'Resource', 'User', 'Permission', function($q, $timeout, $http, $filter, Resource, User, Permission) {
+    return {
+      restrict: 'E',
+      templateUrl: '/views/permissionForm.html',
+      scope: {
+        permission: '=',
+        submit: '&',
+        destroy: '&',
+        submitText: '@'
+      },
+      link: function(scope, elm, attrs) {
+        var getRelatedKeys, getResources, getSelectedKeys, getSelectedResourceType, getSelectedUser, getUsers, pluralise, refreshPermissionFields;
+        scope.resourceTypes = [];
+        scope.keys = [];
+        scope.selectedKeys = [];
+        scope.users = [];
+        scope.showDelete = true;
+        scope.showDeleteModal = false;
+        scope.restrictions = Permission.restrictions;
+        scope.$watch('permission', function(newVal, oldVal) {
+          return refreshPermissionFields();
+        });
+        scope.$watch('selectedResourceType', function(newVal, oldVal) {
+          if (newVal != null ? newVal.name : void 0) {
+            scope.selectedKeys = [];
+            return getRelatedKeys(newVal.name);
+          }
+        });
+        pluralise = function(str) {
+          var result, suffix;
+          if (str != null) {
+            result = str.toLowerCase();
+            suffix = 'y';
+            if (result.indexOf(suffix, result.length - suffix.length) !== -1) {
+              result = result.substring(0, result.length - 1) + 'ies';
+            } else {
+              result += 's';
+            }
+            return result;
+          } else {
+            return str;
+          }
+        };
+        getRelatedKeys = function(name) {
+          var uri;
+          uri = '/api/' + pluralise(name);
+          return $http.get(uri).success(function(data) {
+            scope.selectedKeys = [];
+            scope.keys = data;
+            angular.forEach(scope.keys, function(key) {
+              return key.id = key._id;
+            });
+            return getSelectedKeys();
+          });
+        };
+        scope.deletePermission = function() {
+          scope.destroy({
+            permission: scope.permission
+          });
+          return scope.showDeleteModal = false;
+        };
+        scope.confirmDelete = function() {
+          return scope.showDeleteModal = true;
+        };
+        getUsers = function() {
+          var deferred;
+          deferred = $q.defer();
+          User.all(function(users) {
+            scope.users = users;
+            angular.forEach(scope.users, function(user) {
+              return user.id = user._id;
+            });
+            deferred.resolve();
+          });
+          return deferred.promise;
+        };
+        getResources = function() {
+          var deferred;
+          deferred = $q.defer();
+          Resource.all().then(function(resources) {
+            scope.resourceTypes = resources;
+            angular.forEach(scope.resourceTypes, function(resource) {
+              return resource.id = resource._id;
+            });
+            deferred.resolve();
+          });
+          return deferred.promise;
+        };
+        getSelectedResourceType = function() {
+          scope.selectedResourceType = {};
+          if (scope.permission) {
+            if (scope.permission.resourceType) {
+              return angular.forEach(scope.resourceTypes, function(resource) {
+                if (resource.name === scope.permission.resourceType) {
+                  return scope.selectedResourceType = resource;
+                }
+              });
+            }
+          }
+        };
+        getSelectedUser = function() {
+          scope.selectedUser = {};
+          if (scope.permission) {
+            if (scope.permission.userId) {
+              return angular.forEach(scope.users, function(user) {
+                if (user._id === scope.permission.userId) {
+                  return scope.selectedUser = user;
+                }
+              });
+            }
+          }
+        };
+        getSelectedKeys = function() {
+          scope.selectedKeys = [];
+          if (scope.permission && (scope.permission.keys != null)) {
+            return scope.selectedKeys = $filter('filter')(scope.keys, function(key) {
+              return scope.permission.keys.indexOf(key._id) !== -1;
+            });
+          }
+        };
+        refreshPermissionFields = function() {
+          $timeout(getSelectedResourceType);
+          $timeout(getSelectedUser);
+          return $timeout(getSelectedKeys);
+        };
+        scope.save = function() {
+          var key;
+          if (scope.permission) {
+            scope.permission.userId = scope.selectedUser._id;
+            scope.permission.keys = (function() {
+              var _i, _len, _ref, _results;
+              _ref = scope.selectedKeys;
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                key = _ref[_i];
+                _results.push(key._id);
+              }
+              return _results;
+            })();
+            scope.permission.resourceType = scope.selectedResourceType.name;
+            return scope.submit({
+              permission: scope.permission
+            });
+          }
+        };
+        return $q.all([getResources(), getUsers()]).then(function() {
+          return refreshPermissionFields();
+        });
+      }
+    };
+  }
+]);
+
+angular.module('app').provider('Auth', function() {
+  /*
+  Holds all the requests which failed due to 401 response,
+  so they can be re-requested in future, once login is completed.
+  */
+
+  var buffer, get, pushToBuffer;
+  buffer = [];
+  /*
+  Required by HTTP interceptor.
+  Function is attached to provider to be invisible for
+  regular users of this service.
+  */
+
+  pushToBuffer = function(config, deferred) {
+    return buffer.push({
+      config: config,
+      deferred: deferred
+    });
+  };
+  get = [
+    '$rootScope', '$injector', '$q', 'Role', function($rootScope, $injector, $q, Role) {
+      var $http, getLoggedInUser, loginInfoDirty, loginStatus, me, retry, retryAll;
+      $http = void 0;
+      loginInfoDirty = true;
+      me = {
+        user: null,
+        isAdmin: false,
+        isRestricted: true,
+        loggedIn: false
+      };
+      retry = function(config, deferred) {
+        $http = $http || $injector.get('$http');
+        return $http(config).then(function(response) {
+          return deferred.resolve(response);
+        });
+      };
+      retryAll = function() {
+        var item, _i, _len;
+        for (_i = 0, _len = buffer.length; _i < _len; _i++) {
+          item = buffer[_i];
+          retry(item.config, item.deferred);
+        }
+        return buffer = [];
+      };
+      getLoggedInUser = function() {
+        var deferred;
+        deferred = $q.defer();
+        $http = $http || $injector.get('$http');
+        $http.get('/api/user').success(function(user) {
+          return Role.isInRole('admin', user.roles).then(function(isAdmin) {
+            return Role.isInRole('restricted', user.roles).then(function(isRestricted) {
+              loginInfoDirty = false;
+              me = {
+                user: user,
+                isAdmin: isAdmin,
+                isRestricted: isRestricted,
+                loggedIn: true
+              };
+              return deferred.resolve(me);
+            });
+          });
+        }).error(function() {
+          loginInfoDirty = false;
+          me = {
+            user: null,
+            isAdmin: false,
+            isRestricted: true,
+            loggedIn: false
+          };
+          return deferred.resolve(me);
+        });
+        return deferred.promise;
+      };
+      loginStatus = function() {
+        var deferred;
+        deferred = $q.defer();
+        if (loginInfoDirty) {
+          deferred.resolve(getLoggedInUser());
+        } else {
+          deferred.resolve(me);
+        }
+        return deferred.promise;
+      };
+      return {
+        me: loginStatus,
+        loginConfirmed: function() {
+          loginInfoDirty = true;
+          $rootScope.$broadcast('event:auth-loginChange');
+          return retryAll();
+        },
+        isAdmin: function() {
+          var deferred;
+          deferred = $q.defer();
+          loginStatus().then(function() {
+            return deferred.resolve(me.isAdmin);
+          });
+          return deferred.promise;
+        },
+        logout: function() {
+          $http = $http || $injector.get('$http');
+          return $http.get('/api/logout').success(function() {
+            loginInfoDirty = true;
+            $rootScope.$broadcast('event:auth-loginChange');
+            return me = {
+              user: null,
+              isAdmin: false,
+              isRestricted: true,
+              loggedIn: false
+            };
+          });
+        }
+      };
+    }
+  ];
+  return {
+    $get: get,
+    pushToBuffer: pushToBuffer
+  };
+});
+
+angular.module('app').config([
+  '$httpProvider', 'AuthProvider', function($httpProvider, AuthProvider) {
+    return $httpProvider.interceptors.push([
+      '$rootScope', '$q', function($rootScope, $q) {
+        return {
+          responseError: function(rejection) {
+            var deferred;
+            if ((rejection.config.url !== '/api/login') && (rejection.config.url !== '/api/user') && (rejection.status === 401)) {
+              console.log('a ha!');
+              deferred = $q.defer();
+              AuthProvider.pushToBuffer(rejection.config, deferred);
+              $rootScope.$broadcast('event:auth-loginRequired');
+              return deferred.promise;
+            } else {
+              return $q.reject(rejection);
+            }
+          }
+        };
+      }
+    ]);
+  }
+]);
+
+angular.module('app').factory('Resource', [
+  '$resource', 'giCrud', function($resource, Crud) {
+    return Crud.factory('resources', true);
   }
 ]);
 

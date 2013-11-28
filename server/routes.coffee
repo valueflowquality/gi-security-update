@@ -20,7 +20,7 @@ configure = (app, rest) ->
   , app.middleware.userAction, app.controllers.user
   
   rest.routeResource 'settings', app
-  , app.middleware.userAction, app.controllers.setting
+  , app.middleware.publicReadAction, app.controllers.setting
   
   rest.routeResource 'activities', app
   , app.middleware.userAction, app.controllers.activity
