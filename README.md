@@ -1,7 +1,7 @@
 gint-security
 -------------
 
-[![Build Status](https://api.travis-ci.com/Gintellect/gint-security.png?token=Ep7JsJpF3GkfPp6Gsk1a)](http://magnum.travis-ci.com/Gintellect/gint-security)
+[![Build Status](https://drone.io/github.com/Gintellect/gint-security/status.png)](https://drone.io/github.com/Gintellect/gint-security/latest)
 
 This module provides a thin wrapper around passport-js, and client side user and role management.
 
