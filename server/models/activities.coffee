@@ -2,7 +2,7 @@ module.exports = (dal) ->
 
   modelName = 'Activity'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     description: 'String'
     job:
@@ -23,6 +23,8 @@ module.exports = (dal) ->
     parent:
       key: 'ObjectId'
       resourceType: 'String'
-  dal.model modelName, schema
 
-  dal.crudFactory dal.model(modelName)
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
+
+  dal.crudFactory model

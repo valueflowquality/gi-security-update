@@ -2,7 +2,7 @@ module.exports = (dal) ->
 
   modelName = 'Category'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     parentId: 'ObjectId'
     title: 'String'
@@ -18,6 +18,7 @@ module.exports = (dal) ->
       name: 'String'
       value: 'String'
     ]
-
-  dal.model modelName, schema, 'categories'
-  dal.crudFactory dal.model(modelName)
+  
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
+  dal.crudFactory model

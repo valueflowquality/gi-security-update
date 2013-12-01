@@ -3,11 +3,11 @@ bcrypt = require 'bcrypt'
 gint = require 'gint-util'
 
 module.exports = (dal) ->
-  name = 'User'
+  modelName = 'User'
 
   SALT_WORK_FACTOR = 10
 
-  schema =
+  schemaDefintion =
     systemId: 'ObjectId'
     firstName: 'String'
     lastName: 'String'
@@ -17,17 +17,17 @@ module.exports = (dal) ->
     userIds: [{provider: 'String', providerId: 'String'}]
     roles: [{type: 'ObjectId', ref: 'Role'}]
 
-  model = dal.model name, schema
+  schema = dal.schemaFactory schemaDefintion
 
-  model.schema.virtual('name').get () ->
+  schema.virtual('name').get () ->
     @firstName + ' ' + @lastName
 
-  model.schema.virtual('name').set (name) ->
+  schema.virtual('name').set (name) ->
     split = name.split ' '
     @firstName = split[0]
     @lastName = split[1]
 
-  model.schema.methods.resetAPISecret = (callback) ->
+  schema.methods.resetAPISecret = (callback) ->
     crypto.randomBytes 18, (err, buf) =>
       if err
         callback err
@@ -35,7 +35,8 @@ module.exports = (dal) ->
         @apiSecret = buf.toString 'base64'
         @save callback
 
-  model.schema.methods.comparePassword = (candidate, callback) ->
+ 
+  schema.methods.comparePassword = (candidate, callback) ->
     if candidate?
       if @password?
         bcrypt.compare candidate, @password, (err, isMatch) ->
@@ -47,7 +48,7 @@ module.exports = (dal) ->
     else
       callback 'password does not meet minimum requirements', false
 
-  model.schema.pre 'save', (next) ->
+  schema.pre 'save', (next) ->
     user = @
 
     if not @isModified('password')
@@ -62,8 +63,8 @@ module.exports = (dal) ->
         user.password = hash
         next()
   
-
-  crud = dal.crudFactory dal.model(name)
+  model = dal.modelFactory() modelName, schema
+  crud = dal.crudFactory model
 
   update = (id, json, callback) ->
     crud.findById id, json.systemId, (err, user) ->

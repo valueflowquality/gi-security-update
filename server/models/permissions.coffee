@@ -2,13 +2,14 @@ module.exports = (dal) ->
 
   modelName = 'Permission'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     userId: 'ObjectId'
     resourceType: 'String'
     restriction: 'Number'
     keys: ['ObjectId']
 
-  dal.model modelName, schema
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
 
-  dal.crudFactory dal.model(modelName)
+  dal.crudFactory model

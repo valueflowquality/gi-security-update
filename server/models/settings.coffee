@@ -2,9 +2,9 @@ gint = require 'gint-util'
 
 module.exports = (dal, environmentsModel) ->
 
-  name = 'Setting'
+  modelName = 'Setting'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     key: 'String'
     value: 'String'
@@ -13,9 +13,10 @@ module.exports = (dal, environmentsModel) ->
       key: 'ObjectId'
       resourceType: 'String'
  
-  dal.model name, schema
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
 
-  crud = dal.crudFactory dal.model(name)
+  crud = dal.crudFactory model
 
   get = (name, systemId, environmentId, callback) ->
     if not environmentId?

@@ -1,8 +1,8 @@
 module.exports = (dal) ->
 
-  name = 'System'
+  modelName = 'System'
 
-  schema =
+  schemaDefinition =
     name: 'String'
     attributes: [
       key: 'String'
@@ -10,7 +10,8 @@ module.exports = (dal) ->
       value: 'String'
     ]
 
-  model = dal.model name, schema
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
 
   #This is special - it's a model function
   #that does not filter by systemId (as it is used to find systemIds)

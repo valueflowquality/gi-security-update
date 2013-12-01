@@ -1,12 +1,13 @@
 module.exports = (dal) ->
 
-  name = 'Environment'
+  modelName = 'Environment'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     host: 'String'
 
-  model = dal.model name, schema
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
 
   #This is special - it's a model function
   #that does not filter by systemId (as it is used to find systemIds)
@@ -20,7 +21,7 @@ module.exports = (dal) ->
           systemId: env.systemId
         callback null, obj
       else
-        callback "Environment Not Found", null
+        callback modelName + " Not Found", null
 
   exports = dal.crudFactory model
   exports.forHost = getForHost

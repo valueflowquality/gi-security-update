@@ -2,7 +2,7 @@ module.exports = (dal) ->
 
   modelName = 'File'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     parentId: 'String'
     parentType: 'String'
@@ -15,6 +15,7 @@ module.exports = (dal) ->
     description: 'String'
     size: 'Long'
     s3alternates: ['String']
-
-  dal.model modelName, schema
-  dal.crudFactory dal.model(modelName)
+    
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
+  dal.crudFactory model

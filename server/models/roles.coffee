@@ -2,10 +2,11 @@ module.exports = (dal) ->
 
   modelName = 'Role'
 
-  schema =
+  schemaDefinition =
     systemId: 'ObjectId'
     name: 'String'
 
-  dal.model modelName, schema
+  schema = dal.schemaFactory schemaDefinition
+  model = dal.modelFactory() modelName, schema
 
-  dal.crudFactory dal.model(modelName)
+  dal.crudFactory model
