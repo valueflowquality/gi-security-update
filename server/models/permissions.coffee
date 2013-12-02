@@ -1,15 +1,14 @@
 module.exports = (dal) ->
 
-  modelName = 'Permission'
+  modelDefinition =
+    name: 'Permission'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      userId: 'ObjectId'
+      resourceType: 'String'
+      restriction: 'Number'
+      keys: ['ObjectId']
 
-  schemaDefinition =
-    systemId: 'ObjectId'
-    userId: 'ObjectId'
-    resourceType: 'String'
-    restriction: 'Number'
-    keys: ['ObjectId']
-
-  schema = dal.schemaFactory schemaDefinition
-  model = dal.modelFactory() modelName, schema
-
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
   dal.crudFactory model

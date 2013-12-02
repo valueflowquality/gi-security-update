@@ -1,17 +1,17 @@
 module.exports = (dal) ->
 
-  modelName = 'System'
+  modelDefinition =
+    name: 'System'
+    schemaDefinition:
+      name: 'String'
+      attributes: [
+        key: 'String'
+        category: 'String'
+        value: 'String'
+      ]
 
-  schemaDefinition =
-    name: 'String'
-    attributes: [
-      key: 'String'
-      category: 'String'
-      value: 'String'
-    ]
-
-  schema = dal.schemaFactory schemaDefinition
-  model = dal.modelFactory() modelName, schema
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
 
   #This is special - it's a model function
   #that does not filter by systemId (as it is used to find systemIds)

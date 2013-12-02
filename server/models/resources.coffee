@@ -1,12 +1,12 @@
 module.exports = (dal) ->
 
-  modelName = 'Resource'
+  modelDefinition =
+    name: 'Resource'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      name: 'String'
 
-  schemaDefinition =
-    systemId: 'ObjectId'
-    name: 'String'
-
-  schema = dal.schemaFactory schemaDefinition
-  model = dal.modelFactory() modelName, schema
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
 
   dal.crudFactory model

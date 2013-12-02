@@ -2,19 +2,19 @@ gint = require 'gint-util'
 
 module.exports = (dal, environmentsModel) ->
 
-  modelName = 'Setting'
-
-  schemaDefinition =
-    systemId: 'ObjectId'
-    key: 'String'
-    value: 'String'
-    acl: 'String'
-    parent:
-      key: 'ObjectId'
-      resourceType: 'String'
+  modelDefinition =
+    name: 'Setting'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      key: 'String'
+      value: 'String'
+      acl: 'String'
+      parent:
+        key: 'ObjectId'
+        resourceType: 'String'
  
-  schema = dal.schemaFactory schemaDefinition
-  model = dal.modelFactory() modelName, schema
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
 
   crud = dal.crudFactory model
 

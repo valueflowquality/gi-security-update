@@ -3,21 +3,22 @@ bcrypt = require 'bcrypt'
 gint = require 'gint-util'
 
 module.exports = (dal) ->
-  modelName = 'User'
-
   SALT_WORK_FACTOR = 10
 
-  schemaDefintion =
-    systemId: 'ObjectId'
-    firstName: 'String'
-    lastName: 'String'
-    email: 'String'
-    password: 'String'
-    apiSecret: 'String'
-    userIds: [{provider: 'String', providerId: 'String'}]
-    roles: [{type: 'ObjectId', ref: 'Role'}]
-
-  schema = dal.schemaFactory schemaDefintion
+  modelDefinition =
+    name: 'User'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      firstName: 'String'
+      lastName: 'String'
+      email: 'String'
+      password: 'String'
+      apiSecret: 'String'
+      userIds: [{provider: 'String', providerId: 'String'}]
+      roles: [{type: 'ObjectId', ref: 'Role'}]
+      
+  schema = dal.schemaFactory modelDefinition
+  modelDefinition.schema = schema
 
   schema.virtual('name').get () ->
     @firstName + ' ' + @lastName
@@ -62,8 +63,8 @@ module.exports = (dal) ->
           return next(err)
         user.password = hash
         next()
-  
-  model = dal.modelFactory() modelName, schema
+
+  model = dal.modelFactory modelDefinition
   crud = dal.crudFactory model
 
   update = (id, json, callback) ->
