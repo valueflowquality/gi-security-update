@@ -954,8 +954,8 @@ angular.module('app').directive('userForm', [
           scope.userRoles = [];
           scope.notUserRoles = [];
           return angular.forEach(scope.roles, function(role) {
-            var _ref;
-            if ((scope.user.roles != null) && (_ref = role._id, __indexOf.call(scope.user.roles, _ref) >= 0)) {
+            var _ref, _ref1;
+            if ((((_ref = scope.user) != null ? _ref.roles : void 0) != null) && (_ref1 = role._id, __indexOf.call(scope.user.roles, _ref1) >= 0)) {
               return scope.userRoles.push(role);
             } else {
               return scope.notUserRoles.push(role);
@@ -1181,8 +1181,8 @@ angular.module('app').provider('Auth', function() {
     });
   };
   get = [
-    '$rootScope', '$injector', '$q', 'Role', function($rootScope, $injector, $q, Role) {
-      var $http, getLoggedInUser, loginInfoDirty, loginStatus, me, retry, retryAll;
+    '$rootScope', '$injector', '$q', '$filter', 'Role', 'Setting', function($rootScope, $injector, $q, $filter, Role, Setting) {
+      var $http, getLoggedInUser, getRoleName, loginInfoDirty, loginStatus, me, retry, retryAll;
       $http = void 0;
       loginInfoDirty = true;
       me = {
@@ -1205,21 +1205,41 @@ angular.module('app').provider('Auth', function() {
         }
         return buffer = [];
       };
+      getRoleName = function(settings, settingName, defaultValue) {
+        var roleSetting;
+        roleSetting = $filter('filter')(settings, function(setting) {
+          return setting.key === settingName;
+        });
+        settingName = defaultValue;
+        if ((roleSetting != null ? roleSetting.length : void 0) > 0) {
+          settingName = roleSetting[0].value;
+        }
+        return settingName;
+      };
       getLoggedInUser = function() {
         var deferred;
         deferred = $q.defer();
         $http = $http || $injector.get('$http');
         $http.get('/api/user').success(function(user) {
-          return Role.isInRole('admin', user.roles).then(function(isAdmin) {
-            return Role.isInRole('restricted', user.roles).then(function(isRestricted) {
-              loginInfoDirty = false;
-              me = {
-                user: user,
-                isAdmin: isAdmin,
-                isRestricted: isRestricted,
-                loggedIn: true
-              };
-              return deferred.resolve(me);
+          return Setting.all().then(function(settings) {
+            var admin, restricted, sysAdmin;
+            admin = getRoleName(settings, "AdminRoleName", "admin");
+            restricted = getRoleName(settings, "RestrictedRoleName", "restricted");
+            sysAdmin = getRoleName(settings, "SysAdminRoleName", "sysadmin");
+            return Role.isInRole(admin, user.roles).then(function(isAdmin) {
+              return Role.isInRole(sysAdmin, user.roles).then(function(isSysAdmin) {
+                return Role.isInRole(restricted, user.roles).then(function(isRestricted) {
+                  loginInfoDirty = false;
+                  me = {
+                    user: user,
+                    isAdmin: isAdmin,
+                    isSysAdmin: isSysAdmin,
+                    isRestricted: isRestricted,
+                    loggedIn: true
+                  };
+                  return deferred.resolve(me);
+                });
+              });
             });
           });
         }).error(function() {

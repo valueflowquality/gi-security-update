@@ -141,29 +141,40 @@ module.exports = (app) ->
 
   isInRole = (role, user, callback) ->
     result = false
-    app.models.roles.findOneBy 'name', role, user.systemId
-    , (err, obj) ->
-      if obj and not err
-        _.each(user.roles, (role) ->
-          if role.toString() is obj._id.toString()
-            result = true
-        )
-        callback(result) if callback
-      else
-        callback(false) if callback
+    settingName = role + 'RoleName'
+
+    app.models.settings.get settingName, user.systemId, (err, result) ->
+      roleName = role
+      if result?.value
+        roleName = result.value
+      app.models.roles.findOneBy 'name', roleName, user.systemId
+      , (err, obj) ->
+        if obj and not err
+          _.each(user.roles, (role) ->
+            if role.toString() is obj._id.toString()
+              result = true
+          )
+          callback(result) if callback
+        else
+          callback(false) if callback
 
   isRestricted = (user, callback) ->
     isInRole 'Restricted', user, callback
 
   isAdmin = (user, callback) ->
-    isInRole 'Admin', user, callback
+    isInRole 'Admin', user, (result) ->
+      if result
+        callback(result) if callback
+      else
+        isSysAdmin user, callback
 
   isSysAdmin = (user, callback) ->
     isInRole 'SysAdmin', user, callback
 
   logout = (req, res) ->
     req.logout()
-    res.send 200
+    req.session.destroy (err) ->
+      res.send 200
 
   #Configure Passport authentication strategies
   users = app.models.users

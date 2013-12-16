@@ -19,7 +19,7 @@ module.exports = (dal, environmentsModel) ->
   crud = dal.crudFactory model
 
   get = (name, systemId, environmentId, callback) ->
-    if not environmentId?
+    if not callback?
       callback = environmentId
       getSystem name, systemId, callback
     else
@@ -51,9 +51,8 @@ module.exports = (dal, environmentsModel) ->
     query =
       key: name
       systemId: systemId
-      parent:
-        key: systemId
-        resourceType: 'system'
+      'parent.key': systemId
+      'parent.resourceType': 'system'
     crud.findOne query, callback
 
 

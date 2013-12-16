@@ -16,8 +16,8 @@ angular.module('app').provider 'Auth', () ->
       deferred: deferred
     }
   
-  get = ['$rootScope','$injector', '$q', 'Role'
-  , ($rootScope, $injector, $q, Role) ->
+  get = ['$rootScope','$injector', '$q', '$filter', 'Role', 'Setting'
+  , ($rootScope, $injector, $q, $filter, Role, Setting) ->
     #initialized later because of circular dependency problem
     $http = undefined
     loginInfoDirty = true
@@ -36,21 +36,37 @@ angular.module('app').provider 'Auth', () ->
       retry(item.config, item.deferred) for item in buffer
       buffer = []
 
+    getRoleName = (settings, settingName, defaultValue) ->
+      roleSetting = $filter('filter')(settings, (setting) ->
+        setting.key is settingName
+      )
+      settingName = defaultValue
+      if roleSetting?.length > 0
+        settingName = roleSetting[0].value
+      settingName
+
     getLoggedInUser = ->
       deferred = $q.defer()
 
       $http = $http || $injector.get '$http'
       $http.get('/api/user')
       .success (user) ->
-        Role.isInRole('admin', user.roles).then (isAdmin) ->
-          Role.isInRole('restricted', user.roles).then (isRestricted) ->
-            loginInfoDirty = false
-            me =
-              user: user
-              isAdmin: isAdmin
-              isRestricted: isRestricted
-              loggedIn: true
-            deferred.resolve me
+
+        Setting.all().then (settings) ->
+          admin = getRoleName settings,"AdminRoleName", "admin"
+          restricted = getRoleName settings, "RestrictedRoleName", "restricted"
+          sysAdmin = getRoleName settings, "SysAdminRoleName", "sysadmin"
+          Role.isInRole(admin, user.roles).then (isAdmin) ->
+            Role.isInRole(sysAdmin, user.roles).then (isSysAdmin) ->
+              Role.isInRole(restricted, user.roles).then (isRestricted) ->
+                loginInfoDirty = false
+                me =
+                  user: user
+                  isAdmin: isAdmin
+                  isSysAdmin: isSysAdmin
+                  isRestricted: isRestricted
+                  loggedIn: true
+                deferred.resolve me
       .error ->
         loginInfoDirty = false
         me =

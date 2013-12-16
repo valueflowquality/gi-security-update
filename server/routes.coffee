@@ -14,10 +14,9 @@ configure = (app, rest) ->
 
   rest.routeResource 'roles', app
   , app.middleware.userAction, app.controllers.role
-  # sysAdminAction routes
   
   rest.routeResource 'users', app
-  , app.middleware.userAction, app.controllers.user
+  , app.middleware.adminAction, app.controllers.user
   
   rest.routeResource 'settings', app
   , app.middleware.publicReadAction, app.controllers.setting
@@ -29,18 +28,18 @@ configure = (app, rest) ->
   , app.middleware.userAction, app.controllers.category
   
   rest.routeResource 'systems', app
-  , app.middleware.userAction, app.controllers.system
+  , app.middleware.sysAdminAction, app.controllers.system
   
   rest.routeResource 'environments', app
-  , app.middleware.userAction, app.controllers.environment
+  , app.middleware.sysAdminAction, app.controllers.environment
 
   rest.routeResource 'files', app
   , app.middleware.userAction, app.controllers.file
 
   rest.routeResource 'permissions', app
-  , app.middleware.userAction, app.controllers.permission
+  , app.middleware.adminAction, app.controllers.permission
 
   rest.routeResource 'resources', app
-  , app.middleware.userAction, app.controllers.resource
+  , app.middleware.adminAction, app.controllers.resource
 
 exports.configure = configure
