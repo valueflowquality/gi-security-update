@@ -30,7 +30,7 @@ module.exports = (dal, environmentsModel) ->
     environmentsModel.findById environmentId, systemId, (err, environment) ->
       if err
         callback err, null
-      if environment and not err
+      else if environment and not err
         query =
           key: name
           systemId: systemId
@@ -54,7 +54,6 @@ module.exports = (dal, environmentsModel) ->
       'parent.key': systemId
       'parent.resourceType': 'system'
     crud.findOne query, callback
-
 
   saveSetting = (setting, newValue, callback) ->
     newSetting:
