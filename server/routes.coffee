@@ -39,7 +39,4 @@ configure = (app, rest) ->
   rest.routeResource 'permissions', app
   , app.middleware.adminAction, app.controllers.permission
 
-  rest.routeResource 'resources', app
-  , app.middleware.adminAction, app.controllers.resource
-
 exports.configure = configure

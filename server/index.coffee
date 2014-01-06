@@ -9,8 +9,6 @@ configure = (app, dal, options) ->
   gint.common.extend app.models, models
   gint.common.extend app.controllers, controllers(app)
   gint.common.extend app.middleware, authentication(app, options)
-
-  gint.common.registerResourceTypes dal, models
   
   routes.configure app, gint.common.rest
 
