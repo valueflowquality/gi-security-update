@@ -20,6 +20,8 @@ module.exports = () ->
           publicAction: sinon.spy()
           userAction: sinon.spy()
           adminAction: sinon.spy()
+          sysAdminAction: sinon.spy()
+          publicReadAction: sinon.spy()
 
         controllers:
           user:
@@ -39,12 +41,12 @@ module.exports = () ->
         routeResource: sinon.spy()
 
       securityFilter = app.middleware.publicAction
-      if security is 'user'
-        securityFilter = app.middleware.userAction
-      else if security is 'admin'
-        securityFilter = app.middleware.adminAction
-      else if security is 'public-read'
-        securityFilter = app.middleware.publicReadAction
+
+      switch security
+        when 'user' then securityFilter = app.middleware.userAction
+        when 'admin' then securityFilter = app.middleware.adminAction
+        when 'sysadmin' then securityFilter = app.middleware.sysAdminAction
+        when 'public-read' then securityFilter = app.middleware.publicReadAction
 
       module.configure app, rest
 
@@ -63,7 +65,7 @@ module.exports = () ->
       done()
 
     it 'exports a RESTful users resource', (done) ->
-      assertRestfulForResource 'users', 'user', 'user'
+      assertRestfulForResource 'users', 'admin', 'user'
       done()
 
     it 'exports a RESTful public-read settings resource', (done) ->
@@ -79,11 +81,11 @@ module.exports = () ->
       done()
 
     it 'exports a Restful systems resource', (done) ->
-      assertRestfulForResource 'systems', 'user', 'system'
+      assertRestfulForResource 'systems', 'sysadmin', 'system'
       done()
     
     it 'exports a Restful environments resource', (done) ->
-      assertRestfulForResource 'environments', 'user', 'environment'
+      assertRestfulForResource 'environments', 'sysadmin', 'environment'
       done()
     
     it 'exports a Restful files resource', (done) ->
@@ -91,9 +93,5 @@ module.exports = () ->
       done()
 
     it 'exports a Restful permission resource', (done) ->
-      assertRestfulForResource 'permissions', 'user', 'permission'
-      done()
-
-    it 'exports a Restful resource resource', (done) ->
-      assertRestfulForResource 'resources', 'user', 'resource'
+      assertRestfulForResource 'permissions', 'admin', 'permission'
       done()

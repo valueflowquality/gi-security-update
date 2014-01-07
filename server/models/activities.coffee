@@ -2,7 +2,7 @@ module.exports = (dal) ->
 
   modelDefinition =
     name: 'Activity'
-    schemaDefintion:
+    schemaDefinition:
       systemId: 'ObjectId'
       description: 'String'
       job:

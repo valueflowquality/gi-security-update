@@ -116,4 +116,7 @@ module.exports = (dal, environmentsModel) ->
   exports = gint.common.extend {}, crud
   exports.get = get
   exports.set = set
+  exports._getEnvironment = getEnvironment
+  exports._getSystem = getSystem
+  exports._saveSetting = saveSetting
   exports

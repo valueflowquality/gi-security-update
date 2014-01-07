@@ -8,34 +8,68 @@ dir =  path.normalize __dirname + '../../../../../../server'
 
 module.exports = () ->
   describe 'Roles', ->
+    modelFactory = require(dir + '/models/roles')
     model = null
-    beforeEach (done) ->
-      sinon.spy mocks.dal, 'model'
-      model = require(dir + '/models/roles')(mocks.dal)
+    expectedDefinition =
+      name: 'Role'
+      schemaDefinition:
+        systemId: 'ObjectId'
+        name: 'String'
+   
+    it 'Exports a factory function', (done) ->
+      expect(modelFactory).to.be.a 'function'
       done()
     
-    afterEach (done) ->
-      mocks.dal.model.restore()
-      done()
+    describe 'Constructor: (dal) -> { object }', ->
+      beforeEach (done) ->
+        sinon.spy mocks.dal, 'schemaFactory'
+        sinon.spy mocks.dal, 'modelFactory'
+        sinon.spy mocks.dal, 'crudFactory'
+        model = modelFactory mocks.dal
+        done()
+      
+      afterEach (done) ->
+        mocks.dal.modelFactory.restore()
+        mocks.dal.schemaFactory.restore()
+        mocks.dal.crudFactory.restore()
+        done()
 
-    
-    it 'Creates a Role dal model', (done) ->
-      expect(mocks.dal.model.calledWith('Role'
-      , sinon.match.any)).to.be.true
-      done()
+      it 'Creates a Roles schema', (done) ->
+        expect(mocks.dal.schemaFactory.calledWithMatch(expectedDefinition))
+        .to.be.true
+        done()
+
+      it 'Creates a Roles model', (done) ->
+        returnedDefinition = mocks.dal.schemaFactory.returnValues[0]
+        expect(mocks.dal.modelFactory.calledWithMatch(expectedDefinition))
+        .to.be.true
+        done()
+
+      it 'Uses Crud Factory with returned model', (done) ->
+        returnedModel = mocks.dal.modelFactory.returnValues[0]
+        expect(mocks.dal.crudFactory.calledWithMatch(returnedModel))
+        .to.be.true
+        done()
 
     describe 'Schema', ->
+      schema = null
+
+      beforeEach ->
+        sinon.spy mocks.dal, 'schemaFactory'
+        model = modelFactory mocks.dal
+        schema = mocks.dal.schemaFactory.returnValues[0]
+
+      afterEach ->
+        mocks.dal.schemaFactory.restore()
 
       it 'systemId: ObjectId', (done) ->
-        expect(mocks.dal.model.calledWith('Role'
-        , sinon.match.hasOwn 'systemId', 'ObjectId')).to.be.true
+        expect(schema).to.have.property 'systemId', 'ObjectId'
         done()
 
       it 'name: String', (done) ->
-        expect(mocks.dal.model.calledWith('Role'
-        , sinon.match.hasOwn 'name', 'String')).to.be.true
+        expect(schema).to.have.property 'name', 'String'
         done()
 
-    describe 'Exports',  ->
-      mut = require(dir + '/models/roles')(mocks.dal)
-      mocks.exportsCrudModel 'Role', mut
+    describe 'Exports', ->
+      mocks.exportsCrudModel 'Role'
+      , modelFactory(mocks.dal)
