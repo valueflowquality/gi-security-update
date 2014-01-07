@@ -60,7 +60,7 @@ module.exports = () ->
         .to.be.true
         done()
 
-    describe 'Schema', -> 
+    describe 'Schema', ->
       schema = null
 
       beforeEach ->

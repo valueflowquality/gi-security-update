@@ -45,7 +45,9 @@ module.exports = () ->
       it 'parent: {key: ObjectId, resourceType: String}', ->
         expect(schema).to.have.property 'parent'
         expect(schema.parent).to.be.an 'object'
-        expect(schema.parent).to.deep.equal {key: 'ObjectId', resourceType: 'String'}
+        expect(schema.parent).to.deep.equal(
+          {key: 'ObjectId', resourceType: 'String'}
+        )
 
     describe 'Exports',  ->
       mocks.exportsCrudModel 'Setting', modelFactory(mocks.dal)
