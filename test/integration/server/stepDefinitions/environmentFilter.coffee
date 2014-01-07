@@ -14,6 +14,10 @@ module.exports = () ->
     @req.set('access-key',  ObjectID('5240630360d7400b18000001'))
     next()
 
+  @Given /^is from an admin user$/, (next) ->
+    @req.set('access-key', ObjectID('5240630360d7400b18000003'))
+    next()
+
   @Given /^is from an unknown user$/, (next) ->
     @req.set('access-key',  ObjectID('5240630360d7400b18000666'))
     next()
@@ -43,7 +47,7 @@ module.exports = () ->
 
 
   @Then /^it returns the list of users in the message body$/, (next) ->
-    expect(@res.body.length, "Incorrect number of users returned").to.equal 1
+    expect(@res.body.length, "Incorrect number of users returned").to.equal 2
     user1 = @res.body[0]
     expect(user1.firstName).to.equal 'Alice'
     expect(user1._id).to.equal '5240630360d7400b18000001'

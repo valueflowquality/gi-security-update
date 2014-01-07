@@ -2,6 +2,8 @@ mongo = require 'mongodb'
 
 sysId = mongo.ObjectID('5240630360d7400b17999999')
 aliceId = mongo.ObjectID('5240630360d7400b18000001')
+adminRoleId = mongo.ObjectID('5240630360d7400b18000002')
+adminId = mongo.ObjectID('5240630360d7400b18000003')
 
 createSystems = (db, cb) ->
   sys =
@@ -28,8 +30,26 @@ createUsers = (db, cb) ->
     firstName: 'Alice'
     systemId: sysId
 
+  admin =
+    _id: adminId
+    apiSecret: 'notVerySecret'
+    firstName: 'Admin'
+    systemId: sysId
+    roles: [adminRoleId]
+
   db.createCollection 'users', (err, coll) ->
     coll.insert alice, (err, docs) ->
+      coll.insert admin, (err, docs) ->
+        cb()
+
+createRoles = (db, cb) ->
+  admin =
+    _id: adminRoleId
+    systemId: sysId
+    name: 'Admin'
+
+  db.createCollection 'roles', (err, coll) ->
+    coll.insert admin, (err, docs) ->
       cb()
 
 wrapDbFunction = (dbFunction, cb) ->
@@ -68,5 +88,6 @@ exports.initializeDB = (cb) ->
     db.dropDatabase (err, ok) ->
       createSystems db, () ->
         createEnvironments db, () ->
-          createUsers db, callback
+          createRoles db, () ->
+            createUsers db, callback
   , cb

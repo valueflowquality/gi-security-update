@@ -22,6 +22,13 @@ Feature: Checks requests have an environment
     When the request is addressed to a known host
     And is from a valid user
     And has a valid message signature
+    Then it returns nothing in the message body
+    And it replies with unauthorized
+
+  Scenario:
+    When the request is addressed to a known host
+    And is from an admin user
+    And has a valid message signature
     When the reply is received
     Then it returns the list of users in the message body
     And it replies with ok
