@@ -4,7 +4,7 @@
   "main": "./bin/gint-security.js",
   "devDependencies": {
     "angular-mocks": "1.2.3",
-    "jquery": "1.7.2"
+    "jquery": "1.10.2"
   },
   "dependencies": {
     "angular": "1.2.3",
