@@ -59,6 +59,7 @@
     "selenium-webdriver": "~2.35.2",
     "protractor": "~0.10.0",
     "grunt-env": "~0.4.0",
-    "karma-sinon-chai": "~0.1.1"
+    "karma-sinon-chai": "~0.1.1",
+    "mongoose": "~3.8.4"
   }
 }
