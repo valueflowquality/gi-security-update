@@ -1,4 +1,4 @@
-angular.module('app').filter 'userName'
+angular.module('gint.security').filter 'userName'
 , ['User'
 , (User) ->
   (id) ->

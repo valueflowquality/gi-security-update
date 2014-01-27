@@ -1,4 +1,4 @@
-angular.module('app').provider 'Auth', () ->
+angular.module('gint.security').provider 'Auth', () ->
   ###
   Holds all the requests which failed due to 401 response,
   so they can be re-requested in future, once login is completed.

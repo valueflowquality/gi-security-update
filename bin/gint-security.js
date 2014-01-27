@@ -1,4 +1,6 @@
 
+angular.module('gint.security', ['ngResource', 'gint.util', 'gint.ui']);
+
 /*1369044063,178534957,JIT Construction: v819514,en_US*/
 
 /**
@@ -151,7 +153,7 @@ __d("legacy:fb.xfbml",["Assert","sdk.domReady","sdk.Event","sdk.feature","FB","I
 void(0);
 }).call({}, window.inDapIF ? parent.window : window);
 } catch (e) {new Image().src="http:\/\/www.facebook.com\/" + 'common/scribe_endpoint.php?c=jssdk_error&m='+encodeURIComponent('{"error":"LOAD", "extra": {"name":"'+e.name+'","line":"'+(e.lineNumber||e.line)+'","script":"'+(e.fileName||e.sourceURL||e.script)+'","stack":"'+(e.stackTrace||e.stack)+'","message":"'+e.message+'"}}');};
-angular.module('app').run(['$templateCache', function ($templateCache) {
+angular.module('gint.security').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('/views/login.html', '<div class="hero-unit"> <div class="alert alert-danger" ng-if="loginStatus.failed"> <button type="button" class="close dismissLogin" ng-click="dismissLoginAlert()">&times;</button> <strong>Login Failed!</strong>: Username / Password was incorrect </div> <h3>Please Login</h3> <div class="well form-inline"> <input type="text" ng-model="cred.username" class="input" placeholder="Email"> <input type="password" ng-model="cred.password" class="input-small" placeholder="Password"> <button ng-disabled="!cred.username || !cred.password" class="btn btn-primary basicLogin" ng-click="login()">Login</button> </div> <div class="well form loginWithFacebook" ng-if="allowFacebookLogin"> <button ng-click="loginWithFacebook()"><img src="/img/login-with-facebook.png" width="154" height="22"></button> </div> </div>');
 	$templateCache.put('/views/logout.html', '<div class="hero-unit"> <h3>You have been securely logged out</h3> <a href="/login" class="btn btn-primary">Log Back In</a> </div>');
 	$templateCache.put('/views/permissionForm.html', '<div class="well form"> <div class="form-group" <label>User:</label> <gi-select2 options="users" selection="selectedUser" field="firstName" style="width:100%"/> </div> <div class="form-group"> <label>Resource Type:</label> <gi-select2 options="resourceTypes" selection="selectedResourceType" field="name" style="width:100%"/> </div> <div class="form-group"> <label>Restriction:</label> <select class="form-control" ng-model="permission.restriction" ng-options="r.value as r.name for r in restrictions"></select> </div> <div class="form-group"> <label>{{permission.resourceType.name}}</label> <label>Keys:</label> <gi-select2 tags custom options="keys" selection="selectedKeys" field="name" style="width:100%"/> </div> <button class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> <gi-modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete this permission - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deletePermission()" class="btn btn-danger"> Delete It! </button> </div> </gi-modal>');
@@ -162,7 +164,7 @@ angular.module('app').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('/views/userForm.html', '<div class="well form"> <h4>Profile</h4> <div class="form-group"> <label>First Name:</label> <input type="text" name="name" class="form-control" ng-model="user.firstName" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Surname:</label> <input type="text" name="lastName" class="form-control" ng-model="user.lastName" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Email:</label> <input type="text" name="email" class="form-control" ng-model="user.email" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Password:</label> <input type="password" name="password" class="form-control" ng-model="user.password" ng-change="checkForChanges()"/> </div> <h4>Roles</h4> <div class="form-group"> <h4>Assigned Roles</h4> <div class="col-md-12" ng-repeat="role in userRoles"> <label>{{role.name}}</label> <button class="btn btn-danger" ng-click="removeFromRole(role)"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> <div ng-if="notUserRoles.length> 0"> <h4>Available Roles</h4> <select class="form-control" ng-model="selectedRole" ng-options="role.name for role in notUserRoles"> </select> <button ng-click="addToRole(selectedRole)" class="btn btn-primary">Assign</button> </div> </div> <div class="form-group"> <button ng-disabled="!unsavedChanges" class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> </div> <gi-modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a user - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteUser()" \ class="btn btn-danger"> Delete It! </button> </div> </gi-modal>');
 	$templateCache.put('/views/userManagement.html', '<div class="container"> <div class="row"> <div class="col-md-2"> <ul class="nav nav-pills nav-stacked"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Users</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New User</a> </li> </ul> </div> <div class="col-md-10"> <div> <div ng-show="selectedUser"> <div class="col-md-4"> <h4>Users</h4> <ul class="nav nav-pills nav-stacked" ng-repeat="user in users"> <li ng-class="{active: user._id==selectedUser._id}"> <a ng-click="selectUser(user)">{{user.firstName}}</a> </li> </ul> </div> <div ng-show="currentView==\'list\'" class="col-md-8"> <user-form user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></user-form> </div> <div ng-show="currentView==\'form\'" class="col-md-8"> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> <div ng-hide="selectedUser"> <div class="col-md-4"> <h4>Users</h4> No Users found for this organisation. You can create one by entering the details on this page. </div> <div class="col-md-4"> <h4>Create New User</h4> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> </div> </div> </div> </div>');
 }]);
-angular.module('app').config([
+angular.module('gint.security').config([
   '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     return $routeProvider.when('/login', {
       controller: 'loginController',
@@ -186,7 +188,7 @@ angular.module('app').config([
   }
 ]);
 
-angular.module('app').factory('User', [
+angular.module('gint.security').factory('User', [
   '$resource', function($resource) {
     var all, destroy, factory, get, getByIdSync, items, itemsById, methods, resource, save, updateMasterList;
     methods = {
@@ -311,7 +313,7 @@ angular.module('app').factory('User', [
   }
 ]);
 
-angular.module('app').filter('userName', [
+angular.module('gint.security').filter('userName', [
   'User', function(User) {
     return function(id) {
       var result, user;
@@ -329,7 +331,7 @@ angular.module('app').filter('userName', [
   }
 ]);
 
-angular.module('app').filter('permissionUser', [
+angular.module('gint.security').filter('permissionUser', [
   '$filter', function($filter) {
     return function(permission) {
       var result;
@@ -342,7 +344,7 @@ angular.module('app').filter('permissionUser', [
   }
 ]);
 
-angular.module('app').filter('permissionRestriction', [
+angular.module('gint.security').filter('permissionRestriction', [
   'Permission', function(Permission) {
     return function(permission) {
       var result;
@@ -359,7 +361,7 @@ angular.module('app').filter('permissionRestriction', [
   }
 ]);
 
-angular.module('app').factory('Facebook', [
+angular.module('gint.security').factory('Facebook', [
   '$rootScope', '$http', '$q', function($rootScope, $http, $q) {
     var attemptServerLogin, init, login, loginStatus, _appId, _facebookResponse;
     _appId = null;
@@ -426,7 +428,7 @@ angular.module('app').factory('Facebook', [
   }
 ]);
 
-angular.module('app').factory('Setting', [
+angular.module('gint.security').factory('Setting', [
   'giCrud', function(Crud) {
     var create, crudService;
     crudService = Crud.factory('settings', true);
@@ -448,7 +450,7 @@ angular.module('app').factory('Setting', [
   }
 ]);
 
-angular.module('app').controller('loginController', [
+angular.module('gint.security').controller('loginController', [
   '$scope', '$http', '$filter', 'Auth', 'Facebook', 'Setting', function($scope, $http, $filter, Auth, Facebook, Setting) {
     $scope.loginStatus = {
       failed: false
@@ -494,13 +496,13 @@ angular.module('app').controller('loginController', [
   }
 ]);
 
-angular.module('app').controller('logoutController', [
+angular.module('gint.security').controller('logoutController', [
   'Auth', function(Auth) {
     return Auth.logout();
   }
 ]);
 
-angular.module('app').controller('userController', [
+angular.module('gint.security').controller('userController', [
   '$scope', 'UserAccount', function($scope, UserAccount) {
     $scope.deleteUser = function(id) {
       return UserAccount["delete"]();
@@ -514,7 +516,7 @@ angular.module('app').controller('userController', [
   }
 ]);
 
-angular.module('app').factory('UserAccount', [
+angular.module('gint.security').factory('UserAccount', [
   '$resource', '$rootScope', '$http', '$q', function($resource, $rootScope, $http, $q) {
     var getMe, methods, resetAPISecret, resource;
     methods = {
@@ -558,7 +560,7 @@ angular.module('app').factory('UserAccount', [
   }
 ]);
 
-angular.module('app').factory('Permission', [
+angular.module('gint.security').factory('Permission', [
   '$resource', 'giCrud', function($resource, Crud) {
     var exports, restrictions;
     restrictions = [
@@ -585,7 +587,7 @@ angular.module('app').factory('Permission', [
   }
 ]);
 
-angular.module('app').controller('usersController', [
+angular.module('gint.security').controller('usersController', [
   '$scope', '$location', 'User', 'Auth', function($scope, $location, User, Auth) {
     $scope.newUser = User.create();
     $scope.currentView = 'list';
@@ -633,7 +635,7 @@ angular.module('app').controller('usersController', [
   }
 ]);
 
-angular.module('app').factory('Role', [
+angular.module('gint.security').factory('Role', [
   '$resource', '$filter', '$q', function($resource, $filter, $q) {
     var all, destroy, factory, get, isInRole, methods, resource, roles, save, updateMasterList;
     methods = {
@@ -770,7 +772,7 @@ angular.module('app').factory('Role', [
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('app').controller('roleController', [
+angular.module('gint.security').controller('roleController', [
   '$scope', '$location', 'Role', 'User', 'Auth', function($scope, $location, Role, User, Auth) {
     var refreshRoleUsers, reset;
     $scope.roles = [];
@@ -834,7 +836,7 @@ angular.module('app').controller('roleController', [
   }
 ]);
 
-angular.module('app').controller('permissionController', [
+angular.module('gint.security').controller('permissionController', [
   '$scope', '$location', 'Resource', 'Permission', 'Auth', function($scope, $location, Resource, Permission, Auth) {
     Resource.all().then(function(rts) {
       console.log('rts');
@@ -874,7 +876,7 @@ angular.module('app').controller('permissionController', [
   }
 ]);
 
-angular.module('app').directive('auth', [
+angular.module('gint.security').directive('auth', [
   '$location', '$rootScope', function($location, $rootScope) {
     var link;
     link = function(scope, elem, attrs) {
@@ -898,7 +900,7 @@ angular.module('app').directive('auth', [
   }
 ]);
 
-angular.module('app').directive('roleForm', function() {
+angular.module('gint.security').directive('roleForm', function() {
   return {
     restrict: 'E',
     templateUrl: '/views/roleForm.html',
@@ -926,7 +928,7 @@ angular.module('app').directive('roleForm', function() {
 
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-angular.module('app').directive('userForm', [
+angular.module('gint.security').directive('userForm', [
   'Role', function(Role) {
     return {
       restrict: 'E',
@@ -1006,7 +1008,7 @@ angular.module('app').directive('userForm', [
   }
 ]);
 
-angular.module('app').directive('permissionForm', [
+angular.module('gint.security').directive('permissionForm', [
   '$q', '$timeout', '$http', '$filter', 'Resource', 'User', 'Permission', function($q, $timeout, $http, $filter, Resource, User, Permission) {
     return {
       restrict: 'E',
@@ -1160,7 +1162,7 @@ angular.module('app').directive('permissionForm', [
   }
 ]);
 
-angular.module('app').provider('Auth', function() {
+angular.module('gint.security').provider('Auth', function() {
   /*
   Holds all the requests which failed due to 401 response,
   so they can be re-requested in future, once login is completed.
@@ -1301,7 +1303,7 @@ angular.module('app').provider('Auth', function() {
   };
 });
 
-angular.module('app').config([
+angular.module('gint.security').config([
   '$httpProvider', 'AuthProvider', function($httpProvider, AuthProvider) {
     return $httpProvider.interceptors.push([
       '$rootScope', '$q', function($rootScope, $q) {
@@ -1324,7 +1326,7 @@ angular.module('app').config([
   }
 ]);
 
-angular.module('app').factory('Resource', [
+angular.module('gint.security').factory('Resource', [
   '$resource', 'giCrud', function($resource, Crud) {
     return Crud.factory('resources', true);
   }

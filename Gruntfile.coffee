@@ -61,6 +61,7 @@ module.exports = (grunt) ->
         files:
           './temp/client/js/views.js': './client/views/*.html'
         options:
+          module: 'gint.security'
           trim: './client'
     copy:
       dev:

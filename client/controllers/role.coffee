@@ -1,4 +1,4 @@
-angular.module('app').controller 'roleController'
+angular.module('gint.security').controller 'roleController'
 , ['$scope','$location', 'Role', 'User', 'Auth'
 , ($scope, $location, Role, User, Auth) ->
   $scope.roles = []

@@ -1,4 +1,4 @@
-angular.module('app').directive 'permissionForm'
+angular.module('gint.security').directive 'permissionForm'
 , ['$q', '$timeout', '$http', '$filter', 'Resource', 'User', 'Permission'
 , ($q, $timeout, $http, $filter, Resource, User, Permission) ->
   restrict: 'E'

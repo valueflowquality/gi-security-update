@@ -1,4 +1,4 @@
-angular.module('app').filter 'permissionRestriction'
+angular.module('gint.security').filter 'permissionRestriction'
 , ['Permission'
 , (Permission) ->
   (permission) ->

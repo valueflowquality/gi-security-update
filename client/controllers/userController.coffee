@@ -1,4 +1,4 @@
-angular.module('app').controller 'userController'
+angular.module('gint.security').controller 'userController'
 , ['$scope', 'UserAccount'
 , ($scope, UserAccount) ->
 
