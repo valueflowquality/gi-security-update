@@ -160,6 +160,7 @@ module.exports = (app) ->
 
   isRestricted = (user, callback) ->
     isInRole 'Restricted', user, callback
+    return
 
   isAdmin = (user, callback) ->
     isInRole 'Admin', user, (result) ->
@@ -167,9 +168,11 @@ module.exports = (app) ->
         callback(result) if callback
       else
         isSysAdmin user, callback
+    return
 
   isSysAdmin = (user, callback) ->
     isInRole 'SysAdmin', user, callback
+    return
 
   logout = (req, res) ->
     req.logout()
