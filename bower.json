@@ -10,7 +10,7 @@
     "angular": "1.2.3",
     "angular-resource": "1.2.3",
     "angular-route": "1.2.3",
-    "gint-util": "git@github.com:Gintellect/gint-util.git#v0.2.0",
+    "gint-util": "git@github.com:Gintellect/gint-util.git#v0.2.1",
     "gint-ui": "git@github.com:Gintellect/gint-ui.git#dataTable2",
     "underscore": "~1.5.2"
   }

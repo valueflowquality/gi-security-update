@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.2.0",
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.2.1",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
