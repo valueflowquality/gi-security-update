@@ -189,8 +189,8 @@ angular.module('gint.security').config([
 ]);
 
 angular.module('gint.security').factory('User', [
-  '$resource', function($resource) {
-    var all, destroy, factory, get, getByIdSync, items, itemsById, methods, resource, save, updateMasterList;
+  '$resource', '$http', '$q', 'Auth', function($resource, $http, $q, Auth) {
+    var all, destroy, factory, get, getByIdSync, items, itemsById, login, methods, register, resource, save, updateMasterList;
     methods = {
       query: {
         method: 'GET',
@@ -294,6 +294,21 @@ angular.module('gint.security').factory('User', [
         }
       });
     };
+    register = function(item) {
+      return $http.post('/api/user/register', item);
+    };
+    login = function(cred) {
+      var deferred;
+      deferred = $q.defer();
+      $http.post('/api/login', cred).success(function() {
+        Auth.loginConfirmed();
+        return deferred.resolve();
+      }).error(function() {
+        Auth.loginChanged();
+        return deferred.resolve();
+      });
+      return deferred.promise;
+    };
     factory = function() {
       return {
         firstName: '',
@@ -308,7 +323,9 @@ angular.module('gint.security').factory('User', [
       getSync: getByIdSync,
       create: factory,
       destroy: destroy,
-      save: save
+      save: save,
+      register: register,
+      login: login
     };
   }
 ]);
@@ -1184,7 +1201,7 @@ angular.module('gint.security').provider('Auth', function() {
   };
   get = [
     '$rootScope', '$injector', '$q', '$filter', 'Role', 'Setting', function($rootScope, $injector, $q, $filter, Role, Setting) {
-      var $http, getLoggedInUser, getRoleName, loginInfoDirty, loginStatus, me, retry, retryAll;
+      var $http, getLoggedInUser, getRoleName, loginChanged, loginInfoDirty, loginStatus, me, retry, retryAll;
       $http = void 0;
       loginInfoDirty = true;
       me = {
@@ -1266,11 +1283,15 @@ angular.module('gint.security').provider('Auth', function() {
         }
         return deferred.promise;
       };
+      loginChanged = function() {
+        loginInfoDirty = true;
+        return $rootScope.$broadcast('event:auth-loginChange');
+      };
       return {
         me: loginStatus,
+        loginChanged: loginChanged(),
         loginConfirmed: function() {
-          loginInfoDirty = true;
-          $rootScope.$broadcast('event:auth-loginChange');
+          loginChanged();
           return retryAll();
         },
         isAdmin: function() {

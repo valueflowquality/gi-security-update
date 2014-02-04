@@ -81,8 +81,8 @@ module.exports = (app) ->
 
   publicRegisterAction = (req, res, next) ->
     systemCheck req, res, () ->
-      getSecuritySetting 'allowPublicRegistration', 'allowPublicRegistration', req
-      , (err, setting) ->
+      getSecuritySetting 'allowPublicRegistration'
+      , 'allowPublicRegistration', req, (err, setting) ->
         if setting
           next()
         else

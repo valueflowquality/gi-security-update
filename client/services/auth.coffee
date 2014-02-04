@@ -87,11 +87,14 @@ angular.module('gint.security').provider 'Auth', () ->
 
       deferred.promise
 
-  
-    me: loginStatus
-    loginConfirmed: () ->
+    loginChanged = () ->
       loginInfoDirty = true
       $rootScope.$broadcast 'event:auth-loginChange'
+
+    me: loginStatus
+    loginChanged: loginChanged()
+    loginConfirmed: () ->
+      loginChanged()
       retryAll()
 
     isAdmin: ->
