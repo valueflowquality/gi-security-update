@@ -1,7 +1,7 @@
 describe 'Login controller', ->
   beforeEach angular.mock.module 'ngResource'
   beforeEach angular.mock.module 'gint.util'
-  beforeEach angular.mock.module 'app'
+  beforeEach angular.mock.module 'gint.security'
 
   allSettingsResult = null
   mockSettingService = null

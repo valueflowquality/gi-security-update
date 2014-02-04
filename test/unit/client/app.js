@@ -1,2 +1,2 @@
 var expect = chai.expect;
-angular.module('app', ['ngResource']);
+angular.module('gint.security', ['ngResource']);
