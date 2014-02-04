@@ -80,12 +80,13 @@ module.exports = (app) ->
       res.json 401, {msg: 'not authorized'}
 
   publicRegisterAction = (req, res, next) ->
-    getSecuritySetting 'allowPublicRegistration', 'allowPublicRegistration', req
-    , (err, setting) ->
-      if setting
-        next()
-      else
-        res.json 403, {message: 'Public user registration is not enabled'}
+    systemCheck req, res, () ->
+      getSecuritySetting 'allowPublicRegistration', 'allowPublicRegistration', req
+      , (err, setting) ->
+        if setting
+          next()
+        else
+          res.json 403, {message: 'Public user registration is not enabled'}
 
   hmacAuth = (req, res, next) ->
     if _.indexOf(req.strategies, 'Hmac') is -1

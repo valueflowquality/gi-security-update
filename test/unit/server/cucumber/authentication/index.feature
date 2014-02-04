@@ -53,17 +53,26 @@ Feature: public Register Action middleware
   Background:
     Given the authentication module is required
     And it is initialized with an express app
+    And the loginWithFacebook setting is false
+    And the loginWithHmac setting is false
+    And the loginWithPlay setting is false
     And a request to a known host
+
+  Scenario: Requests are piped through system Check
+    Given an anonymous request to POST /api/aResource/register
+    When this is passed through the publicRegisterAction middleware
+    Then the request should have a systemId
+    And the request should have an environmentId
 
   Scenario: Anonymous users cannot register when allowPublicRegistration setting is undefined 
     Given the allowPublicRegistration setting is undefined
-    And an anonymous request to POST /api/aResource/count
+    And an anonymous request to POST /api/aResource/register
     When this is passed through the publicRegisterAction middleware
     Then the request should be forbidden
 
   Scenario: Anonymous users cannot register when allowPublicRegistration setting is false 
     Given the allowPublicRegistration setting is false
-    And an anonymous request to POST /api/aResource/count
+    And an anonymous request to POST /api/aResource/register
     When this is passed through the publicRegisterAction middleware
     Then the request should be forbidden
 

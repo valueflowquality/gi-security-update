@@ -99,6 +99,10 @@ module.exports = () ->
     expect(@req.systemId).to.equal @systemId
     next()
 
+  @Then /^the request should have an environmentId$/, (next) ->
+    expect(@req.environmentId).to.equal @environmentId
+    next()
+
   @Given /^the (.*) setting is (.*)$/, (setting, value, next) ->
     v = undefined
     switch value
