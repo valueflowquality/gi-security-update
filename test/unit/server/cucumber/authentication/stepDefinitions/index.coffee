@@ -15,7 +15,7 @@ module.exports = () ->
     envForHost =
       _id: @environmentId
       systemId: @systemId
-    app =
+    @app =
       use: sinon.spy()
       get: sinon.spy()
       post: ->
@@ -26,12 +26,10 @@ module.exports = () ->
           forHost: (a, cb) ->
             cb null, envForHost
         settings:
-          get: (a, b, c, cb) ->
-            cb()
-    @mut = @mut app
+          get: sinon.stub()
+
+    @mut = @mut @app
     next()
-
-
 
   @Then /^it exports a (.*) function$/, (functionName, next) ->
     expect(@mut, 'does not export ' + functionName)
@@ -71,13 +69,18 @@ module.exports = () ->
     @mut[funcName] @req, @res, @middlewareCallback
     next()
 
-
   @Then /^the request should be dissalowed$/, (next) ->
     expect(@middlewareCallback.notCalled, "middleware called next incorrectly")
     .to.be.true
     expect(@res.json.calledWith(401), "wrong result code returned").to.be.true
     expect(@res.json.calledWith(401, {msg: 'not authorized'})
     , "wrong error message returned").to.be.true
+    next()
+
+  @Then /^the request should be forbidden$/, (next) ->
+    expect(@middlewareCallback.notCalled, "middleware called next incorrectly")
+    .to.be.true
+    expect(@res.json.calledWith(403), "wrong result code returned").to.be.true
     next()
 
   @Then /^the request should be allowed$/, (next) ->
@@ -94,4 +97,17 @@ module.exports = () ->
 
   @Then /^the request should have a systemId$/, (next) ->
     expect(@req.systemId).to.equal @systemId
+    next()
+
+  @Then /^the request should have an environmentId$/, (next) ->
+    expect(@req.environmentId).to.equal @environmentId
+    next()
+
+  @Given /^the (.*) setting is (.*)$/, (setting, value, next) ->
+    v = undefined
+    switch value
+      when 'true' then v = true
+      when 'false' then v = false
+
+    @app.models.settings.get.withArgs(setting).callsArgWith(3, null, {value: v})
     next()

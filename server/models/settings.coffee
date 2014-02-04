@@ -1,28 +1,25 @@
 gint = require 'gint-util'
 
-module.exports = (mongoose, crudModelFactory, environmentsModel) ->
+module.exports = (dal, environmentsModel) ->
 
-  Schema = mongoose.Schema
+  modelDefinition =
+    name: 'Setting'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      key: 'String'
+      value: 'String'
+      acl: 'String'
+      parent:
+        key: 'ObjectId'
+        resourceType: 'String'
+ 
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
 
-  name = 'Setting'
-
-  schema =
-    systemId: 'ObjectId'
-    key: 'String'
-    value: 'String'
-    acl: 'String'
-    parent:
-      key: 'ObjectId'
-      resourceType: 'String'
-
-  settingSchema = new Schema schema
-  
-  mongoose.model name, settingSchema
-
-  crud = crudModelFactory mongoose.model(name)
+  crud = dal.crudFactory model
 
   get = (name, systemId, environmentId, callback) ->
-    if not environmentId?
+    if not callback?
       callback = environmentId
       getSystem name, systemId, callback
     else
@@ -33,7 +30,7 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
     environmentsModel.findById environmentId, systemId, (err, environment) ->
       if err
         callback err, null
-      if environment and not err
+      else if environment and not err
         query =
           key: name
           systemId: systemId
@@ -54,11 +51,9 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
     query =
       key: name
       systemId: systemId
-      parent:
-        key: systemId
-        resourceType: 'system'
+      'parent.key': systemId
+      'parent.resourceType': 'system'
     crud.findOne query, callback
-
 
   saveSetting = (setting, newValue, callback) ->
     newSetting:
@@ -121,4 +116,7 @@ module.exports = (mongoose, crudModelFactory, environmentsModel) ->
   exports = gint.common.extend {}, crud
   exports.get = get
   exports.set = set
+  exports._getEnvironment = getEnvironment
+  exports._getSystem = getSystem
+  exports._saveSetting = saveSetting
   exports

@@ -1,6 +1,6 @@
 describe 'Role Controller', ->
   beforeEach angular.mock.module 'ngResource'
-  beforeEach angular.mock.module 'app'
+  beforeEach angular.mock.module 'gint.security'
 
   mockRoleService =
     roles: [{name: 'aRole'}]

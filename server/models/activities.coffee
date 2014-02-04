@@ -1,29 +1,29 @@
-module.exports = (mongoose, crudModelFactory) ->
+module.exports = (dal) ->
 
-  modelName = 'Activity'
+  modelDefinition =
+    name: 'Activity'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      description: 'String'
+      job:
+        type: 'ObjectId'
+        ref: 'Job'
+      user:
+        type: 'ObjectId'
+        ref: 'User'
+      timeStamp:
+        type: 'Date'
+        default: Date.now
+      status:
+        type: 'ObjectId'
+        ref: 'JobStatus'
+      code: 'Number'
+      from: 'Mixed'
+      to: 'Mixed'
+      parent:
+        key: 'ObjectId'
+        resourceType: 'String'
 
-  schema =
-    systemId: 'ObjectId'
-    description: 'String'
-    job:
-      type: 'ObjectId'
-      ref: 'Job'
-    user:
-      type: 'ObjectId'
-      ref: 'User'
-    timeStamp:
-      type: 'Date'
-      default: Date.now
-    status:
-      type: 'ObjectId'
-      ref: 'JobStatus'
-    code: 'Number'
-    from: 'Mixed'
-    to: 'Mixed'
-    parent:
-      key: 'ObjectId'
-      resourceType: 'String'
-
-  mongoose.model modelName, schema
-
-  crudModelFactory mongoose.model(modelName)
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
+  dal.crudFactory model

@@ -1,5 +1,6 @@
-angular.module('app').factory 'User'
-, ['$resource', ($resource) ->
+angular.module('gint.security').factory 'User'
+, ['$resource', '$http', '$q', 'Auth'
+, ($resource, $http, $q, Auth) ->
 
   methods =
     query:
@@ -80,6 +81,19 @@ angular.module('app').factory 'User'
             
       callback() if callback
 
+  register = (item) ->
+    $http.post '/api/user/register', item
+
+  login = (cred) ->
+    deferred = $q.defer()
+    $http.post('/api/login', cred).success( () ->
+      Auth.loginConfirmed()
+      deferred.resolve()
+    ).error () ->
+      Auth.loginChanged()
+      deferred.resolve()
+    deferred.promise
+
   factory = () ->
     firstName: ''
     lastName: ''
@@ -92,4 +106,6 @@ angular.module('app').factory 'User'
   create: factory
   destroy: destroy
   save: save
+  register: register
+  login: login
 ]

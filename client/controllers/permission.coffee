@@ -1,4 +1,4 @@
-angular.module('app').controller 'permissionController'
+angular.module('gint.security').controller 'permissionController'
 , ['$scope', '$location', 'Resource', 'Permission', 'Auth'
 , ($scope, $location, Resource, Permission, Auth) ->
   

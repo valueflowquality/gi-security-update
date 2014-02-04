@@ -2,36 +2,33 @@ crypto = require 'crypto'
 bcrypt = require 'bcrypt'
 gint = require 'gint-util'
 
-module.exports = (mongoose, crudModelFactory) ->
-  
-  name = 'User'
-
-  Schema = mongoose.Schema
-
+module.exports = (dal) ->
   SALT_WORK_FACTOR = 10
 
-  schema =
-    systemId: 'ObjectId'
-    firstName: 'String'
-    lastName: 'String'
-    email: 'String'
-    password: 'String'
-    apiSecret: 'String'
-    userIds: [{provider: 'String', providerId: 'String'}]
-    roles: [{type: 'ObjectId', ref: 'Role'}]
+  modelDefinition =
+    name: 'User'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      firstName: 'String'
+      lastName: 'String'
+      email: 'String'
+      password: 'String'
+      apiSecret: 'String'
+      userIds: [{provider: 'String', providerId: 'String'}]
+      roles: [{type: 'ObjectId', ref: 'Role'}]
+      
+  schema = dal.schemaFactory modelDefinition
+  modelDefinition.schema = schema
 
-
-  userSchema = new Schema schema
-
-  userSchema.virtual('name').get () ->
+  schema.virtual('name').get () ->
     @firstName + ' ' + @lastName
 
-  userSchema.virtual('name').set (name) ->
+  schema.virtual('name').set (name) ->
     split = name.split ' '
     @firstName = split[0]
     @lastName = split[1]
 
-  userSchema.methods.resetAPISecret = (callback) ->
+  schema.methods.resetAPISecret = (callback) ->
     crypto.randomBytes 18, (err, buf) =>
       if err
         callback err
@@ -39,7 +36,8 @@ module.exports = (mongoose, crudModelFactory) ->
         @apiSecret = buf.toString 'base64'
         @save callback
 
-  userSchema.methods.comparePassword = (candidate, callback) ->
+ 
+  schema.methods.comparePassword = (candidate, callback) ->
     if candidate?
       if @password?
         bcrypt.compare candidate, @password, (err, isMatch) ->
@@ -51,7 +49,7 @@ module.exports = (mongoose, crudModelFactory) ->
     else
       callback 'password does not meet minimum requirements', false
 
-  userSchema.pre 'save', (next) ->
+  schema.pre 'save', (next) ->
     user = @
 
     if not @isModified('password')
@@ -65,10 +63,9 @@ module.exports = (mongoose, crudModelFactory) ->
           return next(err)
         user.password = hash
         next()
-  
-  mongoose.model name, userSchema
 
-  crud = crudModelFactory mongoose.model(name)
+  model = dal.modelFactory modelDefinition
+  crud = dal.crudFactory model
 
   update = (id, json, callback) ->
     crud.findById id, json.systemId, (err, user) ->

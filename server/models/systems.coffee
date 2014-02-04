@@ -1,21 +1,24 @@
-module.exports = (mongoose, crudModelFactory) ->
+module.exports = (dal) ->
 
-  Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
+  modelDefinition =
+    name: 'System'
+    schemaDefinition:
+      name: 'String'
+      attributes: [
+        key: 'String'
+        category: 'String'
+        value: 'String'
+      ]
 
-  name = 'System'
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
 
-  schema =
-    name: 'String'
-    attributes: [
-      key: 'String'
-      category: 'String'
-      value: 'String'
-    ]
+  #This is special - it's a model function
+  #that does not filter by systemId (as it is used to find systemIds)
+  all = (cb) ->
+    model.find {}, (err, obj) ->
+      cb err, obj
 
-  systemSchema = new Schema schema
-
-  mongoose.model name, systemSchema
-  exports = crudModelFactory mongoose.model(name)
-  exports.name = name
+  exports = dal.crudFactory model
+  exports.all = all
   exports

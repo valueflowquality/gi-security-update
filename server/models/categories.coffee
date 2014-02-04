@@ -1,30 +1,24 @@
-module.exports = (mongoose, crudModelFactory) ->
+module.exports = (dal) ->
 
-  Schema = mongoose.Schema
-  ObjectId = Schema.Types.ObjectId
-
-  modelName = 'Category'
-
-  schema =
-    systemId: ObjectId
-    parentId: ObjectId
-    title: 'String'
-    pluralTitle: 'String'
-    description: 'String'
-    detail: 'String'
-    moredetail: 'String'
-    slug: 'String'
-    visible: 'Boolean'
-    showOnNav: 'Boolean'
-    order: 'Number'
-    attributes: [
-      name: 'String'
-      value: 'String'
-    ]
-
-  categorySchema = new Schema schema
-
-  mongoose.model modelName, categorySchema, 'categories'
-  exports = crudModelFactory mongoose.model(modelName)
-  exports.name = modelName
-  exports
+  modelDefinition =
+    name: 'Category'
+    schemaDefinition:
+      systemId: 'ObjectId'
+      parentId: 'ObjectId'
+      title: 'String'
+      pluralTitle: 'String'
+      description: 'String'
+      detail: 'String'
+      moredetail: 'String'
+      slug: 'String'
+      visible: 'Boolean'
+      showOnNav: 'Boolean'
+      order: 'Number'
+      attributes: [
+        name: 'String'
+        value: 'String'
+      ]
+  
+  modelDefinition.schema = dal.schemaFactory modelDefinition
+  model = dal.modelFactory modelDefinition
+  dal.crudFactory model

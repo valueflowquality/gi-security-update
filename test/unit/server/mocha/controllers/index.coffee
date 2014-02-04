@@ -113,13 +113,5 @@ module.exports = () ->
         expect(controllers.permission).to.equal app.models.permissions
         done()
 
-      it 'crud resource controller', (done) ->
-        assert crudConFac.calledWith(app.models.resources)
-        , 'crud controller factory not called for resource'
-        assert.property controllers, 'resource'
-        , 'Controllers does not export resource'
-        expect(controllers.resource).to.equal app.models.resources
-        done()
-
     activity()
     user()

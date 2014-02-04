@@ -1,4 +1,4 @@
-angular.module('app').directive 'userForm'
+angular.module('gint.security').directive 'userForm'
 , ['Role'
 , (Role) ->
   restrict: 'E'
@@ -27,7 +27,7 @@ angular.module('app').directive 'userForm'
       scope.userRoles = []
       scope.notUserRoles = []
       angular.forEach scope.roles, (role) ->
-        if scope.user.roles? and role._id in scope.user.roles
+        if scope.user?.roles? and role._id in scope.user.roles
           scope.userRoles.push role
         else
           scope.notUserRoles.push role

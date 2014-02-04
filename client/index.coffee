@@ -1,0 +1,1 @@
+angular.module 'gint.security', ['ngResource', 'gint.util', 'gint.ui']

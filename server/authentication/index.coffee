@@ -21,25 +21,24 @@ module.exports = (app) ->
       else
         done null, user
 
+  getSecuritySetting = (name, param, req, cb) ->
+    app.models.settings.get name, req.systemId, req.environmentId
+    , (err, result) ->
+      if err
+        cb() if cb
+      else if result?.value
+        cb(null, param) if cb
+      else
+        cb() if cb
+
   getSystemStrategies = (req, callback) ->
-
-    getSecuritySetting = (name, param, cb) ->
-      app.models.settings.get name, req.systemId, req.environmentId
-      , (err, result) ->
-        if err
-          cb() if cb
-        else if result?.value
-          cb(null, param) if cb
-        else
-          cb() if cb
-
     async.parallel [
       (cb) ->
-        getSecuritySetting 'loginWithFacebook', 'facebook', cb
+        getSecuritySetting 'loginWithFacebook', 'facebook', req, cb
       , (cb) ->
-        getSecuritySetting 'loginWithHmac', 'Hmac', cb
+        getSecuritySetting 'loginWithHmac', 'Hmac', req, cb
       , (cb) ->
-        getSecuritySetting 'loginWithPlay', 'Play', cb
+        getSecuritySetting 'loginWithPlay', 'Play', req, cb
     ], (err, results) ->
       if err
         callback(err, null) if callback
@@ -79,6 +78,15 @@ module.exports = (app) ->
         next()
     else
       res.json 401, {msg: 'not authorized'}
+
+  publicRegisterAction = (req, res, next) ->
+    systemCheck req, res, () ->
+      getSecuritySetting 'allowPublicRegistration'
+      , 'allowPublicRegistration', req, (err, setting) ->
+        if setting
+          next()
+        else
+          res.json 403, {message: 'Public user registration is not enabled'}
 
   hmacAuth = (req, res, next) ->
     if _.indexOf(req.strategies, 'Hmac') is -1
@@ -141,29 +149,43 @@ module.exports = (app) ->
 
   isInRole = (role, user, callback) ->
     result = false
-    app.models.roles.findOneBy 'name', role, user.systemId
-    , (err, obj) ->
-      if obj and not err
-        _.each(user.roles, (role) ->
-          if role.toString() is obj._id.toString()
-            result = true
-        )
-        callback(result) if callback
-      else
-        callback(false) if callback
+    settingName = role + 'RoleName'
+
+    app.models.settings.get settingName, user.systemId, (err, result) ->
+      roleName = role
+      if result?.value
+        roleName = result.value
+      app.models.roles.findOneBy 'name', roleName, user.systemId
+      , (err, obj) ->
+        if obj and not err
+          _.each(user.roles, (role) ->
+            if role.toString() is obj._id.toString()
+              result = true
+          )
+          callback(result) if callback
+        else
+          callback(false) if callback
 
   isRestricted = (user, callback) ->
     isInRole 'Restricted', user, callback
+    return
 
   isAdmin = (user, callback) ->
-    isInRole 'Admin', user, callback
+    isInRole 'Admin', user, (result) ->
+      if result
+        callback(result) if callback
+      else
+        isSysAdmin user, callback
+    return
 
   isSysAdmin = (user, callback) ->
     isInRole 'SysAdmin', user, callback
+    return
 
   logout = (req, res) ->
     req.logout()
-    res.send 200
+    req.session.destroy (err) ->
+      res.send 200
 
   #Configure Passport authentication strategies
   users = app.models.users
@@ -190,6 +212,7 @@ module.exports = (app) ->
     userAction: userAction
     adminAction: adminAction
     sysAdminAction: sysAdminAction
+    publicRegisterAction: publicRegisterAction
     _getSystemStrategies: getSystemStrategies
     _systemCheck: systemCheck
     _hmacAuth: hmacAuth

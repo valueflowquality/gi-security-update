@@ -1,4 +1,4 @@
-angular.module('app').factory 'UserAccount',
+angular.module('gint.security').factory 'UserAccount',
 ['$resource', '$rootScope', '$http', '$q'
 , ($resource, $rootScope, $http, $q) ->
   methods =

@@ -2,68 +2,106 @@ path = require 'path'
 expect = require('chai').expect
 moment = require 'moment'
 mocks = require '../mocks'
-
+sinon = mocks.sinon
 dir =  path.normalize __dirname + '../../../../../../server'
 
 module.exports = () ->
   describe 'Users', ->
-    model = require(dir + '/models/users')(
-      mocks.mongoose, mocks.crudModelFactory
-    )
-    
-    sinon = mocks.sinon
-    
-    it 'Creates a User mongoose model', (done) ->
-      expect(mocks.mongoose.model.calledWith('User'
-      , sinon.match.any)).to.be.true
+    modelFactory = require(dir + '/models/users')
+    model = null
+    expectedDefinition =
+      name: 'User'
+      schemaDefinition:
+        systemId: 'ObjectId'
+        firstName: 'String'
+        lastName: 'String'
+        email: 'String'
+        password: 'String'
+        apiSecret: 'String'
+        userIds: [{provider: 'String', providerId: 'String'}]
+        roles: [{type: 'ObjectId', ref: 'Role'}]
+
+   
+    it 'Exports a factory function', (done) ->
+      expect(modelFactory).to.be.a 'function'
       done()
 
+    describe 'Constructor: (dal) -> {object}', ->
+      beforeEach (done) ->
+        sinon.spy mocks.dal, 'schemaFactory'
+        sinon.spy mocks.dal, 'modelFactory'
+        model = modelFactory mocks.dal
+        done()
+      
+      afterEach (done) ->
+        mocks.dal.modelFactory.restore()
+        mocks.dal.schemaFactory.restore()
+        done()
+
+      it 'Creates a User schema', (done) ->
+        expect(mocks.dal.schemaFactory.calledWithMatch(expectedDefinition))
+        .to.be.true
+        done()
+
+      it 'Creates an User model', (done) ->
+        returnedDefinition = mocks.dal.schemaFactory.returnValues[0]
+        expect(mocks.dal.modelFactory.calledWithMatch(expectedDefinition))
+        .to.be.true
+        done()
+
     describe 'Schema', ->
+      schema = null
+      beforeEach ->
+        sinon.spy mocks.dal, 'schemaFactory'
+        model = modelFactory mocks.dal
+        schema = mocks.dal.schemaFactory.returnValues[0]
+
+      afterEach ->
+        mocks.dal.schemaFactory.restore()
 
       it 'systemId: ObjectId', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'systemId', 'ObjectId')).to.be.true
+        expect(schema).to.have.property 'systemId', 'ObjectId'
         done()
       
       it 'firstName: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'firstName', 'String')).to.be.true
+        expect(schema).to.have.property 'firstName', 'String'
         done()
 
       it 'lastName: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'lastName', 'String')).to.be.true
+        expect(schema).to.have.property 'lastName', 'String'
         done()
 
       it 'email: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'email', 'String')).to.be.true
+        expect(schema).to.have.property 'email', 'String'
         done()
 
       it 'password: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'password', 'String')).to.be.true
+        expect(schema).to.have.property 'password', 'String'
         done()
 
       it 'apiSecret: String', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'apiSecret', 'String')).to.be.true
+        expect(schema).to.have.property 'apiSecret', 'String'
         done()
 
       it 'userIds: [{provider: String, providerId: String}]', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'userIds'
-        , [{provider: 'String', providerId: 'String'}])).to.be.true
+        expect(schema).to.have.property 'userIds'
+        expect(schema.userIds).to.be.an 'array'
+        expect(schema.userIds.length).to.equal 1
+        expect(schema.userIds[0]).to.deep.equal(
+          {provider: 'String', providerId: 'String'}
+        )
         done()
 
       it 'roles: [{type: ObjectId, ref: Role}]', (done) ->
-        expect(mocks.mongoose.model.calledWith('User'
-        , sinon.match.has 'roles'
-        , [{type: 'ObjectId', ref: 'Role'}])).to.be.true
+        expect(schema).to.have.property 'roles'
+        expect(schema.roles).to.be.an 'array'
+        expect(schema.roles.length).to.equal 1
+        expect(schema.roles[0]).to.deep.equal {type: 'ObjectId', ref: 'Role'}
         done()
 
     describe 'Exports',  ->
-      mocks.exportsCrudModel 'User', model, {update: true}
+      mut = require(dir + '/models/users')(mocks.dal)
+      mocks.exportsCrudModel 'User', mut, {update: true}
       
       describe 'Overriden Crud', ->
         it 'update: function(id, json, callback) -> (err, obj)', (done) ->
@@ -75,36 +113,3 @@ module.exports = () ->
         it 'findOneByProviderId: function(id, systemId, callback)' +
         '-> (err, obj)', (done) ->
           done()
-
-#   it 'Hashes password on creation', (done) ->
-#     model.create { firstName: 'bob', password: 'aPassword' }, (err, result) ->
-#       #Check we're doing some sort of hash
-#       result.password.should.not.equal 'aPassword'
-#       result.comparePassword 'aPassword', (err, isMatch) ->
-#         isMatch.should.equal(true)
-#         result.comparePassword 'aBadPassword', (err, isNotMatch) ->
-#           isNotMatch.should.equal(false)
-
-#           done()
-
-#   it 'Does not allow logins with blank passwords', (done) ->
-#     model.create { firstName: 'bob' }, (err, result) ->
-#       result.comparePassword '', (err, isMatch) ->
-#         isMatch.should.be.false
-#         result.comparePassword undefined, (err, isMatch2) ->
-#           isMatch2.should.be.false
-#           result.comparePassword null, (err, isMatch3) ->
-#             isMatch3.should.be.false
-#             done()
-
-#   it 'Can update a password', (done) ->
-#     model.create { firstName: 'bob', password: 'aPassword'}, (err, result) ->
-#       result.comparePassword 'aPassword', (err, isMatch) ->
-#         isMatch.should.be.true
-#         model.update result._id
-#         , {firstName: 'bob', password: 'anotherPassword'}
-#         , (err, updatedUser) ->
-#           updatedUser.comparePassword 'anotherPassword', (err, updateMatch) ->
-#             updateMatch.should.be.true
-#             done()
-

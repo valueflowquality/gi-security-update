@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute', 'ngResource', 'gint.ui', 'gint.util']);
+angular.module('app', ['ngRoute', 'ngResource', 'gint.ui', 'gint.util', 'gint.security']);
 
 angular.module('app').controller('mainController', [
   '$scope', function($scope) {

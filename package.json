@@ -1,7 +1,7 @@
 {
   "author": "David Bochenski",
   "name": "gint-security",
-  "version": "0.1.0-dev",
+  "version": "0.2.0",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
@@ -10,18 +10,19 @@
     "type": "git",
     "url": "git://github.com/gintellect/gint-security.git"
   },
+  "publishConfig": {
+    "registry": "https://gintellect.registry.nodejitsu.com"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.1.20",
+    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.2.1",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
-    "mongoose": "~3.6.5",
     "moment": "~2.0.0",
-    "mongoose-long": "0.0.2",
     "aws-sdk": "~1.4.0",
     "async": "~0.2.9"
   },
@@ -33,7 +34,7 @@
     "grunt-contrib-less": "~0.6.4",
     "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-gint": "~0.3.0",
+    "grunt-gint": "~0.3.1",
     "mocha": "~1.12.0",
     "sinon": "~1.7.3",
     "chai": "~1.7.2",
@@ -61,6 +62,7 @@
     "selenium-webdriver": "~2.35.2",
     "protractor": "~0.10.0",
     "grunt-env": "~0.4.0",
-    "karma-sinon-chai": "~0.1.1"
+    "karma-sinon-chai": "~0.1.1",
+    "mongoose": "~3.8.4"
   }
 }

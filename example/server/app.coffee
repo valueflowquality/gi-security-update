@@ -19,7 +19,7 @@ testConf =
     sessionSecret: 'testSecret'
 
 app.configure ->
-  gint.common.mongo mongoose, testConf.db
+  gint.common.dal.mongo.connect testConf.db
   app.use express.cookieParser()
   app.use express.bodyParser()
 
@@ -40,8 +40,7 @@ app.configure ->
   app.middleware = {}
 
   #configure the module
-  security.configure app, mongoose, testConf.security
-
+  security.configure app, gint.common.dal.mongo, testConf.security
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
 
   app.get '*', app.middleware.publicAction, (req, res) ->

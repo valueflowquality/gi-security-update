@@ -5,5 +5,5 @@ module.exports =
   crudControllerFactory: gint.mocks.crudControllerFactory
   exportsCrudModel: gint.mocks.exportsCrudModel
   crudModelFactory: gint.mocks.crudModelFactory
-  mongoose: gint.mocks.mongoose
+  dal: gint.mocks.dal
   sinon: gint.mocks.sinon

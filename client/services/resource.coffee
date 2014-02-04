@@ -1,4 +1,4 @@
-angular.module('app').factory 'Resource'
+angular.module('gint.security').factory 'Resource'
 , ['$resource', 'giCrud'
 , ($resource, Crud) ->
 

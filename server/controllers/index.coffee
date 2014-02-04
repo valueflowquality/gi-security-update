@@ -13,4 +13,3 @@ module.exports = (app) ->
   system:       conFac app.models.systems
   environment:  conFac app.models.environments
   permission:   conFac app.models.permissions
-  resource:     conFac app.models.resources
