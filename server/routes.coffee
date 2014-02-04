@@ -9,6 +9,9 @@ configure = (app, rest) ->
   app.del '/api/user'
   , app.middleware.userAction, app.controllers.user.destroyMe
 
+  app.post '/api/user/register'
+  , app.middleware.publicRegisterAction, app.controllers.user.create
+
   app.post '/api/user/apiSecret'
   , app.middleware.userAction, app.controllers.user.generateAPISecretForMe
 

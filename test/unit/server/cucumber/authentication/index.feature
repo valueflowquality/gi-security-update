@@ -8,6 +8,9 @@ Feature: publicRead(req, res, next) middleware
   Background:
     Given the authentication module is required
     And it is initialized with an express app
+    And the loginWithFacebook setting is false
+    And the loginWithHmac setting is false
+    And the loginWithPlay setting is false
     And a request to a known host
 
   Scenario: Anonymous users can get all public read resources
@@ -45,3 +48,27 @@ Feature: publicRead(req, res, next) middleware
     Given an anonymous request to DELETE /api/aResource/1
     When this is passed through the publicReadAction middleware
     Then the request should be dissalowed
+
+Feature: public Register Action middleware
+  Background:
+    Given the authentication module is required
+    And it is initialized with an express app
+    And a request to a known host
+
+  Scenario: Anonymous users cannot register when allowPublicRegistration setting is undefined 
+    Given the allowPublicRegistration setting is undefined
+    And an anonymous request to POST /api/aResource/count
+    When this is passed through the publicRegisterAction middleware
+    Then the request should be forbidden
+
+  Scenario: Anonymous users cannot register when allowPublicRegistration setting is false 
+    Given the allowPublicRegistration setting is false
+    And an anonymous request to POST /api/aResource/count
+    When this is passed through the publicRegisterAction middleware
+    Then the request should be forbidden
+
+  Scenario: Anonymous users can register when allowPublicRegistration  setting is true
+    Given the allowPublicRegistration setting is true
+    And an anonymous request to to POST /api/aResource/register
+    When this is passed through the publicRegisterAction middleware
+    Then the request should be allowed

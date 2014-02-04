@@ -7,8 +7,11 @@ dir =  path.normalize __dirname + '../../../../../server'
 module.exports = () ->
 
   describe 'Routes', ->
+    app = null
+    rest = null
+    module = null
 
-    assertRestfulForResource = (resource, security, controllerName) ->
+    beforeEach (done) ->
       module = require(dir + '/routes')
 
       app =
@@ -22,6 +25,7 @@ module.exports = () ->
           adminAction: sinon.spy()
           sysAdminAction: sinon.spy()
           publicReadAction: sinon.spy()
+          publicRegisterAction: sinon.spy()
 
         controllers:
           user:
@@ -29,6 +33,7 @@ module.exports = () ->
             updateMe: sinon.spy()
             destroyMe: sinon.spy()
             index: sinon.spy()
+            create: sinon.spy()
           role: sinon.spy()
           setting: sinon.spy()
           activity: sinon.spy()
@@ -40,15 +45,24 @@ module.exports = () ->
       rest =
         routeResource: sinon.spy()
 
-      securityFilter = app.middleware.publicAction
-
-      switch security
-        when 'user' then securityFilter = app.middleware.userAction
-        when 'admin' then securityFilter = app.middleware.adminAction
-        when 'sysadmin' then securityFilter = app.middleware.sysAdminAction
-        when 'public-read' then securityFilter = app.middleware.publicReadAction
-
       module.configure app, rest
+      done()
+
+    selectSecurityFilter = (security, middleware) ->
+      securityFitler = middleware.publicAction
+      switch security
+        when 'user' then securityFilter = middleware.userAction
+        when 'admin' then securityFilter = middleware.adminAction
+        when 'sysadmin' then securityFilter = middleware.sysAdminAction
+        when 'public-read'
+          securityFilter = middleware.publicReadAction
+        when 'public-register'
+          securityFilter = middleware.publicRegisterAction
+
+      securityFilter
+    
+    assertRestfulForResource = (resource, security, controllerName) ->
+      securityFilter = selectSecurityFilter security, app.middleware
 
       assert rest.routeResource.calledWith(resource, app)
       , 'routeResource not called for ' + resource
@@ -59,6 +73,7 @@ module.exports = () ->
       assert rest.routeResource.calledWith(
         resource, app, securityFilter, app.controllers[controllerName]
       ), 'routeResource ' + resource + ' not called on correct controller'
+
 
     it 'exports a RESTful role resource', (done) ->
       assertRestfulForResource 'roles', 'user', 'role'
@@ -94,4 +109,18 @@ module.exports = () ->
 
     it 'exports a Restful permission resource', (done) ->
       assertRestfulForResource 'permissions', 'admin', 'permission'
+      done()
+
+    it 'exports a user registration action', (done) ->
+      route = '/api/user/register'
+      securityFilter = selectSecurityFilter 'public-register', app.middleware
+      assert app.post.calledWith(route)
+      , 'incorrect or missing user registration route'
+
+      assert app.post.calledWith(route, securityFilter)
+      , 'incorrect security filter on user registration route'
+
+      assert app.post.calledWith(route, securityFilter
+      , app.controllers.user.create)
+      , 'incorrect controller on user registration route'
       done()

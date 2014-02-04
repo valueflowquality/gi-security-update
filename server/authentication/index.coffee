@@ -21,25 +21,24 @@ module.exports = (app) ->
       else
         done null, user
 
+  getSecuritySetting = (name, param, req, cb) ->
+    app.models.settings.get name, req.systemId, req.environmentId
+    , (err, result) ->
+      if err
+        cb() if cb
+      else if result?.value
+        cb(null, param) if cb
+      else
+        cb() if cb
+
   getSystemStrategies = (req, callback) ->
-
-    getSecuritySetting = (name, param, cb) ->
-      app.models.settings.get name, req.systemId, req.environmentId
-      , (err, result) ->
-        if err
-          cb() if cb
-        else if result?.value
-          cb(null, param) if cb
-        else
-          cb() if cb
-
     async.parallel [
       (cb) ->
-        getSecuritySetting 'loginWithFacebook', 'facebook', cb
+        getSecuritySetting 'loginWithFacebook', 'facebook', req, cb
       , (cb) ->
-        getSecuritySetting 'loginWithHmac', 'Hmac', cb
+        getSecuritySetting 'loginWithHmac', 'Hmac', req, cb
       , (cb) ->
-        getSecuritySetting 'loginWithPlay', 'Play', cb
+        getSecuritySetting 'loginWithPlay', 'Play', req, cb
     ], (err, results) ->
       if err
         callback(err, null) if callback
@@ -79,6 +78,14 @@ module.exports = (app) ->
         next()
     else
       res.json 401, {msg: 'not authorized'}
+
+  publicRegisterAction = (req, res, next) ->
+    getSecuritySetting 'allowPublicRegistration', 'allowPublicRegistration', req
+    , (err, setting) ->
+      if setting
+        next()
+      else
+        res.json 403, {message: 'Public user registration is not enabled'}
 
   hmacAuth = (req, res, next) ->
     if _.indexOf(req.strategies, 'Hmac') is -1
@@ -204,6 +211,7 @@ module.exports = (app) ->
     userAction: userAction
     adminAction: adminAction
     sysAdminAction: sysAdminAction
+    publicRegisterAction: publicRegisterAction
     _getSystemStrategies: getSystemStrategies
     _systemCheck: systemCheck
     _hmacAuth: hmacAuth
