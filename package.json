@@ -1,7 +1,7 @@
 {
   "author": "David Bochenski",
   "name": "gint-security",
-  "version": "0.1.0-dev",
+  "version": "0.2.0",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
@@ -9,6 +9,9 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/gintellect/gint-security.git"
+  },
+  "publishConfig": {
+    "registry": "https://gintellect.registry.nodejitsu.com"
   },
   "engines": {
     "node": ">= 0.10.0"
