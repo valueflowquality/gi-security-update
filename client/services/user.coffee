@@ -91,7 +91,7 @@ angular.module('gint.security').factory 'User'
       deferred.resolve()
     ).error () ->
       Auth.loginChanged()
-      deferred.resolve()
+      deferred.reject()
     deferred.promise
 
   factory = () ->

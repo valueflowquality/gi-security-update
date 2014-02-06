@@ -92,7 +92,7 @@ angular.module('gint.security').provider 'Auth', () ->
       $rootScope.$broadcast 'event:auth-loginChange'
 
     me: loginStatus
-    loginChanged: loginChanged()
+    loginChanged: loginChanged
     loginConfirmed: () ->
       loginChanged()
       retryAll()

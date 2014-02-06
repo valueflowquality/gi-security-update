@@ -305,7 +305,7 @@ angular.module('gint.security').factory('User', [
         return deferred.resolve();
       }).error(function() {
         Auth.loginChanged();
-        return deferred.resolve();
+        return deferred.reject();
       });
       return deferred.promise;
     };
@@ -1289,7 +1289,7 @@ angular.module('gint.security').provider('Auth', function() {
       };
       return {
         me: loginStatus,
-        loginChanged: loginChanged(),
+        loginChanged: loginChanged,
         loginConfirmed: function() {
           loginChanged();
           return retryAll();
