@@ -1,6 +1,6 @@
 {
   "name": "gint-security",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "./bin/gint-security.js",
   "devDependencies": {
     "angular-mocks": "1.2.3",
