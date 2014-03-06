@@ -3,13 +3,14 @@
   "version": "0.2.1",
   "main": "./bin/gint-security.js",
   "devDependencies": {
-    "angular-mocks": "1.2.3",
+    "angular-mocks": "1.2.14",
     "jquery": "1.10.2"
   },
   "dependencies": {
-    "angular": "1.2.3",
-    "angular-resource": "1.2.3",
-    "angular-route": "1.2.3",
+    "angular": "1.2.14",
+    "angular-resource": "1.2.14",
+    "angular-route": "1.2.14",
+    "angular-touch": "1.2.14",
     "gint-util": "git@github.com:Gintellect/gint-util.git#v0.3.0",
     "gint-ui": "git@github.com:Gintellect/gint-ui.git#dataTable2",
     "underscore": "~1.5.2"
