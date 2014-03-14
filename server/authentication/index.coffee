@@ -184,8 +184,7 @@ module.exports = (app) ->
 
   logout = (req, res) ->
     req.logout()
-    req.session.destroy (err) ->
-      res.send 200
+    res.send 200
 
   #Configure Passport authentication strategies
   users = app.models.users
