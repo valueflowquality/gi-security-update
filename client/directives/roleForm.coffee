@@ -1,6 +1,6 @@
 angular.module('gint.security').directive 'roleForm', ->
   restrict: 'E'
-  templateUrl: '/views/roleForm.html'
+  templateUrl: '/views/gi-roleForm.html'
   scope:
     role: '='
     submit: '&'

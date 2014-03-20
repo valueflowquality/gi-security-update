@@ -2,7 +2,7 @@ angular.module('gint.security').directive 'userForm'
 , ['Role'
 , (Role) ->
   restrict: 'E'
-  templateUrl: '/views/userForm.html'
+  templateUrl: '/views/gi-userForm.html'
   scope:
     user: '='
     submit: '&'

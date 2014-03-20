@@ -3,20 +3,20 @@ angular.module('gint.security').config ['$routeProvider', '$locationProvider'
   $routeProvider
   .when '/login',
     controller: 'loginController'
-    templateUrl: '/views/login.html'
+    templateUrl: '/views/gi-login.html'
   .when '/user',
     controller: 'userController'
-    templateUrl: '/views/user.html'
+    templateUrl: '/views/gi-user.html'
   .when '/logout',
     controller: 'logoutController'
-    templateUrl: '/views/logout.html'
+    templateUrl: '/views/gi-logout.html'
   .when '/roles',
     controller: 'roleController'
-    templateUrl: '/views/role.html'
+    templateUrl: '/views/gi-role.html'
   .when '/users',
     controller: 'usersController'
-    templateUrl: '/views/userManagement.html'
+    templateUrl: '/views/gi-userManagement.html'
   .when '/permissions',
     controller: 'permissionController'
-    templateUrl: '/views/permissions.html'
+    templateUrl: '/views/gi-permissions.html'
 ]
