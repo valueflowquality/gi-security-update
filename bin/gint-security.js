@@ -1,3 +1,4 @@
+
 angular.module('gint.security', ['ngResource', 'gint.util', 'gint.ui']);
 
 /*1369044063,178534957,JIT Construction: v819514,en_US*/
