@@ -12,7 +12,7 @@
     "angular-route": "1.2.14",
     "angular-touch": "1.2.14",
     "gi-util": "~0.3.5",
-    "gi-ui": "~0.1.1",
+    "gi-ui": "~0.2.0",
     "underscore": "~1.5.2"
   },
   "homepage": "https://github.com/GoIncremental/gi-security",
