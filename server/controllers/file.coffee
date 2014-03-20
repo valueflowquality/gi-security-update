@@ -1,6 +1,6 @@
 AWS = require 'aws-sdk'
 _ = require 'underscore'
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports = (models, crudControllerFactory) ->
   crudController  = crudControllerFactory(models.files)
@@ -15,11 +15,11 @@ module.exports = (models, crudControllerFactory) ->
 
   create = (req, res) ->
     crudController.create req, res, () ->
-      updatePrimary res.gintResult, res
+      updatePrimary res.giResult, res
 
   update = (req, res) ->
     crudController.update req, res, () ->
-      updatePrimary res.gintResult, res
+      updatePrimary res.giResult, res
 
   destroy = (req, res) ->
     settings.get "awsAccessKey"
@@ -70,7 +70,7 @@ module.exports = (models, crudControllerFactory) ->
                 else
                   res.json 404, "could not find file with that id"
   
-  exports = gint.common.extend {}, crudController
+  exports = gi.common.extend {}, crudController
   exports.create = create
   exports.destroy = destroy
   exports

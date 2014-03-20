@@ -1,5 +1,5 @@
 moment = require 'moment'
-sdk = require 'gint-sdk'
+sdk = require 'gi-sdk'
 ObjectID = require('mongodb').ObjectID
 expect = require('chai').expect
 dbHelper = require '../../../lib/dbhelper'

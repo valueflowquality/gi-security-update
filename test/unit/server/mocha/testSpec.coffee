@@ -3,7 +3,7 @@ routes = require './routes'
 models = require './models'
 controllers = require './controllers'
 authentication = require './authentication'
-describe 'Gint-Security',  ->
+describe 'gi-Security',  ->
   index()
   routes()
   controllers()

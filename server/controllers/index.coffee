@@ -1,8 +1,8 @@
-gint = require 'gint-util'
+gi = require 'gi-util'
 user = require './user'
 activity = require './activity'
 file = require './file'
-conFac = gint.common.crudControllerFactory
+conFac = gi.common.crudControllerFactory
 module.exports = (app) ->
   user:         user app.models.users, conFac
   activity:     activity app.models.activities, conFac

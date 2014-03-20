@@ -6,7 +6,7 @@ module.exports = ->
     if page isnt 'home'
       path += page
 
-    @browser.get('http://test.gint-security.com:3000' + path).then ->
+    @browser.get('http://test.gi-security.com:3000' + path).then ->
       callback()
 
   @When /^facebook (is|is not) an approved login method$/
@@ -20,7 +20,7 @@ module.exports = ->
 
   @Then /^I should see a welcome message/, (callback) ->
     @browser.findElement(@By.tagName 'p').getText().then (text) =>
-      expected = 'This is the gint-security test-suite'
+      expected = 'This is the gi-security test-suite'
       if text is expected
         callback()
       else

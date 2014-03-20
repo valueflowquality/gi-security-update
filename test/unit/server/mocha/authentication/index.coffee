@@ -420,7 +420,7 @@ module.exports = () ->
             
             beforeEach (done) ->
               req =
-                host: 'test.gint-security.com'
+                host: 'test.gi-security.com'
               
               res =
                 json: sinon.spy()

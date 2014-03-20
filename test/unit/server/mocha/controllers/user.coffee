@@ -73,7 +73,7 @@ module.exports = () ->
               query:
                 max: 3
             res =
-              gintResult: [alice, bob]
+              giResult: [alice, bob]
               json: (code, result) ->
                 _.each result, (user) ->
                   expect(user.password).to.not.exist
@@ -97,7 +97,7 @@ module.exports = () ->
 
           it 'Does not transmit passwords', (done) ->
             res =
-              gintResult: alice
+              giResult: alice
               json: (code, result) ->
                 expect(result.password).to.not.exist
                 expect(result).to.not.have.property 'password'
@@ -107,11 +107,11 @@ module.exports = () ->
 
           it 'Does not transmit password after sucessful bulk create', (done) ->
             res =
-              gintResult: [
+              giResult: [
                 {message: "ok", obj: alice}
                 {message: "ok", obj: bob}
               ]
-              gintResultCode: 200
+              giResultCode: 200
 
               json: (code, result) ->
                 expect(code).to.equal 200
@@ -124,11 +124,11 @@ module.exports = () ->
 
           it 'Does not transmit password after failed bulk create', (done) ->
             res =
-              gintResult: [
+              giResult: [
                 {message: "not ok", obj: alice}
                 {message: "ok", obj: bob}
               ]
-              gintResultCode: 500
+              giResultCode: 500
               
               json: (code, result) ->
                 expect(code).to.equal 500
@@ -153,7 +153,7 @@ module.exports = () ->
           
           it 'Does not transmit passwords', (done) ->
             res =
-              gintResult: bob
+              giResult: bob
               json: (code, result) ->
                 expect(result.password).to.not.exist
                 expect(result).to.not.have.property 'password'
@@ -174,7 +174,7 @@ module.exports = () ->
 
           it 'Does not transmit passwords', (done) ->
             res =
-              gintResult: alice
+              giResult: alice
               json: (code, result) ->
                 expect(result.password).to.not.exist
                 expect(result).to.not.have.property 'password'

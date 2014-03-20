@@ -71,26 +71,26 @@ module.exports = () ->
             spy = sinon.spy()
             permissionFilter req, res, spy
             expect(spy.calledOnce).to.be.true
-            expect(req.gintFilter).to.not.exist
+            expect(req.giFilter).to.not.exist
             done()
 
-          it 'creates a gintFilter obj on req if permission.find has results'
+          it 'creates a giFilter obj on req if permission.find has results'
           , (done) ->
             app.models.permissions.find.callsArgWith 1, null, []
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter).to.exist
+            expect(req.giFilter).to.exist
             expect(spy.calledOnce).to.be.true
             done()
 
-          it 'creates a property on gintFilter of each results resourceType'
+          it 'creates a property on giFilter of each results resourceType'
           , (done) ->
             results = [{resourceType: 'a'}, {resourceType: 'b'}]
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter).to.have.ownProperty 'a'
-            expect(req.gintFilter).to.have.ownProperty 'b'
+            expect(req.giFilter).to.have.ownProperty 'a'
+            expect(req.giFilter).to.have.ownProperty 'b'
             expect(spy.calledOnce).to.be.true
             done()
 
@@ -100,8 +100,8 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a).to.have.ownProperty '$nin'
-            expect(req.gintFilter.a.$nin).to.be.an 'array'
+            expect(req.giFilter.a).to.have.ownProperty '$nin'
+            expect(req.giFilter.a.$nin).to.be.an 'array'
             expect(spy.calledOnce).to.be.true
             done()
           
@@ -112,8 +112,8 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a).to.have.ownProperty '$nin'
-            expect(req.gintFilter.a.$nin).to.deep.equal ['a', 'b', 'c']
+            expect(req.giFilter.a).to.have.ownProperty '$nin'
+            expect(req.giFilter.a.$nin).to.deep.equal ['a', 'b', 'c']
             expect(spy.calledOnce).to.be.true
             done()
           
@@ -124,8 +124,8 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a.create).to.be.true
-            expect(req.gintFilter.a.$nin).to.not.exist
+            expect(req.giFilter.a.create).to.be.true
+            expect(req.giFilter.a.$nin).to.not.exist
             expect(spy.calledOnce).to.be.true
             done()
 
@@ -136,8 +136,8 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a.create).to.be.true
-            expect(req.gintFilter.a.$nin).to.deep.equal ['a', 'b', 'c']
+            expect(req.giFilter.a.create).to.be.true
+            expect(req.giFilter.a.$nin).to.deep.equal ['a', 'b', 'c']
             expect(spy.calledOnce).to.be.true
             done()
 
@@ -147,8 +147,8 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a).to.have.ownProperty '$in'
-            expect(req.gintFilter.a.$in).to.be.an 'array'
+            expect(req.giFilter.a).to.have.ownProperty '$in'
+            expect(req.giFilter.a.$in).to.be.an 'array'
             expect(spy.calledOnce).to.be.true
             done()
           
@@ -159,9 +159,9 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a).to.have.ownProperty '$in'
-            expect(req.gintFilter.a.$in).to.deep.equal ['a', 'b', 'c']
-            expect(req.gintFilter.a.create).to.not.exist
+            expect(req.giFilter.a).to.have.ownProperty '$in'
+            expect(req.giFilter.a.$in).to.deep.equal ['a', 'b', 'c']
+            expect(req.giFilter.a.create).to.not.exist
             expect(spy.calledOnce).to.be.true
             done()
 
@@ -172,11 +172,11 @@ module.exports = () ->
             app.models.permissions.find.callsArgWith 1, null, results
             spy = sinon.spy()
             permissionFilter req, res, spy
-            expect(req.gintFilter.a).to.have.ownProperty '$in'
-            expect(req.gintFilter.a.$in).to.deep.equal ['a', 'b', 'c']
-            expect(req.gintFilter.a).to.have.ownProperty '$nin'
-            expect(req.gintFilter.a.$nin).to.deep.equal ['a', 'b', 'c']
-            expect(req.gintFilter.a.create).to.be.true
+            expect(req.giFilter.a).to.have.ownProperty '$in'
+            expect(req.giFilter.a.$in).to.deep.equal ['a', 'b', 'c']
+            expect(req.giFilter.a).to.have.ownProperty '$nin'
+            expect(req.giFilter.a.$nin).to.deep.equal ['a', 'b', 'c']
+            expect(req.giFilter.a.create).to.be.true
             expect(spy.calledOnce).to.be.true
 
             done()

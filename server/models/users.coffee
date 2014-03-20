@@ -1,6 +1,6 @@
 crypto = require 'crypto'
 bcrypt = require 'bcrypt'
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports = (dal) ->
   SALT_WORK_FACTOR = 10
@@ -105,7 +105,7 @@ module.exports = (dal) ->
       else
         callback 'cannot find user'
 
-  exports = gint.common.extend {}, crud
+  exports = gi.common.extend {}, crud
   exports.update = update
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId

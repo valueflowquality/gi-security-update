@@ -1,4 +1,4 @@
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports = (model, crudControllerFactory) ->
   crud  = crudControllerFactory(model)
@@ -7,6 +7,6 @@ module.exports = (model, crudControllerFactory) ->
     req.body.user = req.user.id
     crud.create req, res
 
-  exports = gint.common.extend {}, crud
+  exports = gi.common.extend {}, crud
   exports.create = create
   exports

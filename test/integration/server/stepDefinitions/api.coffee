@@ -1,5 +1,5 @@
 moment = require 'moment'
-sdk = require 'gint-sdk'
+sdk = require 'gi-sdk'
 ObjectID = require('mongodb').ObjectID
 expect = require('chai').expect
 dbHelper = require '../../../lib/dbhelper'
@@ -12,7 +12,7 @@ module.exports = () ->
     next()
   
   @When /^the request is addressed to a known host$/, (next) ->
-    @req.set('Host', 'test.gint-security.com')
+    @req.set('Host', 'test.gi-security.com')
     next()
 
   @When /^the reply is received$/, (next) ->

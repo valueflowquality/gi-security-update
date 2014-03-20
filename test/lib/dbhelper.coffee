@@ -15,7 +15,7 @@ createSystems = (db, cb) ->
 
 createEnvironments = (db, cb) ->
   env =
-    host: 'test.gint-security.com'
+    host: 'test.gi-security.com'
     name: 'testenv3'
     systemId: sysId
 
@@ -53,7 +53,7 @@ createRoles = (db, cb) ->
       cb()
 
 wrapDbFunction = (dbFunction, cb) ->
-  mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/gint-security-test'
+  mongo.MongoClient.connect 'mongodb://127.0.0.1:27017/gi-security-test'
   , (err, db) ->
     dbFunction db, () ->
       db.close()

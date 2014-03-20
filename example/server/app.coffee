@@ -1,5 +1,5 @@
 express = require 'express'
-gint = require 'gint-util'
+gi = require 'gi-util'
 security = require '../../server'
 
 MongoStore = require('connect-mongo')(express)
@@ -14,12 +14,12 @@ testConf =
   db:
     host: 'localhost'
     port: '27017'
-    name: 'gint-security-test'
+    name: 'gi-security-test'
   security:
     sessionSecret: 'testSecret'
 
 app.configure ->
-  gint.common.dal.mongo.connect testConf.db
+  gi.common.dal.mongo.connect testConf.db
   app.use express.cookieParser()
   app.use express.bodyParser()
 
@@ -40,7 +40,7 @@ app.configure ->
   app.middleware = {}
 
   #configure the module
-  security.configure app, gint.common.dal.mongo, testConf.security
+  security.configure app, gi.common.dal.mongo, testConf.security
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
 
   app.get '*', app.middleware.publicAction, (req, res) ->

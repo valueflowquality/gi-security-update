@@ -1,4 +1,4 @@
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports = (dal, environmentsModel) ->
 
@@ -113,7 +113,7 @@ module.exports = (dal, environmentsModel) ->
       else
         saveSetting setting, value, callback
         
-  exports = gint.common.extend {}, crud
+  exports = gi.common.extend {}, crud
   exports.get = get
   exports.set = set
   exports._getEnvironment = getEnvironment

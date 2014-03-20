@@ -1,8 +1,8 @@
-angular.module('app', ['ngRoute', 'ngResource', 'gint.ui', 'gint.util', 'gint.security']);
+angular.module('app', ['ngRoute', 'ngResource', 'gi.ui', 'gi.util', 'gi.security']);
 
 angular.module('app').controller('mainController', [
   '$scope', function($scope) {
-    return $scope.testText = 'This is the gint-security test-suite';
+    return $scope.testText = 'This is the gi-security test-suite';
   }
 ]);
 

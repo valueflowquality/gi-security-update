@@ -1,9 +1,9 @@
 _ = require 'underscore'
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports = (app) ->
   #Returns a middleware function that embelisshes
-  #req.gintFilter with information used to filter results
+  #req.giFilter with information used to filter results
   #based on permissions
 
   flags =
@@ -24,20 +24,20 @@ module.exports = (app) ->
       if err
         res.json 500, {message: err}
       else if results?
-        req.gintFilter = {}
+        req.giFilter = {}
 
         _.each results, (result) ->
-          if not req.gintFilter[result.resourceType]
-            req.gintFilter[result.resourceType] = {}
+          if not req.giFilter[result.resourceType]
+            req.giFilter[result.resourceType] = {}
 
-          resourceTypeFilter = req.gintFilter[result.resourceType]
+          resourceTypeFilter = req.giFilter[result.resourceType]
 
           if result.restriction & flags.NONE
             if not resourceTypeFilter.$nin?
               resourceTypeFilter.$nin = []
 
             #console.log 'we are denied access to customer(s): ' + result.keys
-            gint.common.extend resourceTypeFilter.$nin, result.keys
+            gi.common.extend resourceTypeFilter.$nin, result.keys
 
           if result.restriction & flags.CREATE
             resourceTypeFilter.create = true
@@ -45,7 +45,7 @@ module.exports = (app) ->
           if result.restriction & flags.READ
             if not resourceTypeFilter.$in?
               resourceTypeFilter.$in = []
-            gint.common.extend resourceTypeFilter.$in, result.keys
+            gi.common.extend resourceTypeFilter.$in, result.keys
 
         next()
       else

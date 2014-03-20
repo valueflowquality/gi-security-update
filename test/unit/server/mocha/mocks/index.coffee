@@ -1,9 +1,9 @@
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports =
   crudModel: require './crud'
-  crudControllerFactory: gint.mocks.crudControllerFactory
-  exportsCrudModel: gint.mocks.exportsCrudModel
-  crudModelFactory: gint.mocks.crudModelFactory
-  dal: gint.mocks.dal
-  sinon: gint.mocks.sinon
+  crudControllerFactory: gi.mocks.crudControllerFactory
+  exportsCrudModel: gi.mocks.exportsCrudModel
+  crudModelFactory: gi.mocks.crudModelFactory
+  dal: gi.mocks.dal
+  sinon: gi.mocks.sinon

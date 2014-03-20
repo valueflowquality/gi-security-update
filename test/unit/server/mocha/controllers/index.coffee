@@ -35,7 +35,7 @@ module.exports = () ->
         './user': sinon.stub().returnsArg 0
         './activity': sinon.stub().returnsArg 0
         './file': sinon.stub().returnsArg 0
-        'gint-util':
+        'gi-util':
           common:
             crudControllerFactory: crudConFac
 

@@ -1,5 +1,5 @@
 _ = require 'underscore'
-gint = require 'gint-util'
+gi = require 'gi-util'
 
 module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
@@ -45,22 +45,22 @@ module.exports = (model, crudControllerFactory) ->
           res.json 200
 
   stripPasswords = (res) ->
-    if _.isArray res.gintResult
-      _.each res.gintResult, (r) ->
+    if _.isArray res.giResult
+      _.each res.giResult, (r) ->
         r.obj.password = null
         delete r.obj.password
-      res.json res.gintResultCode, res.gintResult
+      res.json res.giResultCode, res.giResult
     else
-      res.gintResult.password = null
-      delete res.gintResult.password
-      res.json 200, res.gintResult
+      res.giResult.password = null
+      delete res.giResult.password
+      res.json 200, res.giResult
 
   index = (req, res) ->
     crud.index req, res, () ->
-      _.each res.gintResult, (u) ->
+      _.each res.giResult, (u) ->
         u.password = null
         delete u.password
-      res.json 200, res.gintResult
+      res.json 200, res.giResult
 
   findById = (req, res) ->
     crud.show req, res, () ->
@@ -75,7 +75,7 @@ module.exports = (model, crudControllerFactory) ->
       stripPasswords res
      
 
-  exports = gint.common.extend {}, crud
+  exports = gi.common.extend {}, crud
   exports.index = index
   exports.show = findById
   exports.create = create

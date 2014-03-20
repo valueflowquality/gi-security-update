@@ -1,4 +1,4 @@
-Feature: gint-security.authentication
+Feature: gi-security.authentication
   Scenario: Public Exports publicRead(req, res, next)
     Given the authentication module is required
     When it is initialized with an express app

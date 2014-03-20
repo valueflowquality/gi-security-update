@@ -14,7 +14,7 @@ module.exports = ->
 
       stubs =
         './routes': sinon.stub().returns { configure : -> }
-        'gint-util': sinon.stub().returns {common: {extend: ->}}
+        'gi-util': sinon.stub().returns {common: {extend: ->}}
 
       module = proxyquire dir, stubs
 

@@ -19,7 +19,7 @@ worldDefinition = () ->
   # .merge
   #   username: process.env.SAUCE_USERNAME
   #   accessKey: process.env.SAUCE_ACCESS_KEY
-  #   name: 'gint-security protractor test'
+  #   name: 'gi-security protractor test'
   #   browserName: 'Chrome'
   #   platform: 'Windows 7'
   #   'record-video': true

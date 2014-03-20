@@ -47,7 +47,7 @@ module.exports = () ->
 
   @Given /^a request to a known host$/, (next) ->
     @req =
-      host: 'test.gint-security.com'
+      host: 'test.gi-security.com'
     next()
 
   @Given /^it should call (.*)$/, (calledMethod, next) ->

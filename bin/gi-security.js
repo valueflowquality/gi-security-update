@@ -1,4 +1,3 @@
-
 angular.module('gi.security', ['ngResource', 'gi.util', 'gi.ui']);
 
 /*1369044063,178534957,JIT Construction: v819514,en_US*/

@@ -4,15 +4,15 @@
   "main": "./bin/gi-security.js",
   "devDependencies": {
     "angular-mocks": "1.2.14",
-    "jquery": "1.10.2"
+    "jquery": "~2.0.3"
   },
   "dependencies": {
     "angular": "1.2.14",
     "angular-resource": "1.2.14",
     "angular-route": "1.2.14",
     "angular-touch": "1.2.14",
-    "gint-util": "git@github.com:Gintellect/gint-util.git#v0.3.0",
-    "gint-ui": "git@github.com:Gintellect/gint-ui.git#dataTable2",
+    "gi-util": "~0.3.0",
+    "gi-ui": "~0.1.1",
     "underscore": "~1.5.2"
   },
   "homepage": "https://github.com/GoIncremental/gi-security",
