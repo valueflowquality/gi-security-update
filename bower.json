@@ -11,7 +11,7 @@
     "angular-resource": "1.2.14",
     "angular-route": "1.2.14",
     "angular-touch": "1.2.14",
-    "gi-util": "~0.3.2",
+    "gi-util": "~0.3.5",
     "gi-ui": "~0.1.1",
     "underscore": "~1.5.2"
   },
