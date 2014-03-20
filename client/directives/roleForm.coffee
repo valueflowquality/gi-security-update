@@ -1,4 +1,4 @@
-angular.module('gint.security').directive 'roleForm', ->
+angular.module('gi.security').directive 'roleForm', ->
   restrict: 'E'
   templateUrl: '/views/gi-roleForm.html'
   scope:

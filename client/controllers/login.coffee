@@ -1,4 +1,4 @@
-angular.module('gint.security').controller 'loginController'
+angular.module('gi.security').controller 'loginController'
 , ['$scope', '$http', '$filter'
 , 'Auth', 'Facebook', 'Setting'
 , ( $scope, $http, $filter

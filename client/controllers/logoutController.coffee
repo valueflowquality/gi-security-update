@@ -1,4 +1,4 @@
-angular.module('gint.security').controller 'logoutController'
+angular.module('gi.security').controller 'logoutController'
 , [ 'Auth', (Auth) ->
   Auth.logout()
 ]

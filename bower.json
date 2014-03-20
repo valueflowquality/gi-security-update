@@ -1,7 +1,7 @@
 {
-  "name": "gint-security",
-  "version": "0.2.1",
-  "main": "./bin/gint-security.js",
+  "name": "gi-security",
+  "version": "0.2.2",
+  "main": "./bin/gi-security.js",
   "devDependencies": {
     "angular-mocks": "1.2.14",
     "jquery": "1.10.2"
@@ -14,5 +14,18 @@
     "gint-util": "git@github.com:Gintellect/gint-util.git#v0.3.0",
     "gint-ui": "git@github.com:Gintellect/gint-ui.git#dataTable2",
     "underscore": "~1.5.2"
-  }
+  },
+  "homepage": "https://github.com/GoIncremental/gi-security",
+  "authors": [
+    "David Bochenski <David@GoIncremental.com>"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "bower_modules",
+    "test",
+    "tests"
+  ]
 }

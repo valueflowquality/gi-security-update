@@ -1,4 +1,4 @@
-angular.module('gint.security').factory 'Setting'
+angular.module('gi.security').factory 'Setting'
 , ['giCrud'
 , (Crud) ->
 

@@ -1,4 +1,4 @@
-angular.module('gint.security').config ['$httpProvider','AuthProvider'
+angular.module('gi.security').config ['$httpProvider','AuthProvider'
 , ($httpProvider, AuthProvider) ->
   
   $httpProvider.interceptors.push ['$rootScope', '$q'

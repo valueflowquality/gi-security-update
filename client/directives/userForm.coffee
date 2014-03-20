@@ -1,4 +1,4 @@
-angular.module('gint.security').directive 'userForm'
+angular.module('gi.security').directive 'userForm'
 , ['Role'
 , (Role) ->
   restrict: 'E'

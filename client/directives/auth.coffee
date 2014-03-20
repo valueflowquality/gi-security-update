@@ -1,4 +1,4 @@
-angular.module('gint.security').directive 'auth'
+angular.module('gi.security').directive 'auth'
 , ['$location', '$rootScope'
 , ($location, $rootScope) ->
   link = (scope, elem, attrs) ->

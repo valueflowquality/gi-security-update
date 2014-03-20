@@ -1,4 +1,4 @@
-angular.module('gint.security').factory 'Role'
+angular.module('gi.security').factory 'Role'
 , ['$resource', '$filter', '$q'
 , ($resource, $filter, $q) ->
 

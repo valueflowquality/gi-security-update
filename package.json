@@ -1,17 +1,14 @@
 {
   "author": "David Bochenski",
-  "name": "gint-security",
-  "version": "0.2.1",
+  "name": "gi-security",
+  "version": "0.2.2",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gintellect/gint-security.git"
-  },
-  "publishConfig": {
-    "registry": "https://gintellect.registry.nodejitsu.com"
+    "url": "git://github.com/goincremental/gi-security.git"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -19,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gint-util": "git+ssh://git@github.com:Gintellect/gint-util.git#v0.3.0",
+    "gi-util": "~0.3.0",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
@@ -59,5 +56,17 @@
     "requirejs": "~2.1.11",
     "karma-requirejs": "~0.2.1",
     "karma": "~0.12.1"
-  }
+  },
+  "description": "gi-security -------------",
+  "bugs": {
+    "url": "https://github.com/goincremental/gi-security/issues"
+  },
+  "bin": {
+    "gi-security": "gint-security.js"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "license": "Apache 2.0"
 }

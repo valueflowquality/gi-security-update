@@ -1,4 +1,4 @@
-angular.module('gint.security').factory 'User'
+angular.module('gi.security').factory 'User'
 , ['$resource', '$http', '$q', 'Auth'
 , ($resource, $http, $q, Auth) ->
 

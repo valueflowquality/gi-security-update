@@ -1,1 +1,1 @@
-angular.module 'gint.security', ['ngResource', 'gint.util', 'gint.ui']
+angular.module 'gi.security', ['ngResource', 'gi.util', 'gi.ui']

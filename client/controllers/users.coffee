@@ -1,4 +1,4 @@
-angular.module('gint.security').controller 'usersController'
+angular.module('gi.security').controller 'usersController'
 , ['$scope', '$location', 'User', 'Auth'
 , ($scope, $location, User, Auth) ->
 

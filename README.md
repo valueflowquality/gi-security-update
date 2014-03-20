@@ -1,7 +1,7 @@
-gint-security
+gi-security
 -------------
 
-[![Build Status](https://drone.io/github.com/Gintellect/gint-security/status.png)](https://drone.io/github.com/Gintellect/gint-security/latest)
+[![Build Status](https://drone.io/github.com/GoIncremental/gi-security/status.png)](https://drone.io/github.com/GoIncremental/gi-security/latest)
 
 This module provides a thin wrapper around passport-js, and client side user and role management.
 

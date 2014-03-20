@@ -72,4 +72,4 @@ require
     'services/permission'
     'services/resource'
   ], () ->
-    console.log 'gint-security loaded'
+    console.log 'gi-security loaded'

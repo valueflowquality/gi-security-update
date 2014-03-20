@@ -1,4 +1,4 @@
-angular.module('gint.security').factory 'Facebook'
+angular.module('gi.security').factory 'Facebook'
 , ['$rootScope', '$http', '$q'
 , ($rootScope, $http, $q) ->
   _appId = null

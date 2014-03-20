@@ -61,7 +61,7 @@ module.exports = (grunt) ->
         files:
           './temp/client/js/views.js': './client/views/*.html'
         options:
-          module: 'gint.security'
+          module: 'gi.security'
           trim: './client'
     copy:
       dev:
@@ -92,7 +92,7 @@ module.exports = (grunt) ->
 
             return contents
           optimize: 'none'
-          out: 'bin/gint-security.js'
+          out: 'bin/gi-security.js'
           preserveLicenseComments: false
           skipModuleInsertion: true
           uglify:
@@ -149,7 +149,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-requirejs'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-copy'
-  grunt.loadNpmTasks 'grunt-gint'
   grunt.loadNpmTasks 'grunt-karma'
   grunt.loadNpmTasks 'grunt-mocha-test'
   grunt.loadNpmTasks 'grunt-cucumber'

@@ -1,4 +1,4 @@
-angular.module('gint.security').config ['$routeProvider', '$locationProvider'
+angular.module('gi.security').config ['$routeProvider', '$locationProvider'
 , ($routeProvider, $locationProvider) ->
   $routeProvider
   .when '/login',
