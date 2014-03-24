@@ -63,9 +63,6 @@
   "bugs": {
     "url": "https://github.com/goincremental/gi-security/issues"
   },
-  "bin": {
-    "gi-security": "gi-security.js"
-  },
   "directories": {
     "example": "example",
     "test": "test"
