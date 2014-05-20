@@ -60,11 +60,33 @@ module.exports = (app) ->
           exports._getSystemStrategies req, (err, strategies) ->
             if strategies? and not err
               req.strategies = strategies
-            next()
+            exports._findUser req, res, next
         else
           res.json 404, {message: 'environment not found'}
     else
       res.json 500, {message: 'host not found on request object'}
+
+  addExtraUserInfo = (req, res, next) ->
+    req.user = req.user.toObject()
+    isAdmin req.user, (adminBool) ->
+      req.user.isAdmin = adminBool?
+      isSysAdmin req.user, (sysAdminBool) ->
+        req.user.isSysAdmin = sysAdminBool?
+        next()
+
+  findUser = (req, res, next) ->
+    if req.isAuthenticated()
+      addExtraUserInfo(req, res, next)
+    else
+      exports._hmacAuth req, res, (err, user) =>
+        if user and (not err)
+          addExtraUserInfo(req, res, next)
+        else
+          exports._playAuth req, res, (err, user) ->
+            if user and (not err)
+              addExtraUserInfo(req, res, next)
+            else
+              next()
 
   publicAction = (req, res, next) ->
     exports._systemCheck req, res, next
@@ -116,20 +138,13 @@ module.exports = (app) ->
           next null, user
       )(req, res, next)
 
+
   userAction = (req, res, next) ->
     exports.publicAction req, res, () =>
-      if req.isAuthenticated()
+      if req.user?
         permissionsMiddleware req, res, next
       else
-        exports._hmacAuth req, res, (err, user) =>
-          if user and (not err)
-            permissionsMiddleware req, res, next
-          else
-            exports._playAuth req, res, (err, user) ->
-              if user and (not err)
-                permissionsMiddleware req, res, next
-              else
-                res.json 401, {}
+        res.json 401, {}
 
   adminAction = (req, res, next) ->
     userAction req, res, () ->
@@ -216,5 +231,6 @@ module.exports = (app) ->
     _systemCheck: systemCheck
     _hmacAuth: hmacAuth
     _playAuth: playAuth
+    _findUser: findUser
 
   exports

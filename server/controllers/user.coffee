@@ -5,9 +5,9 @@ module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
   showMe = (req, res) ->
-    model.findById req.user.id, req.systemId, (err, user) ->
+    model.findById req.user._id, req.systemId, (err, user) ->
       if err
-        res.json 404
+        res.json 404, {message: err}
       else
         user.password = null
         delete user.password
@@ -15,11 +15,11 @@ module.exports = (model, crudControllerFactory) ->
   updateMe = (req, res) ->
     #first check that the user we want to update is the user
     #making the request
-    if req.user.id is not req.body._id
+    if req.user._id is not req.body._id
       res.json 401
     else
       req.body.systemId = req.systemId
-      model.update req.user.id, req.body, (err, user) ->
+      model.update req.user._id, req.body, (err, user) ->
         if err
           res.json 404
         else
@@ -28,17 +28,17 @@ module.exports = (model, crudControllerFactory) ->
           res.json 200, user
 
   destroyMe = (req, res) ->
-    model.destroy req.user.id, req.systemId, (err) ->
+    model.destroy req.user._id, req.systemId, (err) ->
       if err
         res.json 404
       else
         res.json 200
 
   generateAPISecretForMe = (req, res) ->
-    if req.user.id is not req.body._id
+    if req.user._id is not req.body._id
       res.json 401
     else
-      model.resetAPISecret req.user.id, req.systemId, (err) ->
+      model.resetAPISecret req.user._id, req.systemId, (err) ->
         if err
           res.json 404
         else

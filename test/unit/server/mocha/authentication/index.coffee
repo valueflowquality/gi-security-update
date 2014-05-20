@@ -150,36 +150,32 @@ module.exports = () ->
               done()
 
           describe 'userAction: Function(req, res, next) -> void', ->
-            req =
-              isAuthenticated = () ->
-                false
+            req = {}
+            res =
+              json: ->
             beforeEach (done) ->
               sinon.stub authentication, 'publicAction'
-              sinon.stub authentication, '_hmacAuth'
-              sinon.stub authentication, '_playAuth'
               done()
             
             afterEach (done) ->
               authentication.publicAction.restore()
-              authentication._hmacAuth.restore()
-              authentication._playAuth.restore()
               done()
 
             it 'passes args through publicAction', (done) ->
-              req.isAuthenticated = () ->
-                true
+              req.user = {}
+              res =
+                json: sinon.spy()
               authentication.publicAction.callsArg 2
-              authentication.userAction req, {c : 'd'}
+              authentication.userAction req, {a: 'b'}, {c : 'd'}
               
               expect(authentication.publicAction.calledWith(
-                req, {c : 'd'}
+                req, {a: 'b'}
               )).to.be.true
               done()
 
-            it 'passes to permissionsMiddleware if req is authenticated'
+            it 'passes to permissionsMiddleware if req has a user'
             , (done) ->
-              req.isAuthenticated = () ->
-                true
+              req.user = {}
 
               authentication.publicAction.callsArg 2
               authentication.userAction req, {a: 'b'}, {c: 'd'}
@@ -187,99 +183,16 @@ module.exports = () ->
                 req, {a: 'b'}, {c: 'd'})).to.be.true
               done()
 
-            it 'attempts hmac Authentication if req is not authenticated'
-            , (done) ->
-              req.isAuthenticated = () ->
-                false
 
-              authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, null, {user: 'object'}
-              authentication.userAction req, {a: 'b'}, {c: 'd'}
-              expect(authentication._hmacAuth.calledWith(
-                req, {a: 'b'}
-              )).to.be.true
-              done()
-
-            it 'calls PermissionsMiddleware if hmacAuthentication returns' +
-            ' a user and no error', (done) ->
-              req.isAuthenticated = () ->
-                false
-
-              authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, null, {user: 'object'}
-              authentication.userAction req, {a: 'b'}, {c: 'd'}
-              expect(permissionsMiddlewareSpy.calledWithExactly(
-                req, {a: 'b'}, {c: 'd'})).to.be.true
-              done()
-
-            it 'attempts play Authentication if hmacAuthenticaiton returns' +
+            it 'calls res.json if req has no user' +
             ' an error', (done) ->
-              req.isAuthenticated = () ->
-                false
-
-              authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, "an error"
-              , {user: 'object'}
-              authentication.userAction req, {a: 'b'}, {c: 'd'}
-              expect(authentication._playAuth.calledWith(
-                req, {a: 'b'}
-              )).to.be.true
-              done()
-
-            it 'attempts play Authentication if hmacAuthenticaiton returns' +
-            ' no user', (done) ->
-              req.isAuthenticated = () ->
-                false
-
-              authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, null, null
-              authentication.userAction req, {a: 'b'}, {c: 'd'}
-              expect(authentication._playAuth.calledWith(
-                req, {a: 'b'}
-              )).to.be.true
-              done()
-
-            it 'calls PermissionsMiddleware if playAuthentication returns' +
-            ' a user and no error', (done) ->
-              req.isAuthenticated = () ->
-                false
-
-              authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, "an error", null
-              authentication._playAuth.callsArgWith 2, null, {user: 'object'}
-              authentication.userAction req, {a: 'b'}, {c: 'd'}
-              expect(permissionsMiddlewareSpy.calledWithExactly(
-                req, {a: 'b'}, {c: 'd'})).to.be.true
-              done()
-
-            it 'calls res.json if playAuthentication returns' +
-            ' an error', (done) ->
-              req.isAuthenticated = () ->
-                false
+              req.user = null
               
               res =
                 json: sinon.spy()
 
               authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, "an error", null
-              authentication._playAuth.callsArgWith 2, "another error"
               , {user: 'object'}
-              authentication.userAction req, res, {c: 'd'}
-              expect(permissionsMiddlewareSpy.called).to.be.false
-              expect(res.json.calledWith 401, {}).to.be.true
-              done()
-
-            it 'calls res.json if playAuthentication returns' +
-            ' no user', (done) ->
-              req.isAuthenticated = () ->
-                false
-              
-              res =
-                json: sinon.spy()
-
-              authentication.publicAction.callsArg 2
-              authentication._hmacAuth.callsArgWith 2, "an error", null
-              authentication._playAuth.callsArgWith 2, null, null
               authentication.userAction req, res, {c: 'd'}
               expect(permissionsMiddlewareSpy.called).to.be.false
               expect(res.json.calledWith 401, {}).to.be.true
@@ -421,6 +334,8 @@ module.exports = () ->
             beforeEach (done) ->
               req =
                 host: 'test.gi-security.com'
+                isAuthenticated: () ->
+                  true
               
               res =
                 json: sinon.spy()
@@ -431,11 +346,13 @@ module.exports = () ->
 
               sinon.stub app.models.environments, 'forHost'
               sinon.stub authentication, '_getSystemStrategies'
+              sinon.stub authentication, '_findUser'
               done()
 
             afterEach ->
               app.models.environments.forHost.restore()
               authentication._getSystemStrategies.restore()
+              authentication._findUser.restore()
 
             it 'returns 500 error if no request', (done) ->
               authentication._systemCheck null, res, null
@@ -500,6 +417,7 @@ module.exports = () ->
             it 'does not set req.strategies if _getSystemStrategies errors'
             , (done) ->
               app.models.environments.forHost.callsArgWith 1, null, environment
+              authentication._findUser.callsArg 2
               authentication._getSystemStrategies.callsArgWith 1
               , "an error", {some: 'thing'}
               authentication._systemCheck req, res, ->
@@ -510,6 +428,7 @@ module.exports = () ->
             , (done) ->
               app.models.environments.forHost.callsArgWith 1, null, environment
               authentication._getSystemStrategies.callsArgWith 1
+              authentication._findUser.callsArg 2
               authentication._systemCheck req, res, ->
                 expect(req.strategies).to.not.exist
                 done()
@@ -518,6 +437,7 @@ module.exports = () ->
               app.models.environments.forHost.callsArgWith 1, null, environment
               authentication._getSystemStrategies.callsArgWith 1
               , null, 'something'
+              authentication._findUser.callsArg 2
               authentication._systemCheck req, res, ->
                 expect(req.strategies).to.equal 'something'
                 done()

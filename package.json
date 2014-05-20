@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gi-util": "~0.3.5",
+    "gi-util": "~0.3.7",
     "bcrypt": "~0.7.5",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",

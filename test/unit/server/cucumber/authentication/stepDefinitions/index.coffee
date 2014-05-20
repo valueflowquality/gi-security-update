@@ -37,12 +37,16 @@ module.exports = () ->
     next()
 
   @Given /^an anonymous request to (.*) (.*)$/, (method, path, next) ->
+    @req.isAuthenticated = () ->
+      false
     @req.route =
       path: path
       method: method.toLowerCase()
     next()
 
   @Given /^an anonymous request$/, (next) ->
+    @req.isAuthenticated = () ->
+      false
     next()
 
   @Given /^a request to a known host$/, (next) ->
