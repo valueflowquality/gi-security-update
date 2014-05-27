@@ -67,7 +67,8 @@ module.exports = (app) ->
       res.json 500, {message: 'host not found on request object'}
 
   addExtraUserInfo = (req, res, next) ->
-    req.user = req.user.toObject()
+    if req.user.toObject?
+      req.user = req.user.toObject()
     isAdmin req.user, (adminBool) ->
       req.user.isAdmin = adminBool?
       isSysAdmin req.user, (sysAdminBool) ->
