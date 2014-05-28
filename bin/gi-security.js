@@ -1331,7 +1331,6 @@ angular.module('gi.security').config([
           responseError: function(rejection) {
             var deferred;
             if ((rejection.config.url !== '/api/login') && (rejection.config.url !== '/api/user') && (rejection.status === 401)) {
-              console.log('a ha!');
               deferred = $q.defer();
               AuthProvider.pushToBuffer(rejection.config, deferred);
               $rootScope.$broadcast('event:auth-loginRequired');

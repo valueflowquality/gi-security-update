@@ -11,7 +11,7 @@ module.exports = (users) ->
         else if not user
           done null, false, {message: 'User not found'}
         else
-          user.comparePassword password, (err, isValid) ->
+          users.comparePassword user, password, (err, isValid) ->
             if err
               done err
             else if not isValid

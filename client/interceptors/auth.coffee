@@ -11,7 +11,6 @@ angular.module('gi.security').config ['$httpProvider','AuthProvider'
       ) and (
         rejection.status is 401
       )
-        console.log 'a ha!'
         deferred = $q.defer()
         AuthProvider.pushToBuffer rejection.config, deferred
         $rootScope.$broadcast 'event:auth-loginRequired'

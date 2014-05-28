@@ -37,18 +37,6 @@ module.exports = (dal) ->
         @save callback
 
  
-  schema.methods.comparePassword = (candidate, callback) ->
-    if candidate?
-      if @password?
-        bcrypt.compare candidate, @password, (err, isMatch) ->
-          if err
-            return callback(err)
-          callback null, isMatch
-      else
-        callback 'password authentication is not enabled for this user', false
-    else
-      callback 'password does not meet minimum requirements', false
-
   schema.pre 'save', (next) ->
     user = @
 
@@ -66,6 +54,21 @@ module.exports = (dal) ->
 
   model = dal.modelFactory modelDefinition
   crud = dal.crudFactory model
+
+  comparePassword = (user, candidate, callback) ->
+    if model.comparePassword?
+      model.comparePassword(user, candidate, callback) 
+    else
+      if candidate?
+        if user.password?
+          bcrypt.compare candidate, user.password, (err, isMatch) ->
+            if err
+              return callback(err)
+            callback null, isMatch
+        else
+          callback 'password authentication is not enabled for this user', false
+      else
+        callback 'password does not meet minimum requirements', false
 
   update = (id, json, callback) ->
     crud.findById id, json.systemId, (err, user) ->
@@ -110,4 +113,5 @@ module.exports = (dal) ->
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId
   exports.resetAPISecret = resetAPISecret
+  exports.comparePassword = comparePassword
   exports
