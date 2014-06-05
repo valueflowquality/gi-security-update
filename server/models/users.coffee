@@ -16,6 +16,8 @@ module.exports = (dal) ->
       apiSecret: 'String'
       userIds: [{provider: 'String', providerId: 'String'}]
       roles: [{type: 'ObjectId', ref: 'Role'}]
+    options:
+      strict: false
       
   schema = dal.schemaFactory modelDefinition
   modelDefinition.schema = schema
