@@ -18,7 +18,7 @@ module.exports = (dal) ->
       roles: [{type: 'ObjectId', ref: 'Role'}]
     options:
       strict: false
-      
+
   schema = dal.schemaFactory modelDefinition
   modelDefinition.schema = schema
 
@@ -38,7 +38,7 @@ module.exports = (dal) ->
         @apiSecret = buf.toString 'base64'
         @save callback
 
- 
+
   schema.pre 'save', (next) ->
     user = @
 
@@ -59,7 +59,7 @@ module.exports = (dal) ->
 
   comparePassword = (user, candidate, callback) ->
     if model.comparePassword?
-      model.comparePassword(user, candidate, callback) 
+      model.comparePassword(user, candidate, callback)
     else
       if candidate?
         if user.password?
@@ -110,10 +110,20 @@ module.exports = (dal) ->
       else
         callback 'cannot find user'
 
+  create = (json, callback) ->
+    crud.findOneBy 'email', json.email, json.systemId , (err, user) ->
+      if err and err isnt "Cannot find User"
+        callback err, null
+      else if user?
+        callback 'Username already exists'
+      else
+        crud.create json, callback
+
   exports = gi.common.extend {}, crud
   exports.update = update
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId
   exports.resetAPISecret = resetAPISecret
   exports.comparePassword = comparePassword
+  exports.create = create
   exports
