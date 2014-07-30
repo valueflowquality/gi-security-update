@@ -2,7 +2,8 @@ crypto = require 'crypto'
 bcrypt = require 'bcrypt'
 gi = require 'gi-util'
 
-module.exports = (dal) ->
+module.exports = (dal, options) ->
+
   SALT_WORK_FACTOR = 10
 
   modelDefinition =
@@ -56,6 +57,20 @@ module.exports = (dal) ->
 
   model = dal.modelFactory modelDefinition
   crud = dal.crudFactory model
+
+  sendResetInstructions = (resetObj, cb) ->
+    if options.sendResetInstructions?
+      options.sendResetInstructions resetObj, cb
+    else
+      cb "sendResetInstructions function not defined"
+
+  generateToken = (callback) ->
+    crypto.randomBytes 18, (err, buf) =>
+      if err
+        callback err
+      else
+        token = buf.toString 'base64'
+        callback null, token
 
   comparePassword = (user, candidate, callback) ->
     if model.comparePassword?
@@ -126,4 +141,6 @@ module.exports = (dal) ->
   exports.resetAPISecret = resetAPISecret
   exports.comparePassword = comparePassword
   exports.create = create
+  exports.generateToken = generateToken
+  exports.sendResetInstructions = sendResetInstructions
   exports

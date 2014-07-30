@@ -8,12 +8,12 @@ activities = require './activities'
 categories = require './categories'
 permissions = require './permissions'
 
-module.exports = (dal) ->
+module.exports = (dal, options) ->
   environmentsModel = environments dal
   systems: systems dal
   environments: environmentsModel
   files: files dal
-  users: users dal
+  users: users dal, options
   roles: roles dal
   settings: settings dal, environmentsModel
   activities: activities dal

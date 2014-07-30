@@ -49,10 +49,14 @@ module.exports = (model, crudControllerFactory) ->
       _.each res.giResult, (r) ->
         r.obj.password = null
         delete r.obj.password
+        r.obj.confirm = null
+        delete r.obj.confirm
       res.json res.giResultCode, res.giResult
     else
       res.giResult.password = null
       delete res.giResult.password
+      res.giResult.confirm = null
+      delete res.giResult.confirm
       res.json 200, res.giResult
 
   index = (req, res) ->
@@ -73,7 +77,72 @@ module.exports = (model, crudControllerFactory) ->
   update = (req, res) ->
     crud.update req, res, () ->
       stripPasswords res
-     
+
+  checkResetToken = (req, res) ->
+    if req.body.token?
+      model.findOneBy 'token', req.body.token, req.systemId, (err, user) ->
+        if err
+          res.json 500, {message: err}
+        else if not user
+          res.json 404, {message: "invalid token"}
+        else
+          res.json 200, {message: "token ok"}
+    else
+      res.json 200, {isValid: false}
+
+  resetPassword = (req, res) ->
+    if req.body.token?
+      model.findOneBy 'token', req.body.token, req.systemId, (err, u) ->
+        if err
+          res.json 500, {message: err}
+        else if not u
+          res.json 404, {message: "invalid token"}
+        else
+          user = u.toObject()
+          updateObj =
+            password: req.body.password
+            systemId: req.systemId
+            $unset:
+              token: ""
+          model.update user._id, updateObj, (err, obj) ->
+            if err
+              res.json 500, {message: "error saving token to user " + err}
+            else
+              res.json 200, {message: "password reset successfully"}
+    else
+      #look for a user with the specified e-mail
+      #generate a random token
+      model.findOneBy 'email', req.body.email, req.systemId, (err, user) ->
+        if err
+          res.json 500, {message: err}
+        else if not user?
+          res.json 404, {message: "Could not find account for that e-mail"}
+        else
+          model.generateToken (err, token) ->
+            if err
+              res.json 500, {message: err}
+            else if not token
+              res.json 500, {message: "could not generate reset token"}
+            else
+              updateObj =
+                token: token
+                systemId: req.systemId
+
+              model.update user._id, updateObj, (err, obj) ->
+                if err
+                  res.json 500, {message: "error saving token to user " + err}
+                else
+                  resetObj =
+                    host: req.protocol + "://" + req.host
+                    email: user.email
+                    token: token
+
+                  model.sendResetInstructions resetObj, (err) ->
+                    if err
+                      res.json 500, {message: err}
+                    else
+                      res.json 200, {message: "password reset instructions sent"}
+
 
   exports = gi.common.extend {}, crud
   exports.index = index
@@ -84,4 +153,6 @@ module.exports = (model, crudControllerFactory) ->
   exports.updateMe = updateMe
   exports.destroyMe = destroyMe
   exports.generateAPISecretForMe = generateAPISecretForMe
+  exports.resetPassword = resetPassword
+  exports.checkResetToken = checkResetToken
   exports
