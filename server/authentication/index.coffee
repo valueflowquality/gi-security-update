@@ -93,14 +93,30 @@ module.exports = (app) ->
     exports._systemCheck req, res, next
 
   publicReadAction = (req, res, next) ->
-    if req.route.method is 'get'
+
       systemCheck req, res, () ->
-        if not req.query?
-          req.query = {}
-        req.query.acl = 'public-read'
-        next()
-    else
-      res.json 401, {msg: 'not authorized'}
+        if req.user?
+          isAdmin req.user, (admin) ->
+            if admin?
+              next()
+            else
+              if req.route.method is 'get'
+                #if we're not an admin, enforce public-read acl
+                if not req.query?
+                  req.query = {}
+                req.query.acl = 'public-read'
+                next()
+              else
+                res.json 401, {msg: 'not authorized'}
+        else
+          if req.route.method is 'get'
+            #if we're not an admin, enforce public-read acl
+            if not req.query?
+              req.query = {}
+            req.query.acl = 'public-read'
+            next()
+          else
+            res.json 401, {msg: 'not authorized'}
 
   publicRegisterAction = (req, res, next) ->
     systemCheck req, res, () ->
