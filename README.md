@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v0.3.9
+- Fixes issue where password could be accidentally reset on update / save
+
 v0.3.8
 - Admin and sysadmin users can now read all settings (previously the only settings that would return from the api were those with 'public-read' acl)
 
