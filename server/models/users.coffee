@@ -101,6 +101,7 @@ module.exports = (dal, options) ->
                 json.password = savedUser.password
               crud.update id, json, callback
           else
+            delete json.password
             crud.update id, json, callback
         else
           callback 'user not found', null
