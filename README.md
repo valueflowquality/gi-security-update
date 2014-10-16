@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v0.3.10
+- The email is returned in the json after a sucessful password reset (enables clients to auto login)
+
 v0.3.9
 - Fixes issue where password could be accidentally reset on update / save
 
