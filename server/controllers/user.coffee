@@ -108,7 +108,7 @@ module.exports = (model, crudControllerFactory) ->
             if err
               res.json 500, {message: "error saving token to user " + err}
             else
-              res.json 200, {message: "password reset successfully"}
+              res.json 200, {message: "password reset successfully", email: user.email}
     else
       #look for a user with the specified e-mail
       #generate a random token
