@@ -11,7 +11,7 @@ angular.module('gi.security').factory 'Permission'
       { name: 'Destroy', value: 16 }
     ]
 
-  exports = Crud.factory 'permissions', true
+  exports = Crud.factory 'permissions'
   exports.restrictions = restrictions
   exports
 ]

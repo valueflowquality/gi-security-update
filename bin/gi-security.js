@@ -188,111 +188,9 @@ angular.module('gi.security').config([
 ]);
 
 angular.module('gi.security').factory('User', [
-  '$resource', '$http', '$q', 'Auth', function($resource, $http, $q, Auth) {
-    var all, destroy, factory, get, getByIdSync, items, itemsById, login, methods, register, resource, save, updateMasterList;
-    methods = {
-      query: {
-        method: 'GET',
-        params: {},
-        isArray: true
-      },
-      save: {
-        method: 'PUT',
-        params: {},
-        isArray: false
-      },
-      create: {
-        method: 'POST',
-        params: {},
-        isArray: false
-      }
-    };
-    resource = $resource('/api/users/:id', {}, methods);
-    items = [];
-    itemsById = {};
-    updateMasterList = function(newItem) {
-      var replaced;
-      replaced = false;
-      angular.forEach(items, function(item, index) {
-        if (!replaced) {
-          if (newItem._id === item._id) {
-            replaced = true;
-            return items[index] = newItem;
-          }
-        }
-      });
-      if (!replaced) {
-        items.push(newItem);
-      }
-      itemsById[newItem._id] = newItem;
-    };
-    all = function(callback) {
-      if (items.length === 0) {
-        return resource.query(function(results) {
-          items = results;
-          angular.forEach(results, function(item, index) {
-            itemsById[item._id] = item;
-          });
-          if (callback) {
-            return callback(items);
-          }
-        });
-      } else {
-        if (callback) {
-          return callback(items);
-        }
-      }
-    };
-    save = function(item, success) {
-      if (item._id) {
-        return resource.save({
-          id: item._id
-        }, item, function(result) {
-          updateMasterList(result);
-          if (success) {
-            return success();
-          }
-        });
-      } else {
-        return resource.create({}, item, function(result) {
-          updateMasterList(result);
-          if (success) {
-            return success();
-          }
-        });
-      }
-    };
-    getByIdSync = function(id) {
-      return itemsById[id];
-    };
-    get = function(params, callback) {
-      return resource.get(params, function(item) {
-        updateMasterList(item);
-        if (callback) {
-          return callback(item);
-        }
-      });
-    };
-    destroy = function(id, callback) {
-      return resource["delete"]({
-        id: id
-      }, function() {
-        var removed;
-        removed = false;
-        delete itemsById[id];
-        angular.forEach(items, function(item, index) {
-          if (!removed) {
-            if (item._id === id) {
-              removed = true;
-              return items.splice(index, 1);
-            }
-          }
-        });
-        if (callback) {
-          return callback();
-        }
-      });
-    };
+  '$q', '$http', 'Auth', 'giCrud', function($q, $http, Auth, Crud) {
+    var crud, login, register;
+    crud = Crud.factory('users');
     register = function(item) {
       return $http.post('/api/user/register', item);
     };
@@ -308,24 +206,9 @@ angular.module('gi.security').factory('User', [
       });
       return deferred.promise;
     };
-    factory = function() {
-      return {
-        firstName: '',
-        lastName: '',
-        roles: []
-      };
-    };
-    return {
-      query: all,
-      all: all,
-      get: get,
-      getSync: getByIdSync,
-      create: factory,
-      destroy: destroy,
-      save: save,
-      register: register,
-      login: login
-    };
+    crud.register = register;
+    crud.login = login;
+    return crud;
   }
 ]);
 
@@ -446,23 +329,7 @@ angular.module('gi.security').factory('Facebook', [
 
 angular.module('gi.security').factory('Setting', [
   'giCrud', function(Crud) {
-    var create, crudService;
-    crudService = Crud.factory('settings', true);
-    create = function() {
-      return {
-        key: '',
-        value: ''
-      };
-    };
-    return {
-      save: crudService.save,
-      get: crudService.get,
-      destroy: crudService.destroy,
-      getCached: crudService.getCached,
-      query: crudService.all,
-      all: crudService.all,
-      create: create
-    };
+    return Crud.factory('settings');
   }
 ]);
 
@@ -597,7 +464,7 @@ angular.module('gi.security').factory('Permission', [
         value: 16
       }
     ];
-    exports = Crud.factory('permissions', true);
+    exports = Crud.factory('permissions');
     exports.restrictions = restrictions;
     return exports;
   }
@@ -652,112 +519,13 @@ angular.module('gi.security').controller('usersController', [
 ]);
 
 angular.module('gi.security').factory('Role', [
-  '$resource', '$filter', '$q', function($resource, $filter, $q) {
-    var all, destroy, factory, get, isInRole, methods, resource, roles, save, updateMasterList;
-    methods = {
-      query: {
-        method: 'GET',
-        params: {},
-        isArray: true
-      },
-      save: {
-        method: 'PUT',
-        params: {},
-        isArray: false
-      },
-      create: {
-        method: 'POST',
-        params: {},
-        isArray: false
-      }
-    };
-    resource = $resource('/api/roles/:id', {}, methods);
-    roles = [];
-    updateMasterList = function(role) {
-      var replaced;
-      replaced = false;
-      angular.forEach(roles, function(item, index) {
-        if (!replaced) {
-          if (item._id === role._id) {
-            replaced = true;
-            return roles[index] = role;
-          }
-        }
-      });
-      if (!replaced) {
-        return roles.push(role);
-      }
-    };
-    all = function(callback) {
-      if (roles.length === 0) {
-        return resource.query(function(results) {
-          roles = results;
-          if (callback) {
-            return callback(roles);
-          }
-        });
-      } else {
-        if (callback) {
-          return callback(roles);
-        }
-      }
-    };
-    save = function(role, success) {
-      if (role._id) {
-        console.log('updating role');
-        return resource.save({}, role, function(result) {
-          updateMasterList(result);
-          if (success) {
-            return success();
-          }
-        });
-      } else {
-        console.log('creating role');
-        return resource.create({}, role, function(result) {
-          console.log('got a result ' + result);
-          updateMasterList(result);
-          if (success) {
-            return success();
-          }
-        });
-      }
-    };
-    get = function(params, callback) {
-      return resource.get(params, function(role) {
-        updateMasterList(role);
-        if (callback) {
-          return callback(role);
-        }
-      });
-    };
-    destroy = function(id, callback) {
-      return resource["delete"]({
-        id: id
-      }, function() {
-        var removed;
-        removed = false;
-        angular.forEach(roles, function(item, index) {
-          if (!removed) {
-            if (item._id === id) {
-              removed = true;
-              return roles.splice(index, 1);
-            }
-          }
-        });
-        if (callback) {
-          return callback();
-        }
-      });
-    };
-    factory = function() {
-      return {
-        name: ''
-      };
-    };
+  '$filter', '$q', 'giCrud', function($filter, $q, Crud) {
+    var crud, isInRole;
+    crud = Crud.factory('roles');
     isInRole = function(name, roleIds) {
       var deferred;
       deferred = $q.defer();
-      all(function(roles) {
+      crud.all().then(function(roles) {
         var inRole, toCheck;
         inRole = false;
         toCheck = $filter('filter')(roles, function(role) {
@@ -774,15 +542,8 @@ angular.module('gi.security').factory('Role', [
       });
       return deferred.promise;
     };
-    return {
-      query: all,
-      all: all,
-      get: get,
-      create: factory,
-      destroy: destroy,
-      save: save,
-      isInRole: isInRole
-    };
+    crud.isInRole = isInRole;
+    return crud;
   }
 ]);
 
@@ -1347,7 +1108,7 @@ angular.module('gi.security').config([
 
 angular.module('gi.security').factory('Resource', [
   '$resource', 'giCrud', function($resource, Crud) {
-    return Crud.factory('resources', true);
+    return Crud.factory('resources');
   }
 ]);
 

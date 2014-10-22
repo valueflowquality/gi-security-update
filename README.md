@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.0.0
+- BREAKING CHANGES  The Angular User and Role services have been switched to use promises and this release has been upgraded to be compatible with the 1.x series of gi-util
+
 v0.3.10
 - The email is returned in the json after a sucessful password reset (enables clients to auto login)
 
