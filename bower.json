@@ -1,6 +1,6 @@
 {
   "name": "gi-security",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./bin/gi-security.js",
   "devDependencies": {
     "angular-mocks": "1.2.14",
@@ -12,7 +12,7 @@
     "angular-route": "1.2.14",
     "angular-touch": "1.2.14",
     "gi-util": "~1.0.0",
-    "gi-ui": "~0.2.2",
+    "gi-ui": "~0.3.0",
     "underscore": "~1.5.2"
   },
   "homepage": "https://github.com/GoIncremental/gi-security",
