@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.0.2
+- Added updateQuery method to users model to allow flexible batch updates
+
 v1.0.1
 - Use latest gi-ui to avoid bower installation dependency conflict
 
