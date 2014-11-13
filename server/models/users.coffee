@@ -135,8 +135,15 @@ module.exports = (dal, options) ->
       else
         crud.create json, callback
 
+  updateQuery = (query, change, callback) ->
+    if not query.systemId?
+      callback 'SystemId not specified'
+    else
+      model.update query, change, {multi: true}, callback
+
   exports = gi.common.extend {}, crud
   exports.update = update
+  exports.updateQuery = updateQuery
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId
   exports.resetAPISecret = resetAPISecret
