@@ -18,6 +18,12 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.0.4
+- Removed deprecated use of User.create() service method in usersController
+
+v1.0.3
+- Updated angular version dependency to 1.2.28
+
 v1.0.2
 - Added updateQuery method to users model to allow flexible batch updates
 

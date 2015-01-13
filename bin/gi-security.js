@@ -472,7 +472,7 @@ angular.module('gi.security').factory('Permission', [
 
 angular.module('gi.security').controller('usersController', [
   '$scope', '$location', 'User', 'Auth', function($scope, $location, User, Auth) {
-    $scope.newUser = User.create();
+    $scope.newUser = {};
     $scope.currentView = 'list';
     $scope.getData = function() {
       return User.query(function(results) {
