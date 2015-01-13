@@ -108,7 +108,10 @@ module.exports = (model, crudControllerFactory) ->
             if err
               res.json 500, {message: "error saving token to user " + err}
             else
-              res.json 200, {message: "password reset successfully", email: user.email}
+              msg =
+                message: "password reset sucesfully"
+                email: user.email
+              res.json 200, msg
     else
       #look for a user with the specified e-mail
       #generate a random token
@@ -141,7 +144,8 @@ module.exports = (model, crudControllerFactory) ->
                     if err
                       res.json 500, {message: err}
                     else
-                      res.json 200, {message: "password reset instructions sent"}
+                      msg = "password reset instructions sent"
+                      res.json 200, {message: msg}
 
 
   exports = gi.common.extend {}, crud
