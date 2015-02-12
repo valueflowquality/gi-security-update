@@ -130,7 +130,7 @@ module.exports = (dal, options) ->
     crud.findOneBy 'email', json.email, json.systemId , (err, user) ->
       if err and err isnt "Cannot find User"
         callback err, null
-      else if user?
+      else if user?.email is json.email
         callback 'Username already exists'
       else
         crud.create json, callback
