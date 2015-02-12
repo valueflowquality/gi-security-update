@@ -12,23 +12,20 @@ module.exports = (model, crudControllerFactory) ->
 
     if email? and password? and systemId?
       model.findOneBy 'email', email, systemId, (err, user) ->
-        if err
-          res.status(500).send(err)
-        else if not user
-          res.status(401).send("User not found")
+        if err or (not user)
+          res.json 200, {valid: false}
         else
           model.comparePassword user, password, (err, isValid) ->
-            if err
-              res.status(500).send(err)
-            else if not isValid
-              res.status(500).send("Invalid password")
+            if err or (not isValid)
+              res.json 200, {valid: false}
             else
               output = user.toJSON()
               delete output._id
               delete output.systemId
               delete output.userIds
               delete output.password
-              res.json output
+              output.valid = true
+              res.json 200, output
     else
       res.status(400).end("Required data not supplied")
 
