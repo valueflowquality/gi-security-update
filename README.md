@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.0.5
+- Fixes an issue where users cannot be created if findByEmail returned {}
+
 v1.0.4
 - Removed deprecated use of User.create() service method in usersController
 
