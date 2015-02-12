@@ -4,6 +4,34 @@ gi = require 'gi-util'
 module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
+  verify = (req, res) ->
+    email = req.body.email
+    password = req.body.password
+    systemId = req.systemId
+    output = {}
+
+    if email? and password? and systemId?
+      model.findOneBy 'email', email, systemId, (err, user) ->
+        if err
+          res.status(500).send(err)
+        else if not user
+          res.status(401).send("User not found")
+        else
+          model.comparePassword user, password, (err, isValid) ->
+            if err
+              res.status(500).send(err)
+            else if not isValid
+              res.status(500).send("Invalid password")
+            else
+              output = user.toJSON()
+              delete output._id
+              delete output.systemId
+              delete output.userIds
+              delete output.password
+              res.json output
+    else
+      res.status(400).end("Required data not supplied")
+
   showMe = (req, res) ->
     model.findById req.user._id, req.systemId, (err, user) ->
       if err
@@ -159,4 +187,5 @@ module.exports = (model, crudControllerFactory) ->
   exports.generateAPISecretForMe = generateAPISecretForMe
   exports.resetPassword = resetPassword
   exports.checkResetToken = checkResetToken
+  exports.verify = verify
   exports
