@@ -1,6 +1,6 @@
 {
   "name": "gi-security",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "./bin/gi-security.js",
   "devDependencies": {
     "angular-mocks": "~1.2.28",

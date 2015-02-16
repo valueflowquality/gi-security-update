@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.0.7
+- Added giRolePicker directive to allow user roles to be easily visualised
+
 v1.0.6
 - Added /api/user/verify POST method which can be used by admins to check credentials
 
