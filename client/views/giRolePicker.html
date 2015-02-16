@@ -1,0 +1,30 @@
+<div class="row">
+  <div id="board">
+    <div id="columns" >
+      <div class="column col-md-6">
+        <div class="columnHeader">
+          <span>Available</span>
+        </div>
+        <ul class="cards card-list" as-sortable
+        ng-model="model.availableItems">
+          <li as-sortable-item class="card"
+          ng-repeat="item in model.availableItems">
+            <div as-sortable-item-handle>{{item.name}}</div>
+          </li>
+        </ul>
+      </div>
+      <div class="column col-md-6">
+        <div class="columnHeader">
+          <span>Selected</span>
+        </div>
+        <ul class="cards card-list" as-sortable="dragControlListeners"
+        ng-model="model.chosenItems">
+          <li as-sortable-item class="card"
+          ng-repeat="item in model.chosenItems">
+            <div as-sortable-item-handle>{{item.name}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

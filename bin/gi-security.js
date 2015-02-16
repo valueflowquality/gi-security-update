@@ -162,6 +162,7 @@ angular.module('gi.security').run(['$templateCache', function ($templateCache) {
 	$templateCache.put('/views/gi-user.html', '<div class="form" role="form"> <div class="form-group"> <label name="userName">Name: {{user.firstName}} {{ user.lastName }}</label> </div> <div class="form-group"> <label name="userId">Id: {{user._id}}</label> </div> <div class="form-group"> <label name="apiSecret">API Secret: {{user.apiSecret}}</label> </div> <div class="form-group"> <button class="btn btn-primary" ng-click="resetApi()">Create API Secret</button> </div> </div>');
 	$templateCache.put('/views/gi-userForm.html', '<div class="well form"> <h4>Profile</h4> <div class="form-group"> <label>First Name:</label> <input type="text" name="name" class="form-control" ng-model="user.firstName" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Surname:</label> <input type="text" name="lastName" class="form-control" ng-model="user.lastName" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Email:</label> <input type="text" name="email" class="form-control" ng-model="user.email" ng-change="checkForChanges()"/> </div> <div class="form-group"> <label>Password:</label> <input type="password" name="password" class="form-control" ng-model="user.password" ng-change="checkForChanges()"/> </div> <h4>Roles</h4> <div class="form-group"> <h4>Assigned Roles</h4> <div class="col-md-12" ng-repeat="role in userRoles"> <label>{{role.name}}</label> <button class="btn btn-danger" ng-click="removeFromRole(role)"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> <div ng-if="notUserRoles.length> 0"> <h4>Available Roles</h4> <select class="form-control" ng-model="selectedRole" ng-options="role.name for role in notUserRoles"> </select> <button ng-click="addToRole(selectedRole)" class="btn btn-primary">Assign</button> </div> </div> <div class="form-group"> <button ng-disabled="!unsavedChanges" class="btn btn-primary" ng-click="save()"> {{submitText}} </button> <button ng-show="showDelete" class="btn btn-danger" ng-click="confirmDelete()"> <span class="glyphicon glyphicon-trash white"></span> </button> </div> </div> <gi-modal visible="showDeleteModal" title="Please Confirm Delete Action"> <div class="body"> <p>Delete a user - are you sure?</p> <p>Please continue only if you are 100% you understand what you\'re deleting. There is no way to retrieve the data after this point.</p> </div> <div class="footer"> <button ng-click="deleteUser()" \ class="btn btn-danger"> Delete It! </button> </div> </gi-modal>');
 	$templateCache.put('/views/gi-userManagement.html', '<div class="container"> <div class="row"> <div class="col-md-2"> <ul class="nav nav-pills nav-stacked"> <li ng-class="{active: currentView==\'list\' }"> <a ng-click="show(\'list\')">All Users</a> </li> <li ng-class="{active: currentView==\'form\' }"> <a ng-click="show(\'form\')">New User</a> </li> </ul> </div> <div class="col-md-10"> <div> <div ng-show="selectedUser"> <div class="col-md-4"> <h4>Users</h4> <ul class="nav nav-pills nav-stacked" ng-repeat="user in users"> <li ng-class="{active: user._id==selectedUser._id}"> <a ng-click="selectUser(user)">{{user.firstName}}</a> </li> </ul> </div> <div ng-show="currentView==\'list\'" class="col-md-8"> <user-form user="selectedUser" title="User Details" submit-text="Save Changes" submit="saveUser(user)" destroy="deleteUser(user)"></user-form> </div> <div ng-show="currentView==\'form\'" class="col-md-8"> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> <div ng-hide="selectedUser"> <div class="col-md-4"> <h4>Users</h4> No Users found for this organisation. You can create one by entering the details on this page. </div> <div class="col-md-4"> <h4>Create New User</h4> <user-form title="New User" user="newUser" submit-text="Create User" submit="saveUser(user)"></user-form> </div> </div> </div> </div> </div> </div>');
+	$templateCache.put('/views/giRolePicker.html', '<div class="row"> <div id="board"> <div id="columns"> <div class="column col-md-6"> <div class="columnHeader"> <span>Available</span> </div> <ul class="cards card-list" as-sortable ng-model="model.availableItems"> <li as-sortable-item class="card" ng-repeat="item in model.availableItems"> <div as-sortable-item-handle>{{item.name}}</div> </li> </ul> </div> <div class="column col-md-6"> <div class="columnHeader"> <span>Selected</span> </div> <ul class="cards card-list" as-sortable="dragControlListeners" ng-model="model.chosenItems"> <li as-sortable-item class="card" ng-repeat="item in model.chosenItems"> <div as-sortable-item-handle>{{item.name}}</div> </li> </ul> </div> </div> </div> </div> ');
 }]);
 angular.module('gi.security').config([
   '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
@@ -934,6 +935,52 @@ angular.module('gi.security').directive('permissionForm', [
         return $q.all([getResources(), getUsers()]).then(function() {
           return refreshPermissionFields();
         });
+      }
+    };
+  }
+]);
+
+angular.module('gi.security').directive('giRolePicker', [
+  '$filter', function($filter) {
+    return {
+      restrict: 'E',
+      scope: {
+        model: '='
+      },
+      templateUrl: '/views/giRolePicker.html',
+      link: {
+        pre: function($scope) {
+          var refresh;
+          $scope.my = {};
+          refresh = function() {
+            $scope.model.chosenItems = [];
+            $scope.model.availableItems = [];
+            return angular.forEach($scope.model.roles, function(role) {
+              var found;
+              found = false;
+              angular.forEach($scope.model.chosen, function(memberId) {
+                if (memberId.toString() === role._id.toString()) {
+                  return found = true;
+                }
+              });
+              if (found) {
+                return $scope.model.chosenItems.push(role);
+              } else {
+                return $scope.model.availableItems.push(role);
+              }
+            });
+          };
+          $scope.$watch('model.roles', function(newVal, oldVal) {
+            if (newVal != null) {
+              return refresh();
+            }
+          });
+          return $scope.$watch('model.item', function(newVal, oldVal) {
+            if ((newVal != null) && newVal._id !== (oldVal != null ? oldVal._id : void 0)) {
+              return refresh();
+            }
+          });
+        }
       }
     };
   }

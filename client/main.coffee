@@ -65,6 +65,7 @@ require
     'directives/roleForm'
     'directives/userForm'
     'directives/permissionForm'
+    'directives/giRolePicker'
     'interceptors/auth'
     'services/auth'
     'services/facebook'
