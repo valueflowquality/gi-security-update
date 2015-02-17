@@ -15,6 +15,7 @@ module.exports = (dal, options) ->
       email: 'String'
       password: 'String'
       apiSecret: 'String'
+      countryCode: 'String'
       userIds: [{provider: 'String', providerId: 'String'}]
       roles: [{type: 'ObjectId', ref: 'Role'}]
     options:

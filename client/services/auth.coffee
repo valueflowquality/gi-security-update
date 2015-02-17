@@ -4,7 +4,7 @@ angular.module('gi.security').provider 'Auth', () ->
   so they can be re-requested in future, once login is completed.
   ###
   buffer = []
-  
+
   ###
   Required by HTTP interceptor.
   Function is attached to provider to be invisible for
@@ -15,9 +15,9 @@ angular.module('gi.security').provider 'Auth', () ->
       config: config,
       deferred: deferred
     }
-  
-  get = ['$rootScope','$injector', '$q', '$filter', 'Role', 'Setting'
-  , ($rootScope, $injector, $q, $filter, Role, Setting) ->
+
+  get = ['$rootScope','$injector', '$q', '$filter', 'Role', 'Setting', 'giGeo'
+  , ($rootScope, $injector, $q, $filter, Role, Setting, Geo) ->
     #initialized later because of circular dependency problem
     $http = undefined
     loginInfoDirty = true
@@ -26,6 +26,7 @@ angular.module('gi.security').provider 'Auth', () ->
       isAdmin: false
       isRestricted: true
       loggedIn: false
+      countryCode: "N/A"
 
     retry = (config, deferred) ->
       $http = $http || $injector.get '$http'
@@ -44,6 +45,21 @@ angular.module('gi.security').provider 'Auth', () ->
       if roleSetting?.length > 0
         settingName = roleSetting[0].value
       settingName
+
+    getCountry = (me) ->
+      deferred = $q.defer()
+      if me?.user?.countryCode?
+        me.countryCode = me.user.countryCode
+        deferred.resolve me
+      else
+        Geo.country().then (code) ->
+          me.countryCode = code
+          deferred.resolve me
+        , (error) ->
+          me.countryCode = "N/A"
+          deferred.resolve me
+
+      deferred.promise
 
     getLoggedInUser = ->
       deferred = $q.defer()
@@ -66,7 +82,8 @@ angular.module('gi.security').provider 'Auth', () ->
                   isSysAdmin: isSysAdmin
                   isRestricted: isRestricted
                   loggedIn: true
-                deferred.resolve me
+
+                deferred.resolve getCountry(me)
       .error ->
         loginInfoDirty = false
         me =
@@ -74,7 +91,7 @@ angular.module('gi.security').provider 'Auth', () ->
           isAdmin: false
           isRestricted: true
           loggedIn: false
-        deferred.resolve me
+        deferred.resolve getCountry(me)
 
       deferred.promise
 
