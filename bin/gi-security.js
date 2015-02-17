@@ -1007,15 +1007,16 @@ angular.module('gi.security').provider('Auth', function() {
     });
   };
   get = [
-    '$rootScope', '$injector', '$q', '$filter', 'Role', 'Setting', function($rootScope, $injector, $q, $filter, Role, Setting) {
-      var $http, getLoggedInUser, getRoleName, loginChanged, loginInfoDirty, loginStatus, me, retry, retryAll;
+    '$rootScope', '$injector', '$q', '$filter', 'Role', 'Setting', 'giGeo', function($rootScope, $injector, $q, $filter, Role, Setting, Geo) {
+      var $http, getCountry, getLoggedInUser, getRoleName, loginChanged, loginInfoDirty, loginStatus, me, retry, retryAll;
       $http = void 0;
       loginInfoDirty = true;
       me = {
         user: null,
         isAdmin: false,
         isRestricted: true,
-        loggedIn: false
+        loggedIn: false,
+        countryCode: "N/A"
       };
       retry = function(config, deferred) {
         $http = $http || $injector.get('$http');
@@ -1042,6 +1043,23 @@ angular.module('gi.security').provider('Auth', function() {
         }
         return settingName;
       };
+      getCountry = function(me) {
+        var deferred, _ref;
+        deferred = $q.defer();
+        if ((me != null ? (_ref = me.user) != null ? _ref.countryCode : void 0 : void 0) != null) {
+          me.countryCode = me.user.countryCode;
+          deferred.resolve(me);
+        } else {
+          Geo.country().then(function(code) {
+            me.countryCode = code;
+            return deferred.resolve(me);
+          }, function(error) {
+            me.countryCode = "N/A";
+            return deferred.resolve(me);
+          });
+        }
+        return deferred.promise;
+      };
       getLoggedInUser = function() {
         var deferred;
         deferred = $q.defer();
@@ -1063,7 +1081,7 @@ angular.module('gi.security').provider('Auth', function() {
                     isRestricted: isRestricted,
                     loggedIn: true
                   };
-                  return deferred.resolve(me);
+                  return deferred.resolve(getCountry(me));
                 });
               });
             });
@@ -1076,7 +1094,7 @@ angular.module('gi.security').provider('Auth', function() {
             isRestricted: true,
             loggedIn: false
           };
-          return deferred.resolve(me);
+          return deferred.resolve(getCountry(me));
         });
         return deferred.promise;
       };

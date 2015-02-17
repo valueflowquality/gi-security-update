@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.0.8
+- user and me now have a countryCode property (model -> cookie -> ip lookup)
+
 v1.0.7
 - Added giRolePicker directive to allow user roles to be easily visualised
 
