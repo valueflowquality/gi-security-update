@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.1.0
+- Feature: Added general purpose roleAction middleware which allows you to test for arbitrary roles in middleware
+
 v1.0.9
 - use gi-util 1.0.8 which fixes geo ip issue over ssl
 
