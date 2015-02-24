@@ -178,6 +178,19 @@ module.exports = (app) ->
         else
           res.json 401, {}
 
+  roleAction = (role) ->
+    (req, res, next) ->
+      userAction req, res, () ->
+        isInRole role, req.user, (ok) ->
+          if ok
+            next()
+          else
+            isAdmin req.user, (admin) ->
+              if admin
+                next()
+              else
+                res.json 401, {}
+
   isInRole = (role, user, callback) ->
     result = false
     settingName = role + 'RoleName'
@@ -188,7 +201,7 @@ module.exports = (app) ->
         roleName = result.value
       app.models.roles.findOneBy 'name', roleName, user.systemId
       , (err, obj) ->
-        if obj and not err
+        if obj?._id? and not err
           _.each(user.roles, (role) ->
             if role.toString() is obj._id.toString()
               result = true
@@ -239,6 +252,7 @@ module.exports = (app) ->
   #Export the authentiaction action middleware
     publicAction: publicAction
     publicReadAction: publicReadAction
+    roleAction: roleAction
     userAction: userAction
     adminAction: adminAction
     sysAdminAction: sysAdminAction
