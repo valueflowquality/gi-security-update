@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.2.0
+- Feature: saveMe added to client User Service (allows non admin user to update details about themselves)
+
 v1.1.0
 - Feature: Added general purpose roleAction middleware which allows you to test for arbitrary roles in middleware
 

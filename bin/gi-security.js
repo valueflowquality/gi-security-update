@@ -190,7 +190,7 @@ angular.module('gi.security').config([
 
 angular.module('gi.security').factory('User', [
   '$q', '$http', 'Auth', 'giCrud', function($q, $http, Auth, Crud) {
-    var crud, login, register;
+    var crud, login, register, saveMe;
     crud = Crud.factory('users');
     register = function(item) {
       return $http.post('/api/user/register', item);
@@ -207,8 +207,19 @@ angular.module('gi.security').factory('User', [
       });
       return deferred.promise;
     };
+    saveMe = function(item) {
+      var deferred;
+      deferred = $q.defer();
+      $http.put('/api/user', item).success(function() {
+        return deferred.resolve();
+      }).error(function() {
+        return deferred.reject;
+      });
+      return deferred.promise;
+    };
     crud.register = register;
     crud.login = login;
+    crud.saveMe = saveMe;
     return crud;
   }
 ]);
