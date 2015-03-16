@@ -17,7 +17,16 @@ angular.module('gi.security').factory 'User'
       deferred.reject()
     deferred.promise
 
+  saveMe = (item) ->
+    deferred = $q.defer()
+    $http.put('/api/user', item).success( () ->
+      deferred.resolve()
+    ).error () ->
+      deferred.reject
+    deferred.promise
+
   crud.register = register
   crud.login = login
+  crud.saveMe = saveMe
   crud
 ]
