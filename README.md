@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.2.1
+- Added support for Mongo 3.X (just upped dependency versions for some modules)
+
 v1.2.0
 - Feature: saveMe added to client User Service (allows non admin user to update details about themselves)
 
