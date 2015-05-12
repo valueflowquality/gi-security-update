@@ -1,11 +1,10 @@
 node_modules/
-bower_modules/
-bin/
-!bin/gi-security.js
+bower_components/
 coverage/
 temp/
+
+.env
+
 npm-debug.log
 
 .DS_Store
-
-test/client/e2e/.env

@@ -1,5 +1,5 @@
 {
-  "directory" : "bower_modules",
+  "directory" : "bower_components",
   "json"      : "bower.json",
   "endpoint"  : "https://bower.herokuapp.com"
 }
