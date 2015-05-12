@@ -22,6 +22,7 @@ v1.3.0
 - Renamed User service giUser
 - Added provider function setPasswordRequirements to giUser service
 - Added testPassword function to giUser service (validates regex given to provider)
+- Added giPassword form validation directive
 
 v1.2.1
 - Added support for Mongo 3.X (just upped dependency versions for some modules)
