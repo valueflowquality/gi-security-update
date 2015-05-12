@@ -1,5 +1,5 @@
 angular.module('gi.security').controller 'usersController'
-, ['$scope', '$location', 'User', 'Auth'
+, ['$scope', '$location', 'giUser', 'Auth'
 , ($scope, $location, User, Auth) ->
 
   $scope.newUser = {}

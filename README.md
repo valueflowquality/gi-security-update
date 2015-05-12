@@ -18,6 +18,11 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.3.0
+- Renamed User service giUser
+- Added provider function setPasswordRequirements to giUser service
+- Added testPassword function to giUser service (validates regex given to provider)
+
 v1.2.1
 - Added support for Mongo 3.X (just upped dependency versions for some modules)
 

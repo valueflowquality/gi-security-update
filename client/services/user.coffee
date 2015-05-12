@@ -1,32 +1,45 @@
-angular.module('gi.security').factory 'User'
-, ['$q', '$http', 'Auth', 'giCrud'
-, ($q, $http, Auth, Crud) ->
+angular.module('gi.security').provider 'giUser', () ->
+  passwordRequirements = null
 
-  crud = Crud.factory 'users'
+  @setPasswordRequirements = (reqs) ->
+    passwordRequirements = reqs
 
-  register = (item) ->
-    $http.post '/api/user/register', item
+  @$get = ['$q', '$http', 'Auth', 'giCrud'
+  , ($q, $http, Auth, Crud) ->
+    crud = Crud.factory 'users'
 
-  login = (cred) ->
-    deferred = $q.defer()
-    $http.post('/api/login', cred).success( () ->
-      Auth.loginConfirmed()
-      deferred.resolve()
-    ).error () ->
-      Auth.loginChanged()
-      deferred.reject()
-    deferred.promise
+    testPassword = (pwd) ->
+      if passwordRequirements?
+        return passwordRequirements.regexp.test pwd
+      else
+        return true
 
-  saveMe = (item) ->
-    deferred = $q.defer()
-    $http.put('/api/user', item).success( () ->
-      deferred.resolve()
-    ).error () ->
-      deferred.reject
-    deferred.promise
+    register = (item) ->
+      $http.post '/api/user/register', item
 
-  crud.register = register
-  crud.login = login
-  crud.saveMe = saveMe
-  crud
-]
+    login = (cred) ->
+      deferred = $q.defer()
+      $http.post('/api/login', cred).success( () ->
+        Auth.loginConfirmed()
+        deferred.resolve()
+      ).error () ->
+        Auth.loginChanged()
+        deferred.reject()
+      deferred.promise
+
+    saveMe = (item) ->
+      deferred = $q.defer()
+      $http.put('/api/user', item).success( () ->
+        deferred.resolve()
+      ).error () ->
+        deferred.reject
+      deferred.promise
+
+    crud.register = register
+    crud.login = login
+    crud.saveMe = saveMe
+    crud.testPassword = testPassword
+    crud
+  ]
+
+  @

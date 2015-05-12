@@ -1,5 +1,5 @@
 angular.module('gi.security').directive 'permissionForm'
-, ['$q', '$timeout', '$http', '$filter', 'Resource', 'User', 'Permission'
+, ['$q', '$timeout', '$http', '$filter', 'Resource', 'giUser', 'Permission'
 , ($q, $timeout, $http, $filter, Resource, User, Permission) ->
   restrict: 'E'
   templateUrl: '/views/gi-permissionForm.html'
@@ -22,12 +22,12 @@ angular.module('gi.security').directive 'permissionForm'
 
     scope.$watch 'permission', (newVal, oldVal) ->
       refreshPermissionFields()
-    
+
     scope.$watch 'selectedResourceType', (newVal, oldVal) ->
       if newVal?.name
         scope.selectedKeys = []
         getRelatedKeys newVal.name
-    
+
     pluralise = (str) ->
       if str?
         result = str.toLowerCase()
@@ -55,7 +55,7 @@ angular.module('gi.security').directive 'permissionForm'
 
     scope.confirmDelete = ->
       scope.showDeleteModal = true
-  
+
     getUsers = ->
       deferred = $q.defer()
       User.all (users) ->
@@ -83,7 +83,7 @@ angular.module('gi.security').directive 'permissionForm'
           angular.forEach scope.resourceTypes, (resource) ->
             if resource.name is scope.permission.resourceType
               scope.selectedResourceType = resource
-    
+
     getSelectedUser = () ->
       scope.selectedUser = {}
       if scope.permission
@@ -98,7 +98,7 @@ angular.module('gi.security').directive 'permissionForm'
         scope.selectedKeys = $filter('filter')(scope.keys, (key) ->
           scope.permission.keys.indexOf(key._id) isnt -1
         )
-    
+
     refreshPermissionFields = () ->
       $timeout getSelectedResourceType
       $timeout getSelectedUser

@@ -1,5 +1,5 @@
 angular.module('gi.security').filter 'userName'
-, ['User'
+, ['giUser'
 , (User) ->
   (id) ->
     result = 'Missing User Id'
