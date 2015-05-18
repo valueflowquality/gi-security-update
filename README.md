@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.3.1
+- Merged v1.0.10 which adds /api/user/getResetToken for admins
+
 v1.3.0
 - Renamed User service giUser
 - Added provider function setPasswordRequirements to giUser service
