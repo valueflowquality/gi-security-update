@@ -33,6 +33,10 @@ v1.2.0
 v1.1.0
 - Feature: Added general purpose roleAction middleware which allows you to test for arbitrary roles in middleware
 
+v1.0.10
+- added /api/user/getResetToken for admins
+- use gi-util 1.0.9 which adds count() functionality to find query callbacks
+
 v1.0.9
 - use gi-util 1.0.8 which fixes geo ip issue over ssl
 
