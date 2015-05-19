@@ -1,8 +1,30 @@
 _ = require 'underscore'
 gi = require 'gi-util'
+logger = gi.common
 
 module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
+
+  isUsernameAvailable = (req, res) ->
+    systemId = req.systemId
+    email = req.query.username
+    if email?
+      model.findOneBy 'email', email, systemId, (err, user) ->
+        logger.log 'is username available: ' + email
+        logger.log err
+        logger.log user
+        logger.log '---'
+        if err?
+          if err is "Cannot find User"
+            res.json 200, {available: true}
+          else
+            res.json 500, {message: 'error searching by email: ' + err}
+        else if (not user)
+          res.json 200, {available: true}
+        else
+          res.json 200, {available: false}
+    else
+      res.json 200, {available: false}
 
   verify = (req, res) ->
     email = req.body.email
@@ -218,4 +240,5 @@ module.exports = (model, crudControllerFactory) ->
   exports.getResetToken = getResetToken
   exports.checkResetToken = checkResetToken
   exports.verify = verify
+  exports.isUsernameAvailable = isUsernameAvailable
   exports

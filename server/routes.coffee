@@ -9,6 +9,9 @@ configure = (app, rest) ->
   app.del '/api/user'
   , app.middleware.userAction, app.controllers.user.destroyMe
 
+  app.get '/api/user/isAvailable'
+  , app.middleware.publicAction, app.controllers.user.isUsernameAvailable
+
   app.post '/api/user/register'
   , app.middleware.publicRegisterAction, app.controllers.user.create
 

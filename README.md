@@ -18,6 +18,12 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.0
+- Added /api/user/isAvailable public route which takes a ?username= query string and
+returns an {available: bool}
+- Added isUsernameAvailable(username) function to giUser service
+- Added giUsername form validation (uses above functionality)
+
 v1.3.1
 - Merged v1.0.10 which adds /api/user/getResetToken for admins
 
