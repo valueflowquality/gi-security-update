@@ -10,10 +10,6 @@ module.exports = (model, crudControllerFactory) ->
     email = req.query.username
     if email?
       model.findOneBy 'email', email, systemId, (err, user) ->
-        logger.log 'is username available: ' + email
-        logger.log err
-        logger.log user
-        logger.log '---'
         if err?
           if err is "Cannot find User"
             res.json 200, {available: true}
