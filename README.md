@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.1
+- Removed surplus logging
+
 v1.4.0
 - Added /api/user/isAvailable public route which takes a ?username= query string and
 returns an {available: bool}
