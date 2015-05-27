@@ -18,6 +18,11 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.3
+- giUsername directive now optionally evaluates an angular expression, which causes
+the validation to only be tested if the expression evaluates to true. (if there is
+no expression supplied then the directive works as before, and runs the validation.)
+
 v1.4.2
 - Fixes issue where password confirm could be persisted in plaintext.
 

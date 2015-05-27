@@ -1,6 +1,6 @@
 angular.module('gi.security').directive 'giUsername'
-, ['giUser', '$q'
-, (User, $q) ->
+, ['giUser', '$q', '$parse'
+, (User, $q, $parse) ->
   restrict: 'A'
   require: 'ngModel'
   compile: (elem, attrs) ->
@@ -10,13 +10,22 @@ angular.module('gi.security').directive 'giUsername'
       $viewValue = () ->
         ngModelController.$viewValue
 
+      requiredGetter = $parse attrs.giUsername
+
+      $scope.$watch 'item.register', (newVal) ->
+        ngModelController.$$parseAndValidate()
+
       ngModelController.$asyncValidators.giUsername = (modelValue, viewValue) ->
         deferred = $q.defer()
-        User.isUsernameAvailable(modelValue).then (valid) ->
-          if valid
-            deferred.resolve()
-          else
-            deferred.reject()
+        if requiredGetter($scope)
+          User.isUsernameAvailable(modelValue).then (valid) ->
+            if valid
+              deferred.resolve()
+            else
+              deferred.reject()
+        else
+          deferred.resolve()
+
         deferred.promise
 
     linkFn
