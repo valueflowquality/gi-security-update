@@ -43,6 +43,7 @@ module.exports = (dal, options) ->
 
   schema.pre 'save', (next) ->
     user = @
+    @confirm = ""
 
     if not @isModified('password')
       return next()
@@ -89,6 +90,7 @@ module.exports = (dal, options) ->
         callback 'password does not meet minimum requirements', false
 
   update = (id, json, callback) ->
+    delete json.confirm
     crud.findById id, json.systemId, (err, user) ->
       if err
         callback err, null
@@ -111,6 +113,7 @@ module.exports = (dal, options) ->
     crud.findOneBy 'userIds.providerId', id, systemId, callback
 
   findOrCreate = (json, callback) ->
+    delete json.confirm
     findOneByProviderId json.providerId, json.systemId (err, user) ->
       if user
         callback err, user
@@ -128,6 +131,7 @@ module.exports = (dal, options) ->
         callback 'cannot find user'
 
   create = (json, callback) ->
+    delete json.confirm
     crud.findOneBy 'email', json.email, json.systemId , (err, user) ->
       if err and err isnt "Cannot find User"
         callback err, null
@@ -137,6 +141,7 @@ module.exports = (dal, options) ->
         crud.create json, callback
 
   updateQuery = (query, change, callback) ->
+    delete change.confirm
     if not query.systemId?
       callback 'SystemId not specified'
     else

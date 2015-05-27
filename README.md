@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.2
+- Fixes issue where password confirm could be persisted in plaintext.
+
 v1.4.1
 - Removed surplus logging
 
