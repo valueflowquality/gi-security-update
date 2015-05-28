@@ -12,12 +12,15 @@ angular.module('gi.security').directive 'giUsername'
 
       requiredGetter = $parse attrs.giUsername
 
+      needToCheck = () ->
+        (attrs.giUsername is "") or requiredGetter($scope)
+
       $scope.$watch 'item.register', (newVal) ->
         ngModelController.$$parseAndValidate()
 
       ngModelController.$asyncValidators.giUsername = (modelValue, viewValue) ->
         deferred = $q.defer()
-        if requiredGetter($scope)
+        if needToCheck()
           User.isUsernameAvailable(modelValue).then (valid) ->
             if valid
               deferred.resolve()
