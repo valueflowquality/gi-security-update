@@ -665,19 +665,22 @@ angular.module('gi.security').directive('giUsername', [
       compile: function(elem, attrs) {
         var linkFn;
         linkFn = function($scope, elem, attrs, controller) {
-          var $viewValue, ngModelController, requiredGetter;
+          var $viewValue, needToCheck, ngModelController, requiredGetter;
           ngModelController = controller;
           $viewValue = function() {
             return ngModelController.$viewValue;
           };
           requiredGetter = $parse(attrs.giUsername);
+          needToCheck = function() {
+            return (attrs.giUsername === "") || requiredGetter($scope);
+          };
           $scope.$watch('item.register', function(newVal) {
             return ngModelController.$$parseAndValidate();
           });
           return ngModelController.$asyncValidators.giUsername = function(modelValue, viewValue) {
             var deferred;
             deferred = $q.defer();
-            if (requiredGetter($scope)) {
+            if (needToCheck()) {
               User.isUsernameAvailable(modelValue).then(function(valid) {
                 if (valid) {
                   return deferred.resolve();
