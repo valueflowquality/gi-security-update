@@ -743,10 +743,11 @@ angular.module('gi.security').provider('Auth', function() {
     });
   };
   get = [
-    '$rootScope', '$injector', '$q', '$filter', 'Role', 'Setting', 'giGeo', function($rootScope, $injector, $q, $filter, Role, Setting, Geo) {
-      var $http, getCountry, getLoggedInUser, getRoleName, loginChanged, loginInfoDirty, loginStatus, me, retry, retryAll;
+    '$rootScope', '$injector', '$q', '$filter', 'Role', 'Setting', 'giGeo', 'giLog', function($rootScope, $injector, $q, $filter, Role, Setting, Geo, Log) {
+      var $http, fireLoginChangeEvent, firstRequest, getCountry, getLoggedInUser, getRoleName, loginChanged, loginInfoDirty, loginStatus, me, retry, retryAll;
       $http = void 0;
       loginInfoDirty = true;
+      firstRequest = true;
       me = {
         user: null,
         isAdmin: false,
@@ -797,8 +798,10 @@ angular.module('gi.security').provider('Auth', function() {
         return deferred.promise;
       };
       getLoggedInUser = function() {
-        var deferred;
+        var deferred, wasLoggedIn, wasLoggedOut;
         deferred = $q.defer();
+        wasLoggedIn = me.loggedIn;
+        wasLoggedOut = !me.loggedIn;
         $http = $http || $injector.get('$http');
         $http.get('/api/user').success(function(user) {
           return Setting.all().then(function(settings) {
@@ -817,7 +820,12 @@ angular.module('gi.security').provider('Auth', function() {
                     isRestricted: isRestricted,
                     loggedIn: true
                   };
-                  return deferred.resolve(getCountry(me));
+                  return getCountry(me).then(function() {
+                    if (wasLoggedOut) {
+                      fireLoginChangeEvent();
+                    }
+                    return deferred.resolve(me);
+                  });
                 });
               });
             });
@@ -830,30 +838,38 @@ angular.module('gi.security').provider('Auth', function() {
             isRestricted: true,
             loggedIn: false
           };
-          return deferred.resolve(getCountry(me));
+          return getCountry(me).then(function() {
+            if (wasLoggedIn || firstRequest) {
+              fireLoginChangeEvent();
+            }
+            return deferred.resolve(me);
+          });
         });
         return deferred.promise;
       };
+      fireLoginChangeEvent = function() {
+        firstRequest = false;
+        return $rootScope.$broadcast('event:auth-loginChange', me);
+      };
       loginStatus = function() {
         var deferred;
-        deferred = $q.defer();
         if (loginInfoDirty) {
-          deferred.resolve(getLoggedInUser());
+          return getLoggedInUser();
         } else {
+          deferred = $q.defer();
           deferred.resolve(me);
+          return deferred.promise;
         }
-        return deferred.promise;
       };
       loginChanged = function() {
         loginInfoDirty = true;
-        return $rootScope.$broadcast('event:auth-loginChange');
+        return loginStatus();
       };
       return {
         me: loginStatus,
         loginChanged: loginChanged,
         loginConfirmed: function() {
-          loginChanged();
-          return retryAll();
+          return loginChanged().then(retryAll);
         },
         isAdmin: function() {
           var deferred;
@@ -864,17 +880,14 @@ angular.module('gi.security').provider('Auth', function() {
           return deferred.promise;
         },
         logout: function() {
+          var deferred;
+          deferred = $q.defer();
           $http = $http || $injector.get('$http');
-          return $http.get('/api/logout').success(function() {
-            loginInfoDirty = true;
-            $rootScope.$broadcast('event:auth-loginChange');
-            return me = {
-              user: null,
-              isAdmin: false,
-              isRestricted: true,
-              loggedIn: false
-            };
+          $http.get('/api/logout').success(function() {
+            loginChanged();
+            return deferred.resolve();
           });
+          return deferred.promise;
         }
       };
     }
