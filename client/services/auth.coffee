@@ -16,11 +16,13 @@ angular.module('gi.security').provider 'Auth', () ->
       deferred: deferred
     }
 
-  get = ['$rootScope','$injector', '$q', '$filter', 'Role', 'Setting', 'giGeo'
-  , ($rootScope, $injector, $q, $filter, Role, Setting, Geo) ->
+  get = ['$rootScope','$injector', '$q', '$filter', 'Role', 'Setting'
+  , 'giGeo', 'giLog'
+  , ($rootScope, $injector, $q, $filter, Role, Setting, Geo, Log) ->
     #initialized later because of circular dependency problem
     $http = undefined
     loginInfoDirty = true
+    firstRequest = true
     me =
       user: null
       isAdmin: false
@@ -64,6 +66,9 @@ angular.module('gi.security').provider 'Auth', () ->
     getLoggedInUser = ->
       deferred = $q.defer()
 
+      wasLoggedIn = me.loggedIn
+      wasLoggedOut = !me.loggedIn
+
       $http = $http || $injector.get '$http'
       $http.get('/api/user')
       .success (user) ->
@@ -83,7 +88,11 @@ angular.module('gi.security').provider 'Auth', () ->
                   isRestricted: isRestricted
                   loggedIn: true
 
-                deferred.resolve getCountry(me)
+
+                getCountry(me).then () ->
+                  if wasLoggedOut
+                    fireLoginChangeEvent()
+                  deferred.resolve me
       .error ->
         loginInfoDirty = false
         me =
@@ -91,28 +100,34 @@ angular.module('gi.security').provider 'Auth', () ->
           isAdmin: false
           isRestricted: true
           loggedIn: false
-        deferred.resolve getCountry(me)
+        getCountry(me).then () ->
+          if wasLoggedIn or firstRequest
+            fireLoginChangeEvent()
+          deferred.resolve me
 
       deferred.promise
+
+    fireLoginChangeEvent = () ->
+      firstRequest = false
+      $rootScope.$broadcast 'event:auth-loginChange', me
 
     loginStatus = () ->
-      deferred = $q.defer()
       if loginInfoDirty
-        deferred.resolve getLoggedInUser()
+        getLoggedInUser()
       else
+        deferred = $q.defer()
         deferred.resolve me
-
-      deferred.promise
+        deferred.promise
 
     loginChanged = () ->
       loginInfoDirty = true
-      $rootScope.$broadcast 'event:auth-loginChange'
+      loginStatus()
 
     me: loginStatus
     loginChanged: loginChanged
     loginConfirmed: () ->
       loginChanged()
-      retryAll()
+      .then retryAll
 
     isAdmin: ->
       deferred = $q.defer()
@@ -121,16 +136,13 @@ angular.module('gi.security').provider 'Auth', () ->
       deferred.promise
 
     logout: () ->
+      deferred = $q.defer()
       $http = $http || $injector.get '$http'
       $http.get('/api/logout')
       .success ->
-        loginInfoDirty = true
-        $rootScope.$broadcast 'event:auth-loginChange'
-        me =
-          user: null
-          isAdmin: false
-          isRestricted: true
-          loggedIn: false
+        loginChanged()
+        deferred.resolve()
+      deferred.promise
   ]
 
   $get: get

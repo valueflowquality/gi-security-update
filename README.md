@@ -17,7 +17,10 @@ Client Unit tests use Mocha, Karma
 
 Server Integration tests use Cucumber.js and supertest
 
-### Release Notes
+### Release Notes]
+v1.4.5
+- Closes #77 client Auth service now only fires login change event on first request, or when the login actually changes from in <-> out.
+
 v1.4.4
 - Fixup for giUsername where default was not working correctly.
 
