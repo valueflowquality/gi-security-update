@@ -140,8 +140,8 @@ angular.module('gi.security').provider 'Auth', () ->
       $http = $http || $injector.get '$http'
       $http.get('/api/logout')
       .success ->
-        loginChanged()
-        deferred.resolve()
+        loginChanged().then () ->
+          deferred.resolve()
       deferred.promise
   ]
 

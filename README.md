@@ -17,7 +17,11 @@ Client Unit tests use Mocha, Karma
 
 Server Integration tests use Cucumber.js and supertest
 
-### Release Notes]
+### Release Notes
+
+v.1.4.6
+- Minor change to improve timing of promise resolution in Auth.logout()
+
 v1.4.5
 - Closes #77 client Auth service now only fires login change event on first request, or when the login actually changes from in <-> out.
 
