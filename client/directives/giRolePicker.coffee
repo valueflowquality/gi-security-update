@@ -4,7 +4,7 @@ angular.module('gi.security').directive 'giRolePicker'
   restrict: 'E'
   scope:
     model: '='
-  templateUrl: '/views/giRolePicker.html'
+  templateUrl: 'gi-rolePicker.html'
   link:
     pre: ($scope) ->
       $scope.my = {}

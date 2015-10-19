@@ -1,6 +1,6 @@
 angular.module('gi.security').directive 'roleForm', ->
   restrict: 'E'
-  templateUrl: '/views/gi-roleForm.html'
+  templateUrl: 'gi-roleForm.html'
   scope:
     role: '='
     submit: '&'

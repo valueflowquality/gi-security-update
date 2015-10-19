@@ -2,7 +2,7 @@ angular.module('gi.security').directive 'userForm'
 , ['Role'
 , (Role) ->
   restrict: 'E'
-  templateUrl: '/views/gi-userForm.html'
+  templateUrl: 'gi-userForm.html'
   scope:
     user: '='
     submit: '&'
@@ -16,7 +16,7 @@ angular.module('gi.security').directive 'userForm'
     scope.userRoles = []
     scope.notUserRoles = []
     scope.unsavedChanges = false
-    
+
 
     scope.$watch 'user', (newVal) ->
       if newVal

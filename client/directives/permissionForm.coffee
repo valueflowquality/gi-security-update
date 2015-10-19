@@ -2,7 +2,7 @@ angular.module('gi.security').directive 'permissionForm'
 , ['$q', '$timeout', '$http', '$filter', 'Resource', 'giUser', 'Permission'
 , ($q, $timeout, $http, $filter, Resource, User, Permission) ->
   restrict: 'E'
-  templateUrl: '/views/gi-permissionForm.html'
+  templateUrl: 'gi-permissionForm.html'
   scope:
     permission: '='
     submit: '&'

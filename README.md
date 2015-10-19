@@ -18,6 +18,8 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.7
+- Fix names for views (removing /views/ prefix)
 
 v.1.4.6
 - Minor change to improve timing of promise resolution in Auth.logout()
