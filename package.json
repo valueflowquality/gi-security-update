@@ -1,7 +1,7 @@
 {
   "author": "David Bochenski",
   "name": "gi-security",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
