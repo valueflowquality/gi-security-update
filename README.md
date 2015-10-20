@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.8
+- Use latest gi-ui (fixes ui.sortable issue)
+
 v1.4.7
 - Fix names for views (removing /views/ prefix)
 
