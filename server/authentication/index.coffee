@@ -227,6 +227,7 @@ module.exports = (app) ->
     return
 
   logout = (req, res) ->
+    res.clearCookie('connect.sid')
     req.logout()
     res.send 200
 
