@@ -18,6 +18,9 @@ Client Unit tests use Mocha, Karma
 Server Integration tests use Cucumber.js and supertest
 
 ### Release Notes
+v1.4.10
+- Improve sign out functionality 
+
 v1.4.9
 - Use lastest gi-util
 
