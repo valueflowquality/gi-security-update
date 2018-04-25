@@ -1,23 +1,23 @@
 {
-  "author": "David Bochenski",
+  "author": "Intellica Group",
   "name": "gi-security",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/goincremental/gi-security.git"
+    "url": "git://github.com/valueflowquality/gi-commerce-update.git"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 4.9.1"
   },
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
     "gi-util": "~1.9.7",
-    "bcrypt": "~0.7.5",
+    "bcryptjs": "^2.2.0",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
     "aws-sdk": "~1.4.0",
