@@ -1,6 +1,6 @@
 {
   "author": "Intellica Group",
-  "name": "gi-security",
+  "name": "gi-security-update",
   "version": "1.4.11",
   "main": "./server/index.coffee",
   "scripts": {
