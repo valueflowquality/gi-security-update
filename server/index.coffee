@@ -1,4 +1,4 @@
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 routes = require './routes'
 controllers = require './controllers'
 authentication = require './authentication'

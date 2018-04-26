@@ -1,6 +1,6 @@
 AWS = require 'aws-sdk'
 _ = require 'underscore'
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 
 module.exports = (models, crudControllerFactory) ->
   crudController  = crudControllerFactory(models.files)

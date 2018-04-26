@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/valueflowquality/gi-commerce-update.git"
+    "url": "git://github.com/valueflowquality/gi-security-update.git"
   },
   "engines": {
     "node": ">= 4.9.1"
@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gi-util": "~1.9.7",
+    "gi-util-updated": "^1.9.8",
     "bcryptjs": "^2.2.0",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",

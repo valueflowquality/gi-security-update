@@ -1,4 +1,4 @@
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 
 module.exports = (dal, environmentsModel) ->
 

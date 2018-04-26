@@ -11,7 +11,7 @@ module.exports = (config) ->
       'bower_modules/angular/angular.js'
       'bower_modules/angular-resource/angular-resource.js'
       'bower_modules/angular-mocks/angular-mocks.js'
-      'bower_modules/gi-util/bin/gi-util.js'
+      'bower_modules/gi-util-updated/bin/gi-util.js'
       'test/unit/client/app.js'
       'client/controllers/*.coffee'
       'client/directives/*.coffee'

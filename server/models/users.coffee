@@ -1,6 +1,6 @@
 crypto = require 'crypto'
 bcrypt = require 'bcryptjs'
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 
 module.exports = (dal, options) ->
 

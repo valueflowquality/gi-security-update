@@ -1,4 +1,4 @@
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 user = require './user'
 activity = require './activity'
 file = require './file'

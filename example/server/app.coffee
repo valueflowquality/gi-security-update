@@ -1,5 +1,5 @@
 express = require 'express'
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 security = require '../../server'
 
 MongoStore = require('connect-mongo')(express)

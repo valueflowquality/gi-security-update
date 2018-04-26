@@ -1,5 +1,5 @@
 _ = require 'underscore'
-gi = require 'gi-util'
+gi = require 'gi-util-updated'
 logger = gi.common
 
 module.exports = (model, crudControllerFactory) ->
