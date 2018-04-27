@@ -1,7 +1,7 @@
 {
   "author": "Intellica Group",
   "name": "gi-security-updated",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
@@ -16,7 +16,7 @@
   "dependencies": {
     "coffee-script": "~1.4.0",
     "passport": "~0.1.15",
-    "gi-util-updated": "^1.9.8",
+    "gi-util-updated": "^1.9.81",
     "bcryptjs": "^2.2.0",
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
