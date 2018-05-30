@@ -17,14 +17,25 @@ angular.module('gi.security').provider 'giUser', () ->
     register = (item) ->
       $http.post '/api/user/register', item
 
-    login = (cred) ->
+    login = (cred, isAfterRegistration) ->
       deferred = $q.defer()
-      $http.post('/api/login', cred).success( () ->
-        Auth.loginConfirmed()
-        deferred.resolve()
-      ).error () ->
-        Auth.loginChanged()
-        deferred.reject()
+      if isAfterRegistration
+        setTimeout ((cred) ->
+          $http.post('/api/login', cred).success( () ->
+            Auth.loginConfirmed()
+            deferred.resolve()
+          ).error () ->
+            Auth.loginChanged()
+            deferred.reject()
+          return
+        ), 400, cred
+      else
+        $http.post('/api/login', cred).success( () ->
+          Auth.loginConfirmed()
+          deferred.resolve()
+        ).error () ->
+          Auth.loginChanged()
+          deferred.reject()
       deferred.promise
 
     saveMe = (item) ->
