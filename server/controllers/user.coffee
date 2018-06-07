@@ -134,8 +134,8 @@ module.exports = (model, crudControllerFactory) ->
       res.json 200, {isValid: false}
 
   resetPassword = (req, res) ->
-    if req.body.email?
-      model.findOneBy 'email', req.body.email, req.systemId, (err, u) ->
+    if req.body.token?
+      model.findOneBy 'token', req.body.token, req.systemId, (err, u) ->
         if err
           res.json 500, {message: err}
         else if not u
