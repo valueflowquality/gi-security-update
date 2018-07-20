@@ -139,7 +139,7 @@ module.exports = (model, crudControllerFactory) ->
         if err
           res.json 500, {message: err}
         else if not u
-          res.json 404, {message: "invalid token"}
+          res.json 404, {message: "invalid email"}
         else
           user = u.toObject()
           updateObj =
