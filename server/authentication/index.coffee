@@ -231,7 +231,9 @@ module.exports = (app) ->
     req.logout()
     res.clearCookie('hubspotutk', {domain: '.valueflowquality.com'})
     res.clearCookie('__hstc', {domain: '.valueflowquality.com'})
+    res.clearCookie('__hssc', {domain: '.valueflowquality.com'})
     res.clearCookie('__hstc', {domain: '.uat.valueflowquality.com'})
+    res.clearCookie('__hssc', {domain: '.uat.valueflowquality.com'})
     res.send 200
 
   #Configure Passport authentication strategies
