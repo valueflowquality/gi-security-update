@@ -77,22 +77,25 @@ angular.module('gi.security').provider 'Auth', () ->
           admin = getRoleName settings,"AdminRoleName", "admin"
           restricted = getRoleName settings, "RestrictedRoleName", "restricted"
           sysAdmin = getRoleName settings, "SysAdminRoleName", "sysadmin"
+          clientAdmin = getRoleName settings, "ClientAdminRoleName", "clientadmin"
           Role.isInRole(admin, user.roles).then (isAdmin) ->
             Role.isInRole(sysAdmin, user.roles).then (isSysAdmin) ->
-              Role.isInRole(restricted, user.roles).then (isRestricted) ->
-                loginInfoDirty = false
-                me =
-                  user: user
-                  isAdmin: isAdmin
-                  isSysAdmin: isSysAdmin
-                  isRestricted: isRestricted
-                  loggedIn: true
+              Role.isInRole(clientAdmin, user.roles).then (isClientAdmin) ->
+                Role.isInRole(restricted, user.roles).then (isRestricted) ->
+                  loginInfoDirty = false
+                  me =
+                    user: user
+                    isAdmin: isAdmin
+                    isSysAdmin: isSysAdmin
+                    isClientAdmin: isClientAdmin
+                    isRestricted: isRestricted
+                    loggedIn: true
 
 
-                getCountry(me).then () ->
-                  if wasLoggedOut
-                    fireLoginChangeEvent()
-                  deferred.resolve me
+                  getCountry(me).then () ->
+                    if wasLoggedOut
+                      fireLoginChangeEvent()
+                    deferred.resolve me
       .error ->
         loginInfoDirty = false
         me =
@@ -133,6 +136,12 @@ angular.module('gi.security').provider 'Auth', () ->
       deferred = $q.defer()
       loginStatus().then ->
         deferred.resolve me.isAdmin
+      deferred.promise
+
+    isClientAdmin: ->
+      deferred = $q.defer()
+      loginStatus().then ->
+        deferred.resolve me.isClientAdmin
       deferred.promise
 
     logout: () ->

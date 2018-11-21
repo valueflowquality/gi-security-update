@@ -34,7 +34,7 @@ configure = (app, rest) ->
   , app.middleware.userAction, app.controllers.role
 
   rest.routeResource 'users', app
-  , app.middleware.adminAction, app.controllers.user
+  , app.middleware.adminOrClientAdminAction, app.controllers.user
 
   rest.routeResource 'settings', app
   , app.middleware.publicReadAction, app.controllers.setting

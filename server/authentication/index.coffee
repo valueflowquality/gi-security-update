@@ -178,6 +178,26 @@ module.exports = (app) ->
         else
           res.json 401, {}
 
+  clientAdminAction = (req, res, next) ->
+    userAction req, res, () ->
+      isClientAdmin req.user, (ok) ->
+        if ok
+          next()
+        else
+          res.json 401, {}
+
+  adminOrClientAdminAction = (req, res, next) ->
+    userAction req, res, () ->
+      isAdmin req.user, (ok) ->
+        if ok
+          next()
+        else
+          isClientAdmin req.user, (clientAdminOk) ->
+            if clientAdminOk
+              next()
+            else
+              res.json 401, {}
+
   roleAction = (role) ->
     (req, res, next) ->
       userAction req, res, () ->
@@ -222,6 +242,10 @@ module.exports = (app) ->
         isSysAdmin user, callback
     return
 
+  isClientAdmin = (user, callback) ->
+    isInRole 'ClientAdmin', user, callback
+    return
+
   isSysAdmin = (user, callback) ->
     isInRole 'SysAdmin', user, callback
     return
@@ -262,6 +286,8 @@ module.exports = (app) ->
     userAction: userAction
     adminAction: adminAction
     sysAdminAction: sysAdminAction
+    clientAdminAction: clientAdminAction
+    adminOrClientAdminAction: adminOrClientAdminAction
     publicRegisterAction: publicRegisterAction
     _getSystemStrategies: getSystemStrategies
     _systemCheck: systemCheck
