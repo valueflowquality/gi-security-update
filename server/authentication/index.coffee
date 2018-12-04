@@ -71,9 +71,11 @@ module.exports = (app) ->
       req.user = req.user.toObject()
     isAdmin req.user, (adminBool) ->
       req.user.isAdmin = adminBool?
-      isSysAdmin req.user, (sysAdminBool) ->
-        req.user.isSysAdmin = sysAdminBool?
-        next()
+      isClientAdmin req.user, (clientAdminBool) ->
+        req.user.isClientAdmin = clientAdminBool?
+        isSysAdmin req.user, (sysAdminBool) ->
+          req.user.isSysAdmin = sysAdminBool?
+          next()
 
   findUser = (req, res, next) ->
     if req.isAuthenticated()
