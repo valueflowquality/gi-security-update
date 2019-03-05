@@ -238,7 +238,13 @@ angular.module('gi.security').controller('usersController', [
       if (isAdmin) {
         return $scope.getData();
       } else {
-        return $location.path('/login');
+        return Auth.isReadOnlyAdmin().then(function(isReadOnlyAdmin) {
+          if (isReadOnlyAdmin) {
+            return $scope.getData();
+          } else {
+            return $location.path('/login');
+          }
+        });
       }
     });
   }

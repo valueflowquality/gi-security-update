@@ -73,7 +73,7 @@ module.exports = (app) ->
       req.user.isAdmin = adminBool?
       isClientAdmin req.user, (clientAdminBool) ->
         req.user.isClientAdmin = clientAdminBool?
-        isReadOnlyAdmin req,user, (readOnlyAdminBool) ->
+        isReadOnlyAdmin req.user, (readOnlyAdminBool) ->
           req.user.isReadOnlyAdmin = readOnlyAdminBool?
           isSysAdmin req.user, (sysAdminBool) ->
             req.user.isSysAdmin = sysAdminBool?

@@ -37,6 +37,10 @@ angular.module('gi.security').controller 'usersController'
     if isAdmin
       $scope.getData()
     else
-      $location.path '/login'
+      Auth.isReadOnlyAdmin().then (isReadOnlyAdmin) ->
+        if isReadOnlyAdmin
+          $scope.getData()
+        else
+          $location.path '/login'
 
 ]

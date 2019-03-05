@@ -1,7 +1,7 @@
 {
   "author": "Intellica Group",
   "name": "gi-security-updated",
-  "version": "1.4.28",
+  "version": "1.4.29",
   "main": "./server/index.coffee",
   "scripts": {
     "test": "grunt ci"
