@@ -73,9 +73,11 @@ module.exports = (app) ->
       req.user.isAdmin = adminBool?
       isClientAdmin req.user, (clientAdminBool) ->
         req.user.isClientAdmin = clientAdminBool?
-        isSysAdmin req.user, (sysAdminBool) ->
-          req.user.isSysAdmin = sysAdminBool?
-          next()
+        isReadOnlyAdmin req,user, (readOnlyAdminBool) ->
+          req.user.isReadOnlyAdmin = readOnlyAdminBool?
+          isSysAdmin req.user, (sysAdminBool) ->
+            req.user.isSysAdmin = sysAdminBool?
+            next()
 
   findUser = (req, res, next) ->
     if req.isAuthenticated()
@@ -188,6 +190,14 @@ module.exports = (app) ->
         else
           res.json 401, {}
 
+  readOnlyAdminAction = (req, res, next) ->
+    userAction req, res, () ->
+      isReadOnlyAdmin req.user, (ok) ->
+        if ok
+          next()
+        else
+          res.json 401, {}
+
   adminOrClientAdminAction = (req, res, next) ->
     userAction req, res, () ->
       isAdmin req.user, (ok) ->
@@ -198,7 +208,11 @@ module.exports = (app) ->
             if clientAdminOk
               next()
             else
-              res.json 401, {}
+              isReadOnlyAdmin req.user (readOnlyAdminOk) ->
+                if readOnlyAdminOk
+                  next()
+                else
+                  res.json 401, {}
 
   roleAction = (role) ->
     (req, res, next) ->
@@ -248,6 +262,10 @@ module.exports = (app) ->
     isInRole 'ClientAdmin', user, callback
     return
 
+  isReadOnlyAdmin = (user, callback) ->
+    isInRole 'ReadOnlyAdmin', user, callback
+    return
+
   isSysAdmin = (user, callback) ->
     isInRole 'SysAdmin', user, callback
     return
@@ -289,6 +307,7 @@ module.exports = (app) ->
     adminAction: adminAction
     sysAdminAction: sysAdminAction
     clientAdminAction: clientAdminAction
+    readOnlyAdminAction: readOnlyAdminAction
     adminOrClientAdminAction: adminOrClientAdminAction
     publicRegisterAction: publicRegisterAction
     _getSystemStrategies: getSystemStrategies

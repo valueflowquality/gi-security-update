@@ -805,29 +805,33 @@ angular.module('gi.security').provider('Auth', function() {
         $http = $http || $injector.get('$http');
         $http.get('/api/user').success(function(user) {
           return Setting.all().then(function(settings) {
-            var admin, clientAdmin, restricted, sysAdmin;
+            var admin, clientAdmin, readOnlyAdmin, restricted, sysAdmin;
             admin = getRoleName(settings, "AdminRoleName", "admin");
             restricted = getRoleName(settings, "RestrictedRoleName", "restricted");
             sysAdmin = getRoleName(settings, "SysAdminRoleName", "sysadmin");
             clientAdmin = getRoleName(settings, "ClientAdminRoleName", "clientadmin");
+            readOnlyAdmin = getRoleName(settings, "ReadOnlyAdminRoleName", "readonlyadmin");
             return Role.isInRole(admin, user.roles).then(function(isAdmin) {
               return Role.isInRole(sysAdmin, user.roles).then(function(isSysAdmin) {
                 return Role.isInRole(clientAdmin, user.roles).then(function(isClientAdmin) {
-                  return Role.isInRole(restricted, user.roles).then(function(isRestricted) {
-                    loginInfoDirty = false;
-                    me = {
-                      user: user,
-                      isAdmin: isAdmin,
-                      isSysAdmin: isSysAdmin,
-                      isClientAdmin: isClientAdmin,
-                      isRestricted: isRestricted,
-                      loggedIn: true
-                    };
-                    return getCountry(me).then(function() {
-                      if (wasLoggedOut) {
-                        fireLoginChangeEvent();
-                      }
-                      return deferred.resolve(me);
+                  return Role.isInRole(readOnlyAdmin, user.roles).then(function(isReadOnlyAdmin) {
+                    return Role.isInRole(restricted, user.roles).then(function(isRestricted) {
+                      loginInfoDirty = false;
+                      me = {
+                        user: user,
+                        isAdmin: isAdmin,
+                        isSysAdmin: isSysAdmin,
+                        isClientAdmin: isClientAdmin,
+                        isReadOnlyAdmin: isReadOnlyAdmin,
+                        isRestricted: isRestricted,
+                        loggedIn: true
+                      };
+                      return getCountry(me).then(function() {
+                        if (wasLoggedOut) {
+                          fireLoginChangeEvent();
+                        }
+                        return deferred.resolve(me);
+                      });
                     });
                   });
                 });
@@ -888,6 +892,14 @@ angular.module('gi.security').provider('Auth', function() {
           deferred = $q.defer();
           loginStatus().then(function() {
             return deferred.resolve(me.isClientAdmin);
+          });
+          return deferred.promise;
+        },
+        isReadOnlyAdmin: function() {
+          var deferred;
+          deferred = $q.defer();
+          loginStatus().then(function() {
+            return deferred.resolve(me.isReadOnlyAdmin);
           });
           return deferred.promise;
         },

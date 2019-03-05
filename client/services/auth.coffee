@@ -78,24 +78,26 @@ angular.module('gi.security').provider 'Auth', () ->
           restricted = getRoleName settings, "RestrictedRoleName", "restricted"
           sysAdmin = getRoleName settings, "SysAdminRoleName", "sysadmin"
           clientAdmin = getRoleName settings, "ClientAdminRoleName", "clientadmin"
+          readOnlyAdmin = getRoleName settings, "ReadOnlyAdminRoleName", "readonlyadmin"
           Role.isInRole(admin, user.roles).then (isAdmin) ->
             Role.isInRole(sysAdmin, user.roles).then (isSysAdmin) ->
               Role.isInRole(clientAdmin, user.roles).then (isClientAdmin) ->
-                Role.isInRole(restricted, user.roles).then (isRestricted) ->
-                  loginInfoDirty = false
-                  me =
-                    user: user
-                    isAdmin: isAdmin
-                    isSysAdmin: isSysAdmin
-                    isClientAdmin: isClientAdmin
-                    isRestricted: isRestricted
-                    loggedIn: true
+                Role.isInRole(readOnlyAdmin, user.roles).then (isReadOnlyAdmin) ->
+                  Role.isInRole(restricted, user.roles).then (isRestricted) ->
+                    loginInfoDirty = false
+                    me =
+                      user: user
+                      isAdmin: isAdmin
+                      isSysAdmin: isSysAdmin
+                      isClientAdmin: isClientAdmin
+                      isReadOnlyAdmin: isReadOnlyAdmin
+                      isRestricted: isRestricted
+                      loggedIn: true
 
-
-                  getCountry(me).then () ->
-                    if wasLoggedOut
-                      fireLoginChangeEvent()
-                    deferred.resolve me
+                    getCountry(me).then () ->
+                      if wasLoggedOut
+                        fireLoginChangeEvent()
+                      deferred.resolve me
       .error ->
         loginInfoDirty = false
         me =
@@ -142,6 +144,12 @@ angular.module('gi.security').provider 'Auth', () ->
       deferred = $q.defer()
       loginStatus().then ->
         deferred.resolve me.isClientAdmin
+      deferred.promise
+
+    isReadOnlyAdmin: ->
+      deferred = $q.defer()
+      loginStatus().then ->
+        deferred.resolve me.isReadOnlyAdmin
       deferred.promise
 
     logout: () ->
