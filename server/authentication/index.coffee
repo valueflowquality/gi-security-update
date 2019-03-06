@@ -208,7 +208,7 @@ module.exports = (app) ->
             if clientAdminOk
               next()
             else
-              isReadOnlyAdmin req.user (readOnlyAdminOk) ->
+              isReadOnlyAdmin req.user, (readOnlyAdminOk) ->
                 if readOnlyAdminOk
                   next()
                 else
