@@ -1084,25 +1084,37 @@ angular.module('gi.security').provider('giUser', function() {
       register = function(item) {
         return $http.post('/api/user/register', item);
       };
-      login = function(cred, isAfterRegistration) {
+      login = function(cred, isAfterRegistration, callback, failedCb) {
         var deferred;
         deferred = $q.defer();
         if (isAfterRegistration) {
           setTimeout((function(cred) {
             $http.post('/api/login', cred).success(function() {
               Auth.loginConfirmed();
+              if (callback) {
+                callback();
+              }
               return deferred.resolve();
             }).error(function() {
               Auth.loginChanged();
+              if (failedCb) {
+                failedCb();
+              }
               return deferred.reject();
             });
           }), 400, cred);
         } else {
           $http.post('/api/login', cred).success(function() {
             Auth.loginConfirmed();
+            if (callback) {
+              callback();
+            }
             return deferred.resolve();
           }).error(function() {
             Auth.loginChanged();
+            if (failedCb) {
+              failedCb();
+            }
             return deferred.reject();
           });
         }
