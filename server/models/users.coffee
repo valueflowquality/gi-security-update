@@ -149,6 +149,9 @@ module.exports = (dal, options) ->
     else
       model.update query, change, {multi: true}, callback
 
+  modelAggr = (options, cb) ->
+    model.aggregate options, cb
+
   exports = gi.common.extend {}, crud
   exports.update = update
   exports.updateQuery = updateQuery
@@ -157,6 +160,7 @@ module.exports = (dal, options) ->
   exports.resetAPISecret = resetAPISecret
   exports.comparePassword = comparePassword
   exports.create = create
+  exports.modelAggr = modelAggr
   exports.generateToken = generateToken
   exports.sendResetInstructions = sendResetInstructions
   exports
