@@ -72,32 +72,39 @@ angular.module('gi.security').provider 'Auth', () ->
       $http = $http || $injector.get '$http'
       $http.get('/api/user')
       .success (user) ->
+        $http.get("/api/cohorts/userCohorts/" + user._id).success (cohorts) ->
+          if window.dataLayer
+            cohortsString = cohorts.reduce((accum, el) ->
+              return (if accum.length then (accum + '; ' + el) else (accum + el))
+            , '');
+            window.dataLayer.push({ userCohorts: cohortsString });
 
-        Setting.all().then (settings) ->
-          admin = getRoleName settings,"AdminRoleName", "admin"
-          restricted = getRoleName settings, "RestrictedRoleName", "restricted"
-          sysAdmin = getRoleName settings, "SysAdminRoleName", "sysadmin"
-          clientAdmin = getRoleName settings, "ClientAdminRoleName", "clientadmin"
-          readOnlyAdmin = getRoleName settings, "ReadOnlyAdminRoleName", "readonlyadmin"
-          Role.isInRole(admin, user.roles).then (isAdmin) ->
-            Role.isInRole(sysAdmin, user.roles).then (isSysAdmin) ->
-              Role.isInRole(clientAdmin, user.roles).then (isClientAdmin) ->
-                Role.isInRole(readOnlyAdmin, user.roles).then (isReadOnlyAdmin) ->
-                  Role.isInRole(restricted, user.roles).then (isRestricted) ->
-                    loginInfoDirty = false
-                    me =
-                      user: user
-                      isAdmin: isAdmin
-                      isSysAdmin: isSysAdmin
-                      isClientAdmin: isClientAdmin
-                      isReadOnlyAdmin: isReadOnlyAdmin
-                      isRestricted: isRestricted
-                      loggedIn: true
+          Setting.all().then (settings) ->
+            admin = getRoleName settings,"AdminRoleName", "admin"
+            restricted = getRoleName settings, "RestrictedRoleName", "restricted"
+            sysAdmin = getRoleName settings, "SysAdminRoleName", "sysadmin"
+            clientAdmin = getRoleName settings, "ClientAdminRoleName", "clientadmin"
+            readOnlyAdmin = getRoleName settings, "ReadOnlyAdminRoleName", "readonlyadmin"
+            Role.isInRole(admin, user.roles).then (isAdmin) ->
+              Role.isInRole(sysAdmin, user.roles).then (isSysAdmin) ->
+                Role.isInRole(clientAdmin, user.roles).then (isClientAdmin) ->
+                  Role.isInRole(readOnlyAdmin, user.roles).then (isReadOnlyAdmin) ->
+                    Role.isInRole(restricted, user.roles).then (isRestricted) ->
+                      loginInfoDirty = false
+                      me =
+                        user: user
+                        isAdmin: isAdmin
+                        isSysAdmin: isSysAdmin
+                        isClientAdmin: isClientAdmin
+                        isReadOnlyAdmin: isReadOnlyAdmin
+                        isRestricted: isRestricted
+                        loggedIn: true
+                        userCohorts: cohorts
 
-                    getCountry(me).then () ->
-                      if wasLoggedOut
-                        fireLoginChangeEvent()
-                      deferred.resolve me
+                      getCountry(me).then () ->
+                        if wasLoggedOut
+                          fireLoginChangeEvent()
+                        deferred.resolve me
       .error ->
         loginInfoDirty = false
         me =
