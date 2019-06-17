@@ -855,6 +855,42 @@ angular.module('gi.security').provider('Auth', function() {
                 });
               });
             });
+          }).error(function() {
+            return Setting.all().then(function(settings) {
+              var admin, clientAdmin, readOnlyAdmin, restricted, sysAdmin;
+              admin = getRoleName(settings, "AdminRoleName", "admin");
+              restricted = getRoleName(settings, "RestrictedRoleName", "restricted");
+              sysAdmin = getRoleName(settings, "SysAdminRoleName", "sysadmin");
+              clientAdmin = getRoleName(settings, "ClientAdminRoleName", "clientadmin");
+              readOnlyAdmin = getRoleName(settings, "ReadOnlyAdminRoleName", "readonlyadmin");
+              return Role.isInRole(admin, user.roles).then(function(isAdmin) {
+                return Role.isInRole(sysAdmin, user.roles).then(function(isSysAdmin) {
+                  return Role.isInRole(clientAdmin, user.roles).then(function(isClientAdmin) {
+                    return Role.isInRole(readOnlyAdmin, user.roles).then(function(isReadOnlyAdmin) {
+                      return Role.isInRole(restricted, user.roles).then(function(isRestricted) {
+                        loginInfoDirty = false;
+                        me = {
+                          user: user,
+                          isAdmin: isAdmin,
+                          isSysAdmin: isSysAdmin,
+                          isClientAdmin: isClientAdmin,
+                          isReadOnlyAdmin: isReadOnlyAdmin,
+                          isRestricted: isRestricted,
+                          loggedIn: true,
+                          userCohorts: []
+                        };
+                        return getCountry(me).then(function() {
+                          if (wasLoggedOut) {
+                            fireLoginChangeEvent();
+                          }
+                          return deferred.resolve(me);
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
           });
         }).error(function() {
           loginInfoDirty = false;
