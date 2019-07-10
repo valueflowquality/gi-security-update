@@ -20,6 +20,7 @@ module.exports = (dal, options) ->
       hbsp: 'String'
       userIds: [{provider: 'String', providerId: 'String'}]
       roles: [{type: 'ObjectId', ref: 'Role'}]
+      registerDate: 'Date'
     options:
       strict: false
 
@@ -120,6 +121,7 @@ module.exports = (dal, options) ->
       if user
         callback err, user
       else
+        json.registerDate = new Date()
         crud.create json, (err, user) ->
           callback err, user
 
@@ -140,6 +142,7 @@ module.exports = (dal, options) ->
       else if user?.email is json.email
         callback 'Username already exists'
       else
+        json.registerDate = new Date()
         crud.create json, callback
 
   updateQuery = (query, change, callback) ->
