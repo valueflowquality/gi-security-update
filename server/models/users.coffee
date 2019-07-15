@@ -155,8 +155,12 @@ module.exports = (dal, options) ->
   modelAggr = (options, cb) ->
     model.aggregate options, cb
 
+  findOneAndUpdate = (condition, updateObj, cb) ->
+    model.findOneAndUpdate condition, updateObj, cb
+
   exports = gi.common.extend {}, crud
   exports.update = update
+  exports.findOneAndUpdate = findOneAndUpdate
   exports.updateQuery = updateQuery
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId
