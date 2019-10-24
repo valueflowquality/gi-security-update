@@ -1,6 +1,6 @@
 {
   "name": "gi-security-updated",
-  "version": "1.4.36",
+  "version": "1.4.37",
   "main": "./dist/gi-security.js",
   "devDependencies": {
     "angular-mocks": "~1.2.28",
