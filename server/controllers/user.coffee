@@ -9,7 +9,10 @@ module.exports = (model, crudControllerFactory) ->
     systemId = req.systemId
     email = req.query.username
     if email?
-      model.findOneBy 'email', email, systemId, (err, user) ->
+      query =
+        systemId: systemId
+        email: { $regex: "#{email}", $options: "i" }
+      model.findOne query, (err, user) ->
         if err?
           if err is "Cannot find User"
             res.json 200, {available: true}
@@ -29,7 +32,10 @@ module.exports = (model, crudControllerFactory) ->
     output = {}
 
     if email? and password? and systemId?
-      model.findOneBy 'email', email, systemId, (err, user) ->
+      query =
+        systemId: systemId
+        email: { $regex: "#{email}", $options: "i" }
+      model.findOne query, (err, user) ->
         if err or (not user)
           res.json 200, {valid: false}
         else
