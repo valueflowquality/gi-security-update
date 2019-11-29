@@ -164,7 +164,7 @@ module.exports = (model, crudControllerFactory) ->
     else
       #look for a user with the specified e-mail
       #generate a random token
-      model.findOneBy 'email', req.body.email, req.systemId, (err, user) ->
+      model.findOneBy 'email', { $regex: "#{req.body.email}", $options: "i" }, req.systemId, (err, user) ->
         if err
           res.json 500, {message: err}
         else if not user?
