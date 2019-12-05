@@ -19,7 +19,7 @@
     "gi-util-updated": "^1.9.84",
     "bcryptjs": "^2.2.0",
     "underscore": "~1.4.4",
-    "moment": "~2.0.0",
+    "moment": "~2.24.0",
     "aws-sdk": "~1.4.0",
     "async": "~0.2.9"
   },
