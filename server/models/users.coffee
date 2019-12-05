@@ -21,6 +21,7 @@ module.exports = (dal, options) ->
       userIds: [{provider: 'String', providerId: 'String'}]
       roles: [{type: 'ObjectId', ref: 'Role'}]
       registerDate: 'Date'
+      cohortUpdateDate: 'Date'
     options:
       strict: false
 
