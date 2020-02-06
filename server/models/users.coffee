@@ -22,6 +22,8 @@ module.exports = (dal, options) ->
       roles: [{type: 'ObjectId', ref: 'Role'}]
       registerDate: 'Date'
       cohortUpdateDate: 'Date'
+      subscriptionStartDate: 'Date'
+      subscriptionEndDate: 'Date'
     options:
       strict: false
 
