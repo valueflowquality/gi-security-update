@@ -24,6 +24,7 @@ module.exports = (dal, options) ->
       cohortUpdateDate: 'Date'
       subscriptionStartDate: 'Date'
       subscriptionEndDate: 'Date'
+      dashboardViewed: 'Boolean'
     options:
       strict: false
 
