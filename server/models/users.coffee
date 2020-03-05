@@ -25,6 +25,7 @@ module.exports = (dal, options) ->
       subscriptionStartDate: 'Date'
       subscriptionEndDate: 'Date'
       dashboardViewed: 'Boolean'
+      dashboardTopMenuMinimized: 'Boolean'
     options:
       strict: false
 
