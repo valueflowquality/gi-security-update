@@ -279,6 +279,14 @@ module.exports = (app) ->
     res.clearCookie('__hstc', {domain: '.uat.valueflowquality.com'})
     res.clearCookie('__hssc', {domain: '.uat.valueflowquality.com'})
     res.send 200
+    if req.user
+      app.models.sessions.findOneAndRemove { _id: req.sessionID }, (err, data) ->
+        if err
+          res.json 400, err
+        else
+          res.send(200)
+    else
+      res.send(200)
 
   #Configure Passport authentication strategies
   users = app.models.users
