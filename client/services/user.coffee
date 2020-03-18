@@ -46,6 +46,22 @@ angular.module('gi.security').provider 'giUser', () ->
         deferred.reject
       deferred.promise
 
+    updateAccount = (item) ->
+      deferred = $q.defer()
+      $http.put('/api/user/account', item).success( () ->
+        deferred.resolve()
+      ).error (err) ->
+        deferred.reject err
+      deferred.promise
+
+    updatePassword = (item) ->
+      deferred = $q.defer()
+      $http.put('/api/user/password', item).success( () ->
+        deferred.resolve()
+      ).error (err) ->
+        deferred.reject err
+      deferred.promise
+
     isUsernameAvailable = (username) ->
       deferred = $q.defer()
       if username?
@@ -63,6 +79,8 @@ angular.module('gi.security').provider 'giUser', () ->
     crud.register = register
     crud.login = login
     crud.saveMe = saveMe
+    crud.updateAccount = updateAccount
+    crud.updatePassword = updatePassword
     crud.testPassword = testPassword
     crud.isUsernameAvailable = isUsernameAvailable
     crud

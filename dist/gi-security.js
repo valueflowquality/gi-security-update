@@ -308,404 +308,6 @@ angular.module('gi.security').filter('userName', [
   }
 ]);
 
-angular.module('gi.security').directive('auth', [
-  '$location', '$rootScope', function($location, $rootScope) {
-    var link;
-    link = function(scope, elem, attrs) {
-      var path;
-      path = $location.path();
-      scope.$on('event:auth-loginRequired', function() {
-        path = $location.path();
-        return $location.path('/login');
-      });
-      return scope.$on('event:auth-loginConfirmed', function() {
-        if (path === '/logout' || path === '/login') {
-          path = '/';
-        }
-        return $location.path(path);
-      });
-    };
-    return {
-      link: link,
-      restrict: 'C'
-    };
-  }
-]);
-
-angular.module('gi.security').directive('giRolePicker', [
-  '$filter', function($filter) {
-    return {
-      restrict: 'E',
-      scope: {
-        model: '='
-      },
-      templateUrl: 'gi-rolePicker.html',
-      link: {
-        pre: function($scope) {
-          var refresh;
-          $scope.my = {};
-          refresh = function() {
-            $scope.model.chosenItems = [];
-            $scope.model.availableItems = [];
-            return angular.forEach($scope.model.roles, function(role) {
-              var found;
-              found = false;
-              angular.forEach($scope.model.chosen, function(memberId) {
-                if (memberId.toString() === role._id.toString()) {
-                  return found = true;
-                }
-              });
-              if (found) {
-                return $scope.model.chosenItems.push(role);
-              } else {
-                return $scope.model.availableItems.push(role);
-              }
-            });
-          };
-          $scope.$watch('model.roles', function(newVal, oldVal) {
-            if (newVal != null) {
-              return refresh();
-            }
-          });
-          return $scope.$watch('model.item', function(newVal, oldVal) {
-            if ((newVal != null) && newVal._id !== (oldVal != null ? oldVal._id : void 0)) {
-              return refresh();
-            }
-          });
-        }
-      }
-    };
-  }
-]);
-
-angular.module('gi.security').directive('giPassword', [
-  'giUser', function(User) {
-    return {
-      restrict: 'A',
-      require: 'ngModel',
-      compile: function(elem, attrs) {
-        var linkFn;
-        linkFn = function($scope, elem, attrs, controller) {
-          var $viewValue, ngModelController;
-          ngModelController = controller;
-          $viewValue = function() {
-            return ngModelController.$viewValue;
-          };
-          return ngModelController.$validators.giPassword = function(x) {
-            return User.testPassword(x);
-          };
-        };
-        return linkFn;
-      }
-    };
-  }
-]);
-
-angular.module('gi.security').directive('permissionForm', [
-  '$q', '$timeout', '$http', '$filter', 'Resource', 'giUser', 'Permission', function($q, $timeout, $http, $filter, Resource, User, Permission) {
-    return {
-      restrict: 'E',
-      templateUrl: 'gi-permissionForm.html',
-      scope: {
-        permission: '=',
-        submit: '&',
-        destroy: '&',
-        submitText: '@'
-      },
-      link: function(scope, elm, attrs) {
-        var getRelatedKeys, getResources, getSelectedKeys, getSelectedResourceType, getSelectedUser, getUsers, pluralise, refreshPermissionFields;
-        scope.resourceTypes = [];
-        scope.keys = [];
-        scope.selectedKeys = [];
-        scope.users = [];
-        scope.showDelete = true;
-        scope.showDeleteModal = false;
-        scope.restrictions = Permission.restrictions;
-        scope.$watch('permission', function(newVal, oldVal) {
-          return refreshPermissionFields();
-        });
-        scope.$watch('selectedResourceType', function(newVal, oldVal) {
-          if (newVal != null ? newVal.name : void 0) {
-            scope.selectedKeys = [];
-            return getRelatedKeys(newVal.name);
-          }
-        });
-        pluralise = function(str) {
-          var result, suffix;
-          if (str != null) {
-            result = str.toLowerCase();
-            suffix = 'y';
-            if (result.indexOf(suffix, result.length - suffix.length) !== -1) {
-              result = result.substring(0, result.length - 1) + 'ies';
-            } else {
-              result += 's';
-            }
-            return result;
-          } else {
-            return str;
-          }
-        };
-        getRelatedKeys = function(name) {
-          var uri;
-          uri = '/api/' + pluralise(name);
-          return $http.get(uri).success(function(data) {
-            scope.selectedKeys = [];
-            scope.keys = data;
-            angular.forEach(scope.keys, function(key) {
-              return key.id = key._id;
-            });
-            return getSelectedKeys();
-          });
-        };
-        scope.deletePermission = function() {
-          scope.destroy({
-            permission: scope.permission
-          });
-          return scope.showDeleteModal = false;
-        };
-        scope.confirmDelete = function() {
-          return scope.showDeleteModal = true;
-        };
-        getUsers = function() {
-          var deferred;
-          deferred = $q.defer();
-          User.all(function(users) {
-            scope.users = users;
-            angular.forEach(scope.users, function(user) {
-              return user.id = user._id;
-            });
-            deferred.resolve();
-          });
-          return deferred.promise;
-        };
-        getResources = function() {
-          var deferred;
-          deferred = $q.defer();
-          Resource.all().then(function(resources) {
-            scope.resourceTypes = resources;
-            angular.forEach(scope.resourceTypes, function(resource) {
-              return resource.id = resource._id;
-            });
-            deferred.resolve();
-          });
-          return deferred.promise;
-        };
-        getSelectedResourceType = function() {
-          scope.selectedResourceType = {};
-          if (scope.permission) {
-            if (scope.permission.resourceType) {
-              return angular.forEach(scope.resourceTypes, function(resource) {
-                if (resource.name === scope.permission.resourceType) {
-                  return scope.selectedResourceType = resource;
-                }
-              });
-            }
-          }
-        };
-        getSelectedUser = function() {
-          scope.selectedUser = {};
-          if (scope.permission) {
-            if (scope.permission.userId) {
-              return angular.forEach(scope.users, function(user) {
-                if (user._id === scope.permission.userId) {
-                  return scope.selectedUser = user;
-                }
-              });
-            }
-          }
-        };
-        getSelectedKeys = function() {
-          scope.selectedKeys = [];
-          if (scope.permission && (scope.permission.keys != null)) {
-            return scope.selectedKeys = $filter('filter')(scope.keys, function(key) {
-              return scope.permission.keys.indexOf(key._id) !== -1;
-            });
-          }
-        };
-        refreshPermissionFields = function() {
-          $timeout(getSelectedResourceType);
-          $timeout(getSelectedUser);
-          return $timeout(getSelectedKeys);
-        };
-        scope.save = function() {
-          var key;
-          if (scope.permission) {
-            scope.permission.userId = scope.selectedUser._id;
-            scope.permission.keys = (function() {
-              var i, len, ref, results;
-              ref = scope.selectedKeys;
-              results = [];
-              for (i = 0, len = ref.length; i < len; i++) {
-                key = ref[i];
-                results.push(key._id);
-              }
-              return results;
-            })();
-            scope.permission.resourceType = scope.selectedResourceType.name;
-            return scope.submit({
-              permission: scope.permission
-            });
-          }
-        };
-        return $q.all([getResources(), getUsers()]).then(function() {
-          return refreshPermissionFields();
-        });
-      }
-    };
-  }
-]);
-
-angular.module('gi.security').directive('roleForm', function() {
-  return {
-    restrict: 'E',
-    templateUrl: 'gi-roleForm.html',
-    scope: {
-      role: '=',
-      submit: '&',
-      destroy: '&',
-      submitText: '@'
-    },
-    link: function(scope, elm, attrs) {
-      scope.showDelete = true;
-      scope.showDeleteModal = false;
-      scope.deleteRole = function() {
-        scope.destroy({
-          role: scope.role
-        });
-        return scope.showDeleteModal = false;
-      };
-      return scope.confirmDelete = function() {
-        return scope.showDeleteModal = true;
-      };
-    }
-  };
-});
-
-var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-angular.module('gi.security').directive('userForm', [
-  'Role', function(Role) {
-    return {
-      restrict: 'E',
-      templateUrl: 'gi-userForm.html',
-      scope: {
-        user: '=',
-        submit: '&',
-        destroy: '&',
-        submitText: '@'
-      },
-      link: function(scope, elm, attrs) {
-        var getRoles, refreshUserRoles;
-        scope.showDelete = true;
-        scope.showDeleteModal = false;
-        scope.userRoles = [];
-        scope.notUserRoles = [];
-        scope.unsavedChanges = false;
-        scope.$watch('user', function(newVal) {
-          if (newVal) {
-            scope.unsavedChanges = false;
-            return refreshUserRoles();
-          }
-        });
-        refreshUserRoles = function() {
-          scope.userRoles = [];
-          scope.notUserRoles = [];
-          return angular.forEach(scope.roles, function(role) {
-            var ref, ref1;
-            if ((((ref = scope.user) != null ? ref.roles : void 0) != null) && (ref1 = role._id, indexOf.call(scope.user.roles, ref1) >= 0)) {
-              return scope.userRoles.push(role);
-            } else {
-              return scope.notUserRoles.push(role);
-            }
-          });
-        };
-        getRoles = function() {
-          return Role.all(function(roles) {
-            scope.roles = roles;
-            return refreshUserRoles();
-          });
-        };
-        scope.checkForChanges = function() {
-          return scope.unsavedChanges = true;
-        };
-        scope.deleteUser = function() {
-          scope.destroy({
-            user: scope.user
-          });
-          return scope.showDeleteModal = false;
-        };
-        scope.confirmDelete = function() {
-          return scope.showDeleteModal = true;
-        };
-        scope.addToRole = function(role) {
-          scope.unsavedChanges = true;
-          scope.user.roles.push(role._id);
-          return refreshUserRoles();
-        };
-        scope.removeFromRole = function(role) {
-          scope.unsavedChanges = true;
-          return angular.forEach(scope.user.roles, function(userRole, index) {
-            if (userRole === role._id) {
-              scope.user.roles.splice(index, 1);
-              return refreshUserRoles();
-            }
-          });
-        };
-        scope.save = function() {
-          scope.unsavedChanges = false;
-          return scope.submit({
-            user: scope.user
-          });
-        };
-        return getRoles();
-      }
-    };
-  }
-]);
-
-angular.module('gi.security').directive('giUsername', [
-  'giUser', '$q', '$parse', function(User, $q, $parse) {
-    return {
-      restrict: 'A',
-      require: 'ngModel',
-      compile: function(elem, attrs) {
-        var linkFn;
-        linkFn = function($scope, elem, attrs, controller) {
-          var $viewValue, needToCheck, ngModelController, requiredGetter;
-          ngModelController = controller;
-          $viewValue = function() {
-            return ngModelController.$viewValue;
-          };
-          requiredGetter = $parse(attrs.giUsername);
-          needToCheck = function() {
-            return (attrs.giUsername === "") || requiredGetter($scope);
-          };
-          $scope.$watch('item.register', function(newVal) {
-            return ngModelController.$$parseAndValidate();
-          });
-          return ngModelController.$asyncValidators.giUsername = function(modelValue, viewValue) {
-            var deferred;
-            deferred = $q.defer();
-            if (needToCheck()) {
-              User.isUsernameAvailable(modelValue).then(function(valid) {
-                if (valid) {
-                  return deferred.resolve();
-                } else {
-                  return deferred.reject();
-                }
-              });
-            } else {
-              deferred.resolve();
-            }
-            return deferred.promise;
-          };
-        };
-        return linkFn;
-      }
-    };
-  }
-]);
-
 angular.module('gi.security').config([
   '$httpProvider', 'AuthProvider', function($httpProvider, AuthProvider) {
     return $httpProvider.interceptors.push([
@@ -1120,7 +722,7 @@ angular.module('gi.security').provider('giUser', function() {
   };
   this.$get = [
     '$q', '$http', 'Auth', 'giCrud', 'giLog', function($q, $http, Auth, Crud, Log) {
-      var crud, isUsernameAvailable, login, register, saveMe, testPassword;
+      var crud, isUsernameAvailable, login, register, saveMe, testPassword, updateAccount, updatePassword;
       crud = Crud.factory('users');
       testPassword = function(pwd) {
         if (passwordRequirements != null) {
@@ -1166,6 +768,26 @@ angular.module('gi.security').provider('giUser', function() {
         });
         return deferred.promise;
       };
+      updateAccount = function(item) {
+        var deferred;
+        deferred = $q.defer();
+        $http.put('/api/user/account', item).success(function() {
+          return deferred.resolve();
+        }).error(function(err) {
+          return deferred.reject(err);
+        });
+        return deferred.promise;
+      };
+      updatePassword = function(item) {
+        var deferred;
+        deferred = $q.defer();
+        $http.put('/api/user/password', item).success(function() {
+          return deferred.resolve();
+        }).error(function(err) {
+          return deferred.reject(err);
+        });
+        return deferred.promise;
+      };
       isUsernameAvailable = function(username) {
         var deferred;
         deferred = $q.defer();
@@ -1185,6 +807,8 @@ angular.module('gi.security').provider('giUser', function() {
       crud.register = register;
       crud.login = login;
       crud.saveMe = saveMe;
+      crud.updateAccount = updateAccount;
+      crud.updatePassword = updatePassword;
       crud.testPassword = testPassword;
       crud.isUsernameAvailable = isUsernameAvailable;
       return crud;
@@ -1233,6 +857,404 @@ angular.module('gi.security').factory('UserAccount', [
       get: resource.get,
       getMe: getMe,
       resetAPISecret: resetAPISecret
+    };
+  }
+]);
+
+angular.module('gi.security').directive('auth', [
+  '$location', '$rootScope', function($location, $rootScope) {
+    var link;
+    link = function(scope, elem, attrs) {
+      var path;
+      path = $location.path();
+      scope.$on('event:auth-loginRequired', function() {
+        path = $location.path();
+        return $location.path('/login');
+      });
+      return scope.$on('event:auth-loginConfirmed', function() {
+        if (path === '/logout' || path === '/login') {
+          path = '/';
+        }
+        return $location.path(path);
+      });
+    };
+    return {
+      link: link,
+      restrict: 'C'
+    };
+  }
+]);
+
+angular.module('gi.security').directive('giRolePicker', [
+  '$filter', function($filter) {
+    return {
+      restrict: 'E',
+      scope: {
+        model: '='
+      },
+      templateUrl: 'gi-rolePicker.html',
+      link: {
+        pre: function($scope) {
+          var refresh;
+          $scope.my = {};
+          refresh = function() {
+            $scope.model.chosenItems = [];
+            $scope.model.availableItems = [];
+            return angular.forEach($scope.model.roles, function(role) {
+              var found;
+              found = false;
+              angular.forEach($scope.model.chosen, function(memberId) {
+                if (memberId.toString() === role._id.toString()) {
+                  return found = true;
+                }
+              });
+              if (found) {
+                return $scope.model.chosenItems.push(role);
+              } else {
+                return $scope.model.availableItems.push(role);
+              }
+            });
+          };
+          $scope.$watch('model.roles', function(newVal, oldVal) {
+            if (newVal != null) {
+              return refresh();
+            }
+          });
+          return $scope.$watch('model.item', function(newVal, oldVal) {
+            if ((newVal != null) && newVal._id !== (oldVal != null ? oldVal._id : void 0)) {
+              return refresh();
+            }
+          });
+        }
+      }
+    };
+  }
+]);
+
+angular.module('gi.security').directive('giPassword', [
+  'giUser', function(User) {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      compile: function(elem, attrs) {
+        var linkFn;
+        linkFn = function($scope, elem, attrs, controller) {
+          var $viewValue, ngModelController;
+          ngModelController = controller;
+          $viewValue = function() {
+            return ngModelController.$viewValue;
+          };
+          return ngModelController.$validators.giPassword = function(x) {
+            return User.testPassword(x);
+          };
+        };
+        return linkFn;
+      }
+    };
+  }
+]);
+
+angular.module('gi.security').directive('permissionForm', [
+  '$q', '$timeout', '$http', '$filter', 'Resource', 'giUser', 'Permission', function($q, $timeout, $http, $filter, Resource, User, Permission) {
+    return {
+      restrict: 'E',
+      templateUrl: 'gi-permissionForm.html',
+      scope: {
+        permission: '=',
+        submit: '&',
+        destroy: '&',
+        submitText: '@'
+      },
+      link: function(scope, elm, attrs) {
+        var getRelatedKeys, getResources, getSelectedKeys, getSelectedResourceType, getSelectedUser, getUsers, pluralise, refreshPermissionFields;
+        scope.resourceTypes = [];
+        scope.keys = [];
+        scope.selectedKeys = [];
+        scope.users = [];
+        scope.showDelete = true;
+        scope.showDeleteModal = false;
+        scope.restrictions = Permission.restrictions;
+        scope.$watch('permission', function(newVal, oldVal) {
+          return refreshPermissionFields();
+        });
+        scope.$watch('selectedResourceType', function(newVal, oldVal) {
+          if (newVal != null ? newVal.name : void 0) {
+            scope.selectedKeys = [];
+            return getRelatedKeys(newVal.name);
+          }
+        });
+        pluralise = function(str) {
+          var result, suffix;
+          if (str != null) {
+            result = str.toLowerCase();
+            suffix = 'y';
+            if (result.indexOf(suffix, result.length - suffix.length) !== -1) {
+              result = result.substring(0, result.length - 1) + 'ies';
+            } else {
+              result += 's';
+            }
+            return result;
+          } else {
+            return str;
+          }
+        };
+        getRelatedKeys = function(name) {
+          var uri;
+          uri = '/api/' + pluralise(name);
+          return $http.get(uri).success(function(data) {
+            scope.selectedKeys = [];
+            scope.keys = data;
+            angular.forEach(scope.keys, function(key) {
+              return key.id = key._id;
+            });
+            return getSelectedKeys();
+          });
+        };
+        scope.deletePermission = function() {
+          scope.destroy({
+            permission: scope.permission
+          });
+          return scope.showDeleteModal = false;
+        };
+        scope.confirmDelete = function() {
+          return scope.showDeleteModal = true;
+        };
+        getUsers = function() {
+          var deferred;
+          deferred = $q.defer();
+          User.all(function(users) {
+            scope.users = users;
+            angular.forEach(scope.users, function(user) {
+              return user.id = user._id;
+            });
+            deferred.resolve();
+          });
+          return deferred.promise;
+        };
+        getResources = function() {
+          var deferred;
+          deferred = $q.defer();
+          Resource.all().then(function(resources) {
+            scope.resourceTypes = resources;
+            angular.forEach(scope.resourceTypes, function(resource) {
+              return resource.id = resource._id;
+            });
+            deferred.resolve();
+          });
+          return deferred.promise;
+        };
+        getSelectedResourceType = function() {
+          scope.selectedResourceType = {};
+          if (scope.permission) {
+            if (scope.permission.resourceType) {
+              return angular.forEach(scope.resourceTypes, function(resource) {
+                if (resource.name === scope.permission.resourceType) {
+                  return scope.selectedResourceType = resource;
+                }
+              });
+            }
+          }
+        };
+        getSelectedUser = function() {
+          scope.selectedUser = {};
+          if (scope.permission) {
+            if (scope.permission.userId) {
+              return angular.forEach(scope.users, function(user) {
+                if (user._id === scope.permission.userId) {
+                  return scope.selectedUser = user;
+                }
+              });
+            }
+          }
+        };
+        getSelectedKeys = function() {
+          scope.selectedKeys = [];
+          if (scope.permission && (scope.permission.keys != null)) {
+            return scope.selectedKeys = $filter('filter')(scope.keys, function(key) {
+              return scope.permission.keys.indexOf(key._id) !== -1;
+            });
+          }
+        };
+        refreshPermissionFields = function() {
+          $timeout(getSelectedResourceType);
+          $timeout(getSelectedUser);
+          return $timeout(getSelectedKeys);
+        };
+        scope.save = function() {
+          var key;
+          if (scope.permission) {
+            scope.permission.userId = scope.selectedUser._id;
+            scope.permission.keys = (function() {
+              var i, len, ref, results;
+              ref = scope.selectedKeys;
+              results = [];
+              for (i = 0, len = ref.length; i < len; i++) {
+                key = ref[i];
+                results.push(key._id);
+              }
+              return results;
+            })();
+            scope.permission.resourceType = scope.selectedResourceType.name;
+            return scope.submit({
+              permission: scope.permission
+            });
+          }
+        };
+        return $q.all([getResources(), getUsers()]).then(function() {
+          return refreshPermissionFields();
+        });
+      }
+    };
+  }
+]);
+
+angular.module('gi.security').directive('roleForm', function() {
+  return {
+    restrict: 'E',
+    templateUrl: 'gi-roleForm.html',
+    scope: {
+      role: '=',
+      submit: '&',
+      destroy: '&',
+      submitText: '@'
+    },
+    link: function(scope, elm, attrs) {
+      scope.showDelete = true;
+      scope.showDeleteModal = false;
+      scope.deleteRole = function() {
+        scope.destroy({
+          role: scope.role
+        });
+        return scope.showDeleteModal = false;
+      };
+      return scope.confirmDelete = function() {
+        return scope.showDeleteModal = true;
+      };
+    }
+  };
+});
+
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+angular.module('gi.security').directive('userForm', [
+  'Role', function(Role) {
+    return {
+      restrict: 'E',
+      templateUrl: 'gi-userForm.html',
+      scope: {
+        user: '=',
+        submit: '&',
+        destroy: '&',
+        submitText: '@'
+      },
+      link: function(scope, elm, attrs) {
+        var getRoles, refreshUserRoles;
+        scope.showDelete = true;
+        scope.showDeleteModal = false;
+        scope.userRoles = [];
+        scope.notUserRoles = [];
+        scope.unsavedChanges = false;
+        scope.$watch('user', function(newVal) {
+          if (newVal) {
+            scope.unsavedChanges = false;
+            return refreshUserRoles();
+          }
+        });
+        refreshUserRoles = function() {
+          scope.userRoles = [];
+          scope.notUserRoles = [];
+          return angular.forEach(scope.roles, function(role) {
+            var ref, ref1;
+            if ((((ref = scope.user) != null ? ref.roles : void 0) != null) && (ref1 = role._id, indexOf.call(scope.user.roles, ref1) >= 0)) {
+              return scope.userRoles.push(role);
+            } else {
+              return scope.notUserRoles.push(role);
+            }
+          });
+        };
+        getRoles = function() {
+          return Role.all(function(roles) {
+            scope.roles = roles;
+            return refreshUserRoles();
+          });
+        };
+        scope.checkForChanges = function() {
+          return scope.unsavedChanges = true;
+        };
+        scope.deleteUser = function() {
+          scope.destroy({
+            user: scope.user
+          });
+          return scope.showDeleteModal = false;
+        };
+        scope.confirmDelete = function() {
+          return scope.showDeleteModal = true;
+        };
+        scope.addToRole = function(role) {
+          scope.unsavedChanges = true;
+          scope.user.roles.push(role._id);
+          return refreshUserRoles();
+        };
+        scope.removeFromRole = function(role) {
+          scope.unsavedChanges = true;
+          return angular.forEach(scope.user.roles, function(userRole, index) {
+            if (userRole === role._id) {
+              scope.user.roles.splice(index, 1);
+              return refreshUserRoles();
+            }
+          });
+        };
+        scope.save = function() {
+          scope.unsavedChanges = false;
+          return scope.submit({
+            user: scope.user
+          });
+        };
+        return getRoles();
+      }
+    };
+  }
+]);
+
+angular.module('gi.security').directive('giUsername', [
+  'giUser', '$q', '$parse', function(User, $q, $parse) {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      compile: function(elem, attrs) {
+        var linkFn;
+        linkFn = function($scope, elem, attrs, controller) {
+          var $viewValue, needToCheck, ngModelController, requiredGetter;
+          ngModelController = controller;
+          $viewValue = function() {
+            return ngModelController.$viewValue;
+          };
+          requiredGetter = $parse(attrs.giUsername);
+          needToCheck = function() {
+            return (attrs.giUsername === "") || requiredGetter($scope);
+          };
+          $scope.$watch('item.register', function(newVal) {
+            return ngModelController.$$parseAndValidate();
+          });
+          return ngModelController.$asyncValidators.giUsername = function(modelValue, viewValue) {
+            var deferred;
+            deferred = $q.defer();
+            if (needToCheck()) {
+              User.isUsernameAvailable(modelValue).then(function(valid) {
+                if (valid) {
+                  return deferred.resolve();
+                } else {
+                  return deferred.reject();
+                }
+              });
+            } else {
+              deferred.resolve();
+            }
+            return deferred.promise;
+          };
+        };
+        return linkFn;
+      }
     };
   }
 ]);

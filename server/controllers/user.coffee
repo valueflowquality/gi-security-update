@@ -76,6 +76,64 @@ module.exports = (model, crudControllerFactory) ->
           delete user.password
           res.json 200, user
 
+  updateAccount = (req, res) ->
+    if req.user._id is not req.body._id
+      res.json 401
+    else
+      updateObject =
+        systemId: req.user.systemId
+
+      if req.body.firstName
+        updateObject.firstName = req.body.firstName
+
+      if req.body.lastName
+        updateObject.lastName = req.body.lastName
+
+      if req.body.userCountry?.code
+        updateObject.countryCode = req.body.userCountry.code
+
+      model.update req.user._id, updateObject, (err, user) ->
+        if err
+          res.json 404, err
+        else
+          user.password = null
+          delete user.password
+          res.json 200, user
+
+
+  updatePassword = (req, res) ->
+    if req.user._id is not req.body._id
+      res.json 401
+    else
+      if !req.body.currentPassword
+        return res.json 400, { msg: "The current password not specified" }
+
+      if !req.body.newPassword
+        return res.json 400, { msg: "The new password not specified" }
+      
+      if !req.body.confirmPassword
+        return res.json 400, { msg: "The confirmation password not specified" }
+
+      if req.body.newPassword != req.body.confirmPassword
+        return res.json 400, { msg: "The new password does not match the cconfirmation password" }
+
+      model.comparePassword req.user, req.body.currentPassword, (err, isValid) ->
+        if err
+          return res.json 400, err
+        else
+          if !isValid
+            return res.json 400, { msg: "The provided current password is incorrect" }
+          else
+            updateObject =
+              systemId: req.user.systemId
+              password: req.body.newPassword
+
+            model.update req.user._id, updateObject, (err, user) ->
+              if err
+                res.json 400, err
+              else
+                res.json 200, { msg: "Password update succeeded" }
+
   updateDashboardViewed = (req, res) ->
     if req.user._id is not req.body._id
       res.json 401
@@ -262,6 +320,8 @@ module.exports = (model, crudControllerFactory) ->
   exports.update = update
   exports.showMe = showMe
   exports.updateMe = updateMe
+  exports.updateAccount = updateAccount
+  exports.updatePassword = updatePassword
   exports.updateDashboardViewed = updateDashboardViewed
   exports.updateTopMenuMinimized = updateTopMenuMinimized
   exports.destroyMe = destroyMe

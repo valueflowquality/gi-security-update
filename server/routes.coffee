@@ -6,6 +6,12 @@ configure = (app, rest) ->
   app.put '/api/user'
   , app.middleware.userAction, app.controllers.user.updateMe
 
+  app.put '/api/user/account'
+  , app.middleware.userAction, app.controllers.user.updateAccount
+
+  app.put '/api/user/password'
+  , app.middleware.userAction, app.controllers.user.updatePassword
+
   app.put '/api/user/dashboardViewed'
   , app.middleware.userAction, app.controllers.user.updateDashboardViewed
 
