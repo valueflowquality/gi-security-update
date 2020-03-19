@@ -25,8 +25,4 @@ module.exports = (users) ->
     , middleware
     , passport.authenticate('basic')
     , (req, res) ->
-      if req.body?.rememberMe
-        req.session.cookie.maxAge = 180 * 24 * 60 * 60 * 1000
-      else
-        req.session.cookie.expires = false
       res.json 200
