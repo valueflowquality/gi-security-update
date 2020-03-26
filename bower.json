@@ -1,6 +1,6 @@
 {
   "name": "gi-security-updated",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "main": "./dist/gi-security.js",
   "devDependencies": {
     "angular-mocks": "~1.2.28",
@@ -12,7 +12,7 @@
     "angular-route": "~1.2.28",
     "angular-touch": "~1.2.28",
     "gi-util-updated": "~1.9.82",
-    "gi-ui-updated": "~1.6.31",
+    "gi-ui-updated": "~1.6.32",
 
     "underscore": "~1.5.2"
   },
