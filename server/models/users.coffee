@@ -161,6 +161,10 @@ module.exports = (dal, options) ->
     else
       model.update query, change, {multi: true}, callback
 
+  updateQueryWithoutSystemId = (query, change, callback) ->
+    delete change.confirm
+    model.update query, change, {multi: true}, callback
+
   modelAggr = (options, cb) ->
     model.aggregate options, cb
 
@@ -171,6 +175,7 @@ module.exports = (dal, options) ->
   exports.update = update
   exports.findOneAndUpdate = findOneAndUpdate
   exports.updateQuery = updateQuery
+  exports.updateQueryWithoutSystemId = updateQueryWithoutSystemId
   exports.findOrCreate = findOrCreate
   exports.findOneByProviderId = findOneByProviderId
   exports.resetAPISecret = resetAPISecret
