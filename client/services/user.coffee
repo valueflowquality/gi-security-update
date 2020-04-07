@@ -38,14 +38,6 @@ angular.module('gi.security').provider 'giUser', () ->
           deferred.reject()
       deferred.promise
 
-    saveMe = (item) ->
-      deferred = $q.defer()
-      $http.put('/api/user', item).success( () ->
-        deferred.resolve()
-      ).error () ->
-        deferred.reject
-      deferred.promise
-
     updateAccount = (item) ->
       deferred = $q.defer()
       $http.put('/api/user/account', item).success( () ->
@@ -78,7 +70,6 @@ angular.module('gi.security').provider 'giUser', () ->
 
     crud.register = register
     crud.login = login
-    crud.saveMe = saveMe
     crud.updateAccount = updateAccount
     crud.updatePassword = updatePassword
     crud.testPassword = testPassword

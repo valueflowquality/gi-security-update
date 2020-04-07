@@ -61,24 +61,10 @@ module.exports = (model, crudControllerFactory) ->
         user.password = null
         delete user.password
         res.json 200, user
-  updateMe = (req, res) ->
-    #first check that the user we want to update is the user
-    #making the request
-    if req.user._id is not req.body._id
-      res.json 401
-    else
-      req.body.systemId = req.systemId
-      model.update req.user._id, req.body, (err, user) ->
-        if err
-          res.json 404
-        else
-          user.password = null
-          delete user.password
-          res.json 200, user
 
   updateAccount = (req, res) ->
     if req.user._id is not req.body._id
-      res.json 401
+      res.json 401, { msg: "Editing other user data is not permitted" }
     else
       updateObject =
         systemId: req.user.systemId
@@ -319,7 +305,6 @@ module.exports = (model, crudControllerFactory) ->
   exports.create = create
   exports.update = update
   exports.showMe = showMe
-  exports.updateMe = updateMe
   exports.updateAccount = updateAccount
   exports.updatePassword = updatePassword
   exports.updateDashboardViewed = updateDashboardViewed

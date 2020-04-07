@@ -3,9 +3,6 @@ configure = (app, rest) ->
   app.get '/api/user'
   , app.middleware.userAction, app.controllers.user.showMe
 
-  app.put '/api/user'
-  , app.middleware.userAction, app.controllers.user.updateMe
-
   app.put '/api/user/account'
   , app.middleware.userAction, app.controllers.user.updateAccount
 
