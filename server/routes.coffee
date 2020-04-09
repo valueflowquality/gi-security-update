@@ -22,7 +22,7 @@ configure = (app, rest) ->
   , app.middleware.publicAction, app.controllers.user.isUsernameAvailable
 
   app.post '/api/user/register'
-  , app.middleware.publicRegisterAction, app.controllers.user.create
+  , app.middleware.publicRegisterAction, app.controllers.user.register
 
   app.post '/api/user/apiSecret'
   , app.middleware.userAction, app.controllers.user.generateAPISecretForMe
