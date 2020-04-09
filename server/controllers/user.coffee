@@ -96,7 +96,7 @@ module.exports = (model, crudControllerFactory) ->
 
       if !req.body.newPassword
         return res.json 400, { msg: "The new password not specified" }
-      
+
       if !req.body.confirmPassword
         return res.json 400, { msg: "The confirmation password not specified" }
 
@@ -187,6 +187,16 @@ module.exports = (model, crudControllerFactory) ->
 
   findById = (req, res) ->
     crud.show req, res, () ->
+      stripPasswords res
+
+  register = (req, res) ->
+    createObject =
+      email: req.body.email
+      firstName: req.body.firstName
+      lastName: req.body.lastName
+      password: req.body.password
+    req.body = createObject
+    crud.create req, res, () ->
       stripPasswords res
 
   create = (req, res) ->
@@ -302,6 +312,7 @@ module.exports = (model, crudControllerFactory) ->
   exports = gi.common.extend {}, crud
   exports.index = index
   exports.show = findById
+  exports.register = register
   exports.create = create
   exports.update = update
   exports.showMe = showMe
