@@ -195,6 +195,12 @@ module.exports = (model, crudControllerFactory) ->
       firstName: req.body.firstName
       lastName: req.body.lastName
       password: req.body.password
+
+    if req.body.pageName
+      createObject.pageName = req.body.pageName
+    if req.body.register
+      createObject.register = req.body.register
+
     req.body = createObject
     crud.create req, res, () ->
       stripPasswords res
