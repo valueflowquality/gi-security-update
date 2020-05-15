@@ -5,13 +5,16 @@ logger = gi.common
 module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
+  escapeRegExp = (text) ->
+    text.replace(/[-[\]{}()*+?.,\\^$|#\\s]/g,'\\$&')
+
   isUsernameAvailable = (req, res) ->
     systemId = req.systemId
     email = req.query.username
     if email?
       query =
         systemId: systemId
-        email: { $regex: "#{email}", $options: "i" }
+        email: { $regex: escapeRegExp email, $options: "i" }
       model.findOne query, (err, user) ->
         if err?
           if err is "Cannot find User"
