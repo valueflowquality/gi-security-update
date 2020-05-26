@@ -6,7 +6,7 @@ module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
   escapeRegExp = (text) ->
-    text.replace(/[-[\]{}()*+?.,\\^$|#\\]/g,'\\$&')
+    text.replace(/[-\[\]{}()*+?.,^$|#\\]/g,'\\$&')
 
   isUsernameAvailable = (req, res) ->
     systemId = req.systemId
