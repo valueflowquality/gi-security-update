@@ -61,8 +61,12 @@ module.exports = (model, crudControllerFactory) ->
       if err
         res.json 404, {message: err}
       else
-        user.password = null
-        delete user.password
+        user.password = undefined
+        user.subscriptionStartDate = undefined
+        user.subscriptionEndDate = undefined
+        user.trialStartDate = undefined
+        user.trialEndDate = undefined
+        user.subscriptionId = undefined
         res.json 200, user
 
   updateAccount = (req, res) ->
@@ -85,8 +89,12 @@ module.exports = (model, crudControllerFactory) ->
         if err
           res.json 404, err
         else
-          user.password = null
-          delete user.password
+          user.password = undefined
+          user.subscriptionStartDate = undefined
+          user.subscriptionEndDate = undefined
+          user.trialStartDate = undefined
+          user.trialEndDate = undefined
+          user.subscriptionId = undefined
           res.json 200, user
 
 
