@@ -9,9 +9,6 @@ configure = (app, rest) ->
   app.put '/api/user/password'
   , app.middleware.userAction, app.controllers.user.updatePassword
 
-  app.put '/api/user/dashboardViewed'
-  , app.middleware.userAction, app.controllers.user.updateDashboardViewed
-
   app.put '/api/user/dashboardTopMenuMinimized'
   , app.middleware.userAction, app.controllers.user.updateTopMenuMinimized
 

@@ -131,19 +131,6 @@ module.exports = (model, crudControllerFactory) ->
               else
                 res.json 200, { msg: "Password update succeeded" }
 
-  updateDashboardViewed = (req, res) ->
-    if req.user._id is not req.body._id
-      res.json 401
-    else
-      updateObject =
-        systemId: req.user.systemId
-        dashboardViewed: true
-      model.update req.user._id, updateObject, (err, user) ->
-        if err
-          res.json 404, err
-        else
-          res.json 200
-
   updateTopMenuMinimized = (req, res) ->
     if req.user._id is not req.body._id || req.body.data == null
       res.json 401
@@ -335,7 +322,6 @@ module.exports = (model, crudControllerFactory) ->
   exports.showMe = showMe
   exports.updateAccount = updateAccount
   exports.updatePassword = updatePassword
-  exports.updateDashboardViewed = updateDashboardViewed
   exports.updateTopMenuMinimized = updateTopMenuMinimized
   exports.destroyMe = destroyMe
   exports.generateAPISecretForMe = generateAPISecretForMe
