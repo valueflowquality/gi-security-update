@@ -29,6 +29,7 @@ module.exports = (dal, options) ->
       trialEndDate: 'Date'
       subscriptionId: "String"
       dashboardTopMenuMinimized: 'Boolean'
+      dashboardWelcomeRemoved: 'Boolean'
     options:
       strict: false
 
