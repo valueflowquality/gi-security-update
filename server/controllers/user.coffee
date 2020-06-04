@@ -144,6 +144,19 @@ module.exports = (model, crudControllerFactory) ->
         else
           res.json 200
 
+  updateWelcomeRemoved = (req, res) ->
+    if req.user._id is not req.body._id || req.body.data == null
+      res.json 401
+    else
+      updateObject =
+        systemId: req.user.systemId
+        dashboardWelcomeRemoved: req.body.data
+      model.update req.user._id, updateObject, (err, user) ->
+        if err
+          res.json 404, err
+        else
+          res.json 200
+
   destroyMe = (req, res) ->
     model.destroy req.user._id, req.systemId, (err) ->
       if err
@@ -323,6 +336,7 @@ module.exports = (model, crudControllerFactory) ->
   exports.updateAccount = updateAccount
   exports.updatePassword = updatePassword
   exports.updateTopMenuMinimized = updateTopMenuMinimized
+  exports.updateWelcomeRemoved = updateWelcomeRemoved
   exports.destroyMe = destroyMe
   exports.generateAPISecretForMe = generateAPISecretForMe
   exports.resetPassword = resetPassword
