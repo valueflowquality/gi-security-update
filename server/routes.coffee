@@ -15,8 +15,8 @@ configure = (app, rest) ->
   app.put '/api/user/dashboardWelcomeRemoved'
   , app.middleware.userAction, app.controllers.user.updateWelcomeRemoved
 
-  app.put '/api/user/addCompletedCoursedId'
-  , app.middleware.userAction, app.controllers.user.addCompletedCoursedId
+  app.put '/api/user/addCompletedCourseId'
+  , app.middleware.userAction, app.controllers.user.addCompletedCourseId
 
   app.del '/api/user'
   , app.middleware.userAction, app.controllers.user.destroyMe
