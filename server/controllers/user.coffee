@@ -169,8 +169,6 @@ module.exports = (model, crudControllerFactory) ->
         if err
           res.json 404, err
         else
-          console.log "user"
-          console.dir user
           res.json 200, { message: "User updated" }
 
   destroyMe = (req, res) ->
