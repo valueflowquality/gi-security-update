@@ -72,6 +72,12 @@ angular.module('gi.security').provider 'Auth', () ->
       $http = $http || $injector.get '$http'
       $http.get('/api/user')
       .success (user) ->
+        if (typeof profitwell == 'function')
+          console.log "pwa"
+          profitwell('start', { 'user_email': user.email })
+        else
+          console.log "pwanf"
+
         $http.get("/api/cohorts/userCohorts/" + user._id)
         .success (cohorts) ->
           if window.dataLayer
