@@ -30,6 +30,7 @@ module.exports = (dal, options) ->
       subscriptionId: "String"
       dashboardTopMenuMinimized: 'Boolean'
       dashboardWelcomeRemoved: 'Boolean'
+      completedCourseIds: ['Number']
     options:
       strict: false
 

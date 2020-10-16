@@ -157,6 +157,20 @@ module.exports = (model, crudControllerFactory) ->
         else
           res.json 200
 
+  addCompletedCourseId = (req, res) ->
+    if !req.user?._id || !req.body?.courseId
+      res.json 401, { message: "Incorrect data" }
+    else
+      updateObject =
+        systemId: req.user.systemId
+        $addToSet:
+          completedCourseIds: req.body.courseId
+      model.update req.user._id, updateObject, (err, user) ->
+        if err
+          res.json 404, err
+        else
+          res.json 200, { message: "User updated" }
+
   destroyMe = (req, res) ->
     model.destroy req.user._id, req.systemId, (err) ->
       if err
@@ -337,6 +351,7 @@ module.exports = (model, crudControllerFactory) ->
   exports.updatePassword = updatePassword
   exports.updateTopMenuMinimized = updateTopMenuMinimized
   exports.updateWelcomeRemoved = updateWelcomeRemoved
+  exports.addCompletedCourseId = addCompletedCourseId
   exports.destroyMe = destroyMe
   exports.generateAPISecretForMe = generateAPISecretForMe
   exports.resetPassword = resetPassword
