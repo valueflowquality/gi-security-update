@@ -5,7 +5,11 @@ strategies = require './strategies'
 module.exports = (users) ->
   passport.use new strategies.basic.Strategy(
     (email, password, systemId, done) ->
-      users.findOneBy 'email', email, systemId, (err, user) ->
+      query =
+        systemId: systemId
+        email: { $regex: "^#{email.replace(/[-\[\]{}()*+?.,^$|#\\]/g,'\\$&')}$", $options: "i" }
+
+      users.findOne query, (err, user) ->
         if err
           done null, false, {message: err}
         else if not user

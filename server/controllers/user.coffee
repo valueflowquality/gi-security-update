@@ -6,7 +6,7 @@ module.exports = (model, crudControllerFactory) ->
   crud = crudControllerFactory(model)
 
   escapeRegExp = (text) ->
-    text.replace(/[-\[\]{}()*+?.,^$|#\\]/g,'\\$&')
+    "^" + text.replace(/[-\[\]{}()*+?.,^$|#\\]/g,'\\$&') + "$"
 
   isUsernameAvailable = (req, res) ->
     systemId = req.systemId
@@ -37,7 +37,7 @@ module.exports = (model, crudControllerFactory) ->
     if email? and password? and systemId?
       query =
         systemId: systemId
-        email: { $regex: "#{email}", $options: "i" }
+        email: { $regex: escapeRegExp email, $options: "i" }
       model.findOne query, (err, user) ->
         if err or (not user)
           res.json 200, {valid: false}
@@ -273,9 +273,13 @@ module.exports = (model, crudControllerFactory) ->
                 email: user.email
               res.json 200, msg
     else
-      #look for a user with the specified e-mail
-      #generate a random token
-      model.findOneBy 'email', { $regex: escapeRegExp req.body.email, $options: "i" }, req.systemId, (err, user) ->
+      query =
+        systemId: req.systemId
+        email:
+          $regex: escapeRegExp(req.body.email),
+          $options: "i"
+
+      model.findOne query, (err, user) ->
         if err
           res.json 500, {message: err}
         else if not user?
