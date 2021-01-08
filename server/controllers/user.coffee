@@ -221,6 +221,8 @@ module.exports = (model, crudControllerFactory) ->
       lastName: req.body.lastName
       password: req.body.password
 
+    if req.body.countryCode
+      createObject.countryCode = req.body.countryCode
     if req.body.pageName
       createObject.pageName = req.body.pageName
     if req.body.register
