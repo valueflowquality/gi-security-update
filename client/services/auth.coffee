@@ -72,11 +72,21 @@ angular.module('gi.security').provider 'Auth', () ->
       $http = $http || $injector.get '$http'
       $http.get('/api/user')
       .success (user) ->
-        if (typeof profitwell == 'function')
-          console.log "pwa"
-          profitwell('start', { 'user_email': user.email })
+        if (heap && typeof heap.identify == 'function' && typeof heap.addUserProperties == 'function' )
+          heap.identify(user._id);
+          propertyBody = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            registerDate: user.registerDate
+          }
+
+          if user.assets?.length > 0
+            propertyBody.assets = user.assets.join(";")
+
+          heap.addUserProperties(propertyBody);
         else
-          console.log "pwanf"
+          console.log "heapf"
 
         $http.get("/api/cohorts/userCohorts/" + user._id)
         .success (cohorts) ->
@@ -199,6 +209,12 @@ angular.module('gi.security').provider 'Auth', () ->
       $http.get('/api/logout')
       .success ->
         loginChanged().then () ->
+          if (heap && typeof heap.resetIdentity == 'function')
+            console.log "loheapa"
+            heap.resetIdentity();
+          else
+            console.log "loheapf"
+
           deferred.resolve()
       deferred.promise
   ]
