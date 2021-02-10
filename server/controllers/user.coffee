@@ -215,6 +215,22 @@ module.exports = (model, crudControllerFactory) ->
       stripPasswords res
 
   register = (req, res) ->
+    if !req.body
+      console.log "A user information validation error was found for the user creation request at " + new Date() + " - no body was present"
+      return res.json 400, { message: "The necessary information to create a new account was not supplied, please refresh and try again or get in touch with us at education@valueflowquality.com." }
+    if !req.body.email
+      console.log "A user information validation error was found for the user creation request at " + new Date() + " - no email was present"
+      return res.json 400, { message: "The email address needed to create a new account was not supplied, please refresh and try again or get in touch with us at education@valueflowquality.com." }
+    if !req.body.firstName
+      console.log "A user information validation error was found for the user creation request at " + new Date() + " - no first name was present"
+      return res.json 400, { message: "The first name needed to create a new account was not supplied, please refresh and try again or get in touch with us at education@valueflowquality.com." }
+    if !req.body.lastName
+      console.log "A user information validation error was found for the user creation request at " + new Date() + " - no last name was present"
+      return res.json 400, { message: "The last name needed to create a new account was not supplied, please refresh and try again or get in touch with us at education@valueflowquality.com." }
+    if !req.body.password
+      console.log "A user information validation error was found for the user creation request at " + new Date() + " - no password was present"
+      return res.json 400, { message: "The password needed to create a new account was not supplied, please refresh and try again or get in touch with us at education@valueflowquality.com." }
+
     createObject =
       email: req.body.email
       firstName: req.body.firstName
