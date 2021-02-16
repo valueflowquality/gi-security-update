@@ -271,14 +271,21 @@ module.exports = (app) ->
     return
 
   logout = (req, res) ->
-    res.clearCookie('connect.sid')
+    if req.session.cookie
+      cookieData = req.session.cookie
+
     req.logout()
-    res.clearCookie('hubspotutk', {domain: '.valueflowquality.com'})
-    res.clearCookie('__hstc', {domain: '.valueflowquality.com'})
-    res.clearCookie('__hssc', {domain: '.valueflowquality.com'})
-    res.clearCookie('__hstc', {domain: '.uat.valueflowquality.com'})
-    res.clearCookie('__hssc', {domain: '.uat.valueflowquality.com'})
-    res.send 200
+    app.models.sessions.removeSession req.sessionID, cookieData, (error) ->
+      if error
+        res.json 400, { message: "An error occured while logging the user out, please refresh and try again or get in touch with us at education@valueflowquality.com." }
+      else
+        res.clearCookie('connect.sid')
+        res.clearCookie('hubspotutk', {domain: '.valueflowquality.com'})
+        res.clearCookie('__hstc', {domain: '.valueflowquality.com'})
+        res.clearCookie('__hssc', {domain: '.valueflowquality.com'})
+        res.clearCookie('__hstc', {domain: '.uat.valueflowquality.com'})
+        res.clearCookie('__hssc', {domain: '.uat.valueflowquality.com'})
+        res.json 200, { message: 'Success'}
 
   #Configure Passport authentication strategies
   users = app.models.users
